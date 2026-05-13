@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>HarboursOfPower — sim stream</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      color-scheme: dark light;
+      --bg: #0f1216;
+      --bg-soft: #161b22;
+      --bg-row: #1a2029;
+      --bg-row-alt: #1d242e;
+      --fg: #e6edf3;
+      --fg-mute: #94a3b8;
+      --accent: #5eead4;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --good: #22c55e;
+      --war: #b91c1c;
+      --plague: #a855f7;
+      --border: #232a33;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    header {
+      display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+      padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--bg-soft);
+      position: sticky; top: 0; z-index: 5;
+    }
+    header h1 { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: 0.4px; }
+    header .meta { color: var(--fg-mute); font-size: 12px; }
+    header .controls { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    header label { display: inline-flex; align-items: center; gap: 4px; color: var(--fg-mute); }
+    header input[type=number] { width: 64px; background: #0b0f14; color: var(--fg); border: 1px solid var(--border); padding: 2px 4px; border-radius: 3px; }
+    header button { background: #0b0f14; color: var(--fg); border: 1px solid var(--border); padding: 4px 10px; border-radius: 3px; cursor: pointer; }
+    header button:hover { border-color: var(--accent); color: var(--accent); }
+    header .stale { color: var(--bad); font-weight: 600; }
+    header .pill { padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); font-size: 11px; color: var(--fg-mute); }
+    main { padding: 12px 14px 60px; display: grid; gap: 14px; grid-template-columns: 1fr; }
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+    .kpi { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
+    .kpi .label { color: var(--fg-mute); font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; }
+    .kpi .value { font-size: 20px; font-weight: 600; margin-top: 2px; }
+    .kpi .sub { font-size: 11px; color: var(--fg-mute); margin-top: 2px; }
+    .panel { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .panel-h { padding: 8px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .panel-h h2 { margin: 0; font-size: 13px; font-weight: 600; }
+    .panel-h .hint { color: var(--fg-mute); font-size: 11px; margin-left: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { padding: 4px 8px; text-align: right; white-space: nowrap; }
+    th { background: var(--bg-row-alt); color: var(--fg-mute); font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; cursor: pointer; user-select: none; position: sticky; top: 0; z-index: 2; box-shadow: 0 1px 0 var(--border); }
+    th[data-sort=asc]::after { content: " \25B2"; color: var(--accent); }
+    th[data-sort=desc]::after { content: " \25BC"; color: var(--accent); }
+    td:first-child, th:first-child { text-align: left; }
+    tbody tr:nth-child(even) td { background: var(--bg-row); }
+    tbody tr:nth-child(odd) td { background: var(--bg-row-alt); }
+    tbody tr.war td:first-child { border-left: 3px solid var(--war); }
+    tbody tr.plague td:first-child { border-left: 3px solid var(--plague); }
+    .mood-calm { color: var(--good); }
+    .mood-uneasy { color: #eab308; }
+    .mood-tense { color: var(--warn); }
+    .mood-critical { color: var(--bad); font-weight: 600; }
+    .bar { display: inline-block; height: 4px; vertical-align: middle; background: var(--bg); border-radius: 2px; overflow: hidden; width: 40px; }
+    .bar > span { display: block; height: 100%; background: var(--accent); }
+    .delta-up { color: var(--good); }
+    .delta-dn { color: var(--bad); }
+    .delta-zero { color: var(--fg-mute); }
+    .spark { display: block; }
+    code { background: #0b0f14; padding: 1px 4px; border-radius: 3px; color: var(--accent); font-size: 11px; }
+    .footer { color: var(--fg-mute); font-size: 11px; padding: 6px 14px; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>HarboursOfPower &mdash; sim stream</h1>
+    <span class="meta">Source: <code id="src">latest.json</code></span>
+    <span class="pill" id="status">idle</span>
+    <span id="stale" class="meta"></span>
+    <div class="controls">
+      <label>poll&nbsp;ms <input id="poll" type="number" min="100" step="100" value="500" /></label>
+      <label><input type="checkbox" id="auto" checked /> auto</label>
+      <button id="refresh">Refresh now</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="kpis" id="kpis"></section>
+
+    <section class="panel">
+      <div class="panel-h">
+        <h2>NPC purse &amp; riots over time</h2>
+        <span class="hint">client-side history (max 600 ticks since this page opened)</span>
+      </div>
+      <svg id="spark" class="spark" viewBox="0 0 800 140" preserveAspectRatio="none" width="100%" height="140"></svg>
+    </section>
+
+    <section class="panel">
+      <div class="panel-h">
+        <h2>Ports</h2>
+        <span class="hint">click a column header to sort &middot; <span class="mood-critical">critical</span> &gt; <span class="mood-tense">tense</span> &gt; <span class="mood-uneasy">uneasy</span> &gt; <span class="mood-calm">calm</span> &middot; red bar = at war &middot; purple bar = plague</span>
+      </div>
+      <div style="overflow:auto; max-height: 70vh;">
+        <table id="ports"></table>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer">
+    Serve this folder over HTTP (e.g. <code>cd tools/sim_stream &amp;&amp; python3 -m http.server 8000</code>) and run
+    <code>python3 tools/sim_stream.py 1000 --every 1</code> in parallel. The dashboard refreshes from
+    <code>latest.json</code> at the poll interval above.
+  </div>
+
+<script>
+  const COLUMNS = [
+    { key: "id",                  label: "port",        type: "str",   def: "asc"  },
+    { key: "wealth",              label: "wealth",      type: "num",   def: "desc" },
+    { key: "attractor",           label: "attractor",   type: "num",   def: "desc" },
+    { key: "wealthRatio",         label: "w/att",       type: "num",   def: "desc", fmt: v => v.toFixed(2) },
+    { key: "stock_grain",         label: "grain",       type: "num",   def: "desc" },
+    { key: "grain_food_days",     label: "food d",      type: "num",   def: "asc",  fmt: v => v.toFixed(1) },
+    { key: "food_unrest",         label: "unrest",      type: "num",   def: "desc", isMood: true },
+    { key: "population_grain",    label: "pop",         type: "num",   def: "desc" },
+    { key: "population_grain_cap",label: "pop cap",     type: "num",   def: "desc" },
+    { key: "famine_streak_days",  label: "famine",      type: "num",   def: "desc" },
+    { key: "commerce_pulse",      label: "pulse",       type: "num",   def: "desc", fmt: v => v.toFixed(2) },
+    { key: "stock_metal",         label: "metal",       type: "num",   def: "desc" },
+    { key: "stock_wire",          label: "wire",        type: "num",   def: "desc" },
+    { key: "war_days_left",       label: "war d",       type: "num",   def: "desc" },
+    { key: "plague_days",         label: "plague",      type: "num",   def: "desc" },
+  ];
+
+  const state = {
+    src: "latest.json",
+    trendSrc: "trend.jsonl",
+    last: null,
+    prev: null,
+    history: [],     // [{ tick, day, npc_purse, riots, bust }]
+    historyMax: 20000,
+    sort: { key: "food_unrest", dir: "desc" },
+    rendered: false,
+    trendLoaded: false,
+  };
+
+  function $(id) { return document.getElementById(id); }
+  function fmt(n) { return typeof n === "number" ? n.toLocaleString() : (n ?? ""); }
+  function moodClass(unrest) {
+    const u = +unrest || 0;
+    if (u >= 130) return "mood-critical";
+    if (u >= 90)  return "mood-tense";
+    if (u >= 40)  return "mood-uneasy";
+    return "mood-calm";
+  }
+  function moodLabel(unrest) {
+    const u = +unrest || 0;
+    if (u >= 130) return "Critical";
+    if (u >= 90)  return "Tense";
+    if (u >= 40)  return "Uneasy";
+    return "Calm";
+  }
+  function delta(curr, prev) {
+    if (prev == null) return null;
+    return (+curr) - (+prev);
+  }
+  function deltaSpan(d, fmtFn) {
+    if (d == null) return "";
+    const cls = d > 0 ? "delta-up" : d < 0 ? "delta-dn" : "delta-zero";
+    const sign = d > 0 ? "+" : d < 0 ? "" : "±";
+    const txt = fmtFn ? fmtFn(Math.abs(d)) : Math.abs(d).toLocaleString();
+    return ` <span class="${cls}">${sign}${txt}</span>`;
+  }
+  function tsAgo(updated_at) {
+    if (!updated_at) return "";
+    const t = Date.parse(updated_at);
+    if (Number.isNaN(t)) return "";
+    const s = Math.max(0, Math.round((Date.now() - t) / 1000));
+    return s < 2 ? "just now" : `${s}s ago`;
+  }
+
+  async function loadTrend() {
+    try {
+      const res = await fetch(state.trendSrc + "?_=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) return; // file may not exist yet — that's fine
+      const text = await res.text();
+      const rows = text.split("\n").filter(Boolean).map(line => {
+        try { return JSON.parse(line); } catch (e) { return null; }
+      }).filter(Boolean);
+      state.history = rows.map(r => ({
+        tick: r.tick,
+        day: r.day,
+        npc_purse: r.npc_purse,
+        riots: r.riot_events_total,
+        bust: r.bankruptcy_events_total,
+      }));
+      if (state.history.length > state.historyMax) {
+        state.history = state.history.slice(-state.historyMax);
+      }
+    } catch (e) {
+      // soft-fail
+    }
+    state.trendLoaded = true;
+  }
+
+  async function poll() {
+    if (!state.trendLoaded) await loadTrend();
+    try {
+      // cache-buster so we always get the freshest file
+      const res = await fetch(state.src + "?_=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const snap = await res.json();
+      ingest(snap);
+      $("status").textContent = "live · tick " + snap.tick;
+      $("status").style.color = "var(--good)";
+      $("stale").textContent = "updated " + tsAgo(snap.updated_at) + " · started " + (snap.started_at || "?")
+        + " · trend " + state.history.length + " pts";
+      $("stale").classList.remove("stale");
+    } catch (err) {
+      $("status").textContent = "error · " + err.message;
+      $("status").style.color = "var(--bad)";
+      $("stale").classList.add("stale");
+    }
+  }
+
+  function ingest(snap) {
+    state.prev = state.last;
+    state.last = snap;
+    // Append to history only if tick advanced (snapshot writer may dedupe).
+    const lastHist = state.history[state.history.length - 1];
+    if (!lastHist || lastHist.tick !== snap.tick) {
+      state.history.push({
+        tick: snap.tick,
+        day: snap.day,
+        npc_purse: snap.npc_total_money,
+        riots: snap.riot_events_total,
+        bust: snap.bankruptcy_events_total,
+      });
+      if (state.history.length > state.historyMax) state.history.shift();
+    }
+    renderHeader(snap);
+    renderKpis(snap);
+    renderSpark();
+    renderPorts(snap);
+    state.rendered = true;
+  }
+
+  function renderHeader(snap) {
+    $("src").textContent = (snap.world_path || "latest.json") + "  →  latest.json";
+  }
+
+  function renderKpis(snap) {
+    const prev = state.prev;
+    const items = [
+      {
+        label: "Day · Tick",
+        value: `d${snap.day} · t${snap.tick}`,
+        sub: `tps ${snap.ticks_per_sec?.toFixed(1) ?? "-"} · elapsed ${snap.elapsed_s?.toFixed(1) ?? "-"}s`,
+      },
+      {
+        label: "NPC purse (sum)",
+        value: fmt(snap.npc_total_money) + deltaSpan(delta(snap.npc_total_money, prev?.npc_total_money)),
+        sub: `balance sheet ${fmt(snap.npc_total_balance_sheet_coins)}`,
+      },
+      {
+        label: "NPC fleet at sea",
+        value: `${snap.npc_at_sea} / ${snap.npc_agent_count}`,
+        sub: "merchants currently underway",
+      },
+      {
+        label: "Food riots (total)",
+        value: fmt(snap.riot_events_total) + deltaSpan(delta(snap.riot_events_total, prev?.riot_events_total)),
+        sub: "world-wide cumulative",
+      },
+      {
+        label: "Bankruptcies",
+        value: fmt(snap.bankruptcy_events_total) + deltaSpan(delta(snap.bankruptcy_events_total, prev?.bankruptcy_events_total)),
+        sub: "merchant liquidations",
+      },
+      {
+        label: "Pirate raids",
+        value: fmt(snap.pirate_raids_success) + deltaSpan(delta(snap.pirate_raids_success, prev?.pirate_raids_success)),
+        sub: "successful encounters",
+      },
+      {
+        label: "World treasury",
+        value: fmt(snap.world_treasury_coins) + deltaSpan(delta(snap.world_treasury_coins, prev?.world_treasury_coins)),
+        sub: "city coffers (post mint sinks)",
+      },
+    ];
+    $("kpis").innerHTML = items.map(it => `
+      <div class="kpi">
+        <div class="label">${it.label}</div>
+        <div class="value">${it.value}</div>
+        <div class="sub">${it.sub}</div>
+      </div>
+    `).join("");
+  }
+
+  function renderSpark() {
+    const svg = $("spark");
+    const w = 800, h = 140, pad = 6;
+    const h0 = state.history;
+    if (h0.length < 2) { svg.innerHTML = ""; return; }
+    const xs = h0.map((_, i) => i);
+    const purses = h0.map(p => p.npc_purse);
+    const riots  = h0.map(p => p.riots);
+    const minP = Math.min(...purses), maxP = Math.max(...purses);
+    const minR = Math.min(...riots),  maxR = Math.max(...riots);
+    const xScale = i => pad + (i / (xs.length - 1)) * (w - 2 * pad);
+    const yScalePurse = v => h - pad - ((v - minP) / Math.max(1, maxP - minP)) * (h - 2 * pad);
+    const yScaleRiots = v => h - pad - ((v - minR) / Math.max(1, maxR - minR)) * (h - 2 * pad);
+    const polyP = purses.map((v, i) => `${xScale(i)},${yScalePurse(v)}`).join(" ");
+    const polyR = riots.map((v, i) => `${xScale(i)},${yScaleRiots(v)}`).join(" ");
+    const last = h0[h0.length - 1];
+    svg.innerHTML = `
+      <polyline fill="none" stroke="#5eead4" stroke-width="1.5" points="${polyP}" />
+      <polyline fill="none" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="3,3" points="${polyR}" />
+      <text x="${w - pad}" y="14" text-anchor="end" fill="#94a3b8" font-size="11">NPC purse range ${fmt(minP)}–${fmt(maxP)}  ·  Riots ${minR}–${maxR}</text>
+      <text x="${w - pad}" y="${h - pad - 2}" text-anchor="end" fill="#94a3b8" font-size="11">latest tick ${last.tick} · d${last.day}</text>
+    `;
+  }
+
+  function renderPorts(snap) {
+    const ports = snap.ports || {};
+    const prev = state.prev?.ports || {};
+    const rows = Object.entries(ports).map(([pid, p]) => {
+      const att = Math.max(1, +p.attractor || 1);
+      const row = { id: pid, ...p, wealthRatio: (+p.wealth || 0) / att };
+      return row;
+    });
+    rows.sort((a, b) => {
+      const k = state.sort.key, dir = state.sort.dir === "asc" ? 1 : -1;
+      if (a[k] == null && b[k] == null) return 0;
+      if (a[k] == null) return 1;
+      if (b[k] == null) return -1;
+      if (typeof a[k] === "string") return a[k].localeCompare(b[k]) * dir;
+      return ((a[k] || 0) - (b[k] || 0)) * dir;
+    });
+    const headHtml = COLUMNS.map(c => {
+      const sortAttr = state.sort.key === c.key ? state.sort.dir : "";
+      return `<th data-key="${c.key}" data-sort="${sortAttr}">${c.label}</th>`;
+    }).join("");
+    const bodyHtml = rows.map(r => {
+      const pp = prev[r.id] || {};
+      const tdHtml = COLUMNS.map(c => {
+        let v = r[c.key];
+        let cellClass = "";
+        let inner = "";
+        if (c.key === "id") {
+          inner = r.id;
+        } else if (c.isMood) {
+          const cls = moodClass(v);
+          const label = moodLabel(v);
+          inner = `<span class="${cls}">${v} ${label}</span>`;
+        } else {
+          const txt = c.fmt ? c.fmt(+v || 0) : fmt(v);
+          let d = null;
+          if (c.type === "num" && pp[c.key] != null) {
+            d = (+v) - (+pp[c.key]);
+            if (Math.abs(d) < (c.fmt ? 0.05 : 1)) d = 0;
+          }
+          inner = txt + (d != null ? deltaSpan(d, c.fmt ? Math.abs : null) : "");
+        }
+        if (c.key === "wealthRatio") {
+          const ratio = Math.min(2, +v || 0);
+          const pct = (ratio / 2) * 100;
+          inner += ` <span class="bar"><span style="width:${pct}%"></span></span>`;
+        }
+        return `<td class="${cellClass}">${inner}</td>`;
+      }).join("");
+      const trClass = (r.at_war ? "war" : "") + (r.plague_days > 0 ? " plague" : "");
+      return `<tr class="${trClass}">${tdHtml}</tr>`;
+    }).join("");
+    $("ports").innerHTML = `<thead><tr>${headHtml}</tr></thead><tbody>${bodyHtml}</tbody>`;
+    $("ports").querySelectorAll("th").forEach(th => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.key;
+        const col = COLUMNS.find(c => c.key === key);
+        if (!col) return;
+        if (state.sort.key === key) {
+          state.sort.dir = state.sort.dir === "asc" ? "desc" : "asc";
+        } else {
+          state.sort.key = key;
+          state.sort.dir = col.def || "desc";
+        }
+        if (state.last) renderPorts(state.last);
+      });
+    });
+  }
+
+  let timer = null;
+  function start() {
+    stop();
+    const ms = Math.max(100, +$("poll").value || 500);
+    timer = setInterval(poll, ms);
+  }
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  $("auto").addEventListener("change", e => e.target.checked ? start() : stop());
+  $("poll").addEventListener("change", () => { if ($("auto").checked) start(); });
+  $("refresh").addEventListener("click", poll);
+
+  poll();
+  if ($("auto").checked) start();
+</script>
+</body>
+</html>

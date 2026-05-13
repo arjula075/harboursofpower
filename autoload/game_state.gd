@@ -152,19 +152,47 @@ const _POP_GRAIN_CEILING_BOOST := 22
 ## Consecutive harsh days before −1 grain mouth (no dedicated crop-failure layer yet — keep rare). Sync tools/sim_100_days.py.
 const _POP_FAMINE_STREAK_TO_LOSS := 24
 const _POP_FAMINE_STREAK_RESET := 8
-## Famine streak harsh/calm: meal-based, not granary runway. Sync tools/sim_100_days.py.
-const _POP_FAMINE_HARSH_CONSEC_ZERO_GRAIN_DAYS := 6
+## Famine streak harsh/calm: meal-based, not granary runway. Short shortages and single unrest spikes shouldn't doom a city; the iron-age default is resilience, not collapse-every-season. Sync tools/sim_100_days.py.
+const _POP_FAMINE_HARSH_CONSEC_ZERO_GRAIN_DAYS := 9
 const _POP_FAMINE_CALM_CONSEC_FULL_RATION_DAYS := 2
-## Harsh day from unrest alone (famine streak) when no zero-grain run; above calm band. Sync tools/sim_100_days.py.
-const _POP_FAMINE_HARSH_UNREST_MIN := 92
-const _POP_PROSPERITY_STREAK_TO_GAIN := 52
-const _POP_PROSPERITY_STREAK_RESET := 26
-## Prosperity streak resets to 0 on `poor`; unrest alone used to wipe at u>75 (too harsh vs Uneasy/Tense). Sync tools/sim_100_days.py.
-const _POP_PROSPERITY_POOR_UNREST_EXCEEDS := 88
-## Low commerce pulse counts toward “poor” for population prosperity (busy ports recover). Sync sim.
-const _COMMERCE_POOR_PULSE := 0.19
+## Harsh day from unrest alone (famine streak) when no zero-grain run; only sustained Critical-tier crises (was 92 — too easy, fired during normal seasonal swings). Sync tools/sim_100_days.py.
+const _POP_FAMINE_HARSH_UNREST_MIN := 118
+## Prosperity → growth: lowered streak from 52 → 30 so a healthy month yields +1 mouth. Reset 14 keeps subsequent gains paced. Sync tools/sim_100_days.py.
+const _POP_PROSPERITY_STREAK_TO_GAIN := 30
+const _POP_PROSPERITY_STREAK_RESET := 14
+## Only sustained Critical-tier unrest blocks prosperity (was 88 — wiped streaks during ordinary tension). On `poor`, streak now decays by `_POP_PROSPERITY_POOR_DECAY` instead of resetting to 0 (single bad day no longer erases weeks of recovery). Sync tools/sim_100_days.py.
+const _POP_PROSPERITY_POOR_UNREST_EXCEEDS := 118
+const _POP_PROSPERITY_POOR_DECAY := 4
+## Iron-age rural→urban migration pull: when current pop is below the founding baseline AND the day is `wealthy`, the prosperity streak gains an extra +`floor(gap_frac × _POP_MIGRATION_PULL)` on top of the natural +1. Models second-sons, refugees, and rural surplus flowing into the metropolis (big cities = bigger empty-homes pull). Disabled once pop ≥ baseline so natural growth continues at +1/day past the founding cohort. Sync tools/sim_100_days.py.
+const _POP_MIGRATION_PULL := 4
+## Low commerce pulse counts toward “poor” for population prosperity (busy ports recover). 0.10 (was 0.19) keeps only truly dead trade hubs in the `poor` bucket. Sync sim.
+const _COMMERCE_POOR_PULSE := 0.10
 const _POP_OUTPUT_SCALE_MIN := 0.72
 const _POP_OUTPUT_SCALE_MAX := 1.28
+## Civic grain rationing (resilience helper A): when granary runway drops under the trigger, officials cut the per-day grain bite to `_RATION_BITE_FRAC` (min `_RATION_BITE_MIN`). Granary stretches ~40% further; demographics tick sees a partial-ration day (neither full nor zero), so the famine streak holds steady instead of climbing. Auto-ends when runway recovers or after `_RATION_MAX_DAYS`. Costs a small daily unrest tick. Sync tools/sim_100_days.py.
+const _RATION_TRIGGER_FOOD_DAYS := 5.0
+const _RATION_END_FOOD_DAYS := 11.0
+const _RATION_BITE_FRAC := 0.62
+const _RATION_BITE_MIN := 2
+const _RATION_UNREST_TICK := 2
+const _RATION_MAX_DAYS := 75
+## Summer foraging (resilience helper B): half-sine bonus over DOY [`_FORAGE_SUMMER_START_DOY`, `_FORAGE_SUMMER_END_DOY`], peak `_FORAGE_SUMMER_PEAK_MOUTHS` mouths/day of virtual food (berries, figs, wild greens, shore fish) — never touches the granary, but counts toward `eaten_eff` in the demographics tick. Sync tools/sim_100_days.py.
+const _FORAGE_SUMMER_START_DOY := 100
+const _FORAGE_SUMMER_END_DOY := 235
+const _FORAGE_SUMMER_PEAK_MOUTHS := 4.0
+## Preserved-foods reserve (resilience helper D): per-port emergency buffer (salt fish, dried beans, olive oil) measured in mouth-days. Refills slowly when granary runway is abundant; auto-drawn to cover any grain shortfall before demographics tick scores the day. Sync tools/sim_100_days.py.
+const _PRESERVED_FOOD_CAP_MULT := 8
+const _PRESERVED_FOOD_CAP_MIN := 24
+const _PRESERVED_FOOD_FILL_FOODDAYS_MIN := 45.0
+const _PRESERVED_FOOD_FILL_PER_DAY := 0.4
+const _PRESERVED_FOOD_INITIAL_FRAC := 0.5
+## Baseline drift: `port_population_grain_baseline` is the city’s “institutional” size (migration target, farm scale ref). It rises slowly when population & food stay healthy; it falls slowly under prolonged collapse — not fixed to world.json forever. Small ports can outgrow old baselines; metropoles can shrink after generations of crisis. Sync tools/sim_100_days.py.
+const _POP_BASELINE_RISE_FRAC := 0.88
+const _POP_BASELINE_RISE_DAYS := 110
+const _POP_BASELINE_FALL_FRAC := 0.58
+const _POP_BASELINE_FALL_DAYS := 100
+## Existential war: if `is_port_at_war` and this port’s initial burst length ≥ `population_existential_war_burst_days` (world.json; default 999 = off), famine streak needs half as many harsh days before −1 mouth (siege / Third-Punic style collapse). Sync tools/sim_100_days.py.
+const _POP_EXISTENTIAL_WAR_BURST_OFF := 999
 ## While at war, unrest tracks “civilian” grain stress: panic uses stock ÷ peacetime ration (war ration alone must not read as famine). If granary meets peacetime draw but not full war ration, add only mild strain. Keep in sync with tools/sim_100_days.py.
 const _FOOD_UNREST_WAR_RATION_GAP_PER := 1
 ## p2 Need-based reservation: smooth exponential curves (player vs NPC counterparty use different depth).
@@ -453,10 +481,17 @@ var _port_names: Dictionary = {}  # id -> display name
 ## Optional chart positions from world.json `map_u` / `map_v` in [0,1] for UI sea-chart.
 var _port_map_uv: Dictionary = {}  # id -> Vector2
 var _lane_days: Dictionary = {}  # "from|to" -> int days
+## Sparse NPC voyage graph from world.json `npc_lanes` (optional). When non-empty, NPC merchants use this
+## graph for `_voyage_plan` coastal shortest days; player keeps full `lanes`. Sync tools/sim_100_days.py.
+var _npc_lane_days: Dictionary = {}  # "from|to" -> int days
 ## port_id -> Array[String] neighbor port ids (undirected).
 var _port_neighbors: Dictionary = {}
+## Neighbors derived from `_npc_lane_days` only (for NPC voyage cache).
+var _port_neighbors_npc: Dictionary = {}
 ## Cached coastal shortest travel days `from|to` (int days, or -1 if unreachable by lanes alone).
 var _voyage_coastal_shortest_cache: Dictionary = {}
+## Same as above but on `_npc_lane_days` when present.
+var _voyage_coastal_shortest_cache_npc: Dictionary = {}
 var _goods: Dictionary = {}  # id -> { name, buy, sell, stock_target, optional market_demand_per_day }
 ## Per-port commodity stock (city + warehouses abstraction).
 var _port_stocks: Dictionary = {}  # port_id -> Dictionary good_id -> int
@@ -476,11 +511,21 @@ var _port_consecutive_grain_full_ration_days: Dictionary = {}  # port_id -> int
 ## Consecutive days with **zero** grain eaten while need > 0; counts toward harsh famine pressure.
 var _port_consecutive_grain_zero_eat_days: Dictionary = {}  # port_id -> int
 var _port_prosperity_streak_days: Dictionary = {}  # port_id -> int consecutive prosperous days
+## Civic rationing toggle + consecutive days active (resilience helper A — see `_RATION_*`).
+var _port_rationing_active: Dictionary = {}  # port_id -> bool
+var _port_rationing_days_active: Dictionary = {}  # port_id -> int
+## Preserved-foods reserve (mouth-day units; float for fractional daily refill, see `_PRESERVED_FOOD_*`).
+var _port_preserved_food: Dictionary = {}  # port_id -> float
 var _port_initial_wealth: Dictionary = {}  # port_id -> optional starting liquidity (abstract coin)
 ## world.json `port_role_wealth_bonuses` keyed by port `role` — added to stock-implied wealth attractor.
 var _port_role_wealth_bonus: Dictionary = {}  # port_id -> int
 ## world.json each port `role` id (e.g. breadbasket) for mechanics beyond wealth bonus.
 var _port_roles: Dictionary = {}  # port_id -> String
+## Optional per port: `population_existential_war_burst_days` in world.json — if current war’s `burst_initial` ≥ this (and value < `_POP_EXISTENTIAL_WAR_BURST_OFF`), famine losses accelerate for that campaign.
+var _port_existential_war_burst_days: Dictionary = {}  # port_id -> int
+## Counters for baseline drift (not saved; reset on load).
+var _port_baseline_momentum_up: Dictionary = {}  # port_id -> int
+var _port_baseline_momentum_dn: Dictionary = {}  # port_id -> int
 ## Smoothed local prosperity; high values increase wine demand.
 var _port_wealth: Dictionary = {}  # port_id -> int
 ## Filled at the start of each daily sim tick (before voyages, farms, wealth refresh, population, NPCs).
@@ -638,6 +683,12 @@ var _player_good_last_trade_day: Dictionary = {}
 ## Day the player last paid clerks to refresh route/piracy tables at the quay.
 var _player_route_intel_refresh_day: int = 0
 
+## Sea-chart grouping for City → Ledger (`world.json` chart_areas + per-port chart_area_id).
+const _LEDGER_CHART_AREA_FALLBACK := "_unassigned"
+var _chart_area_labels: Dictionary = {} ## area_id -> display name
+var _chart_area_notes: Dictionary = {} ## area_id -> optional description
+var _port_chart_area_id: Dictionary = {} ## port_id -> area_id
+
 ## Hull design for the whole convoy (all hulls match this slip; refit swaps the design). See `data/ships.json`.
 var player_ship_class_id: String = ""
 ## Captain’s naval culture (Italic, Greek, …) — mismatched hulls cost more in wine/officers.
@@ -687,6 +738,8 @@ func _ready() -> void:
 
 func _maybe_run_world_autonomy_warmup() -> void:
 	if FileAccess.file_exists(SAVE_PATH):
+		if _player_seed_opening_ledger_hearsay_if_empty():
+			market_changed.emit()
 		return
 	var n: int = clampi(_world_autonomy_warmup_days, 0, 180)
 	for _i in n:
@@ -695,6 +748,8 @@ func _maybe_run_world_autonomy_warmup() -> void:
 	if n > 0:
 		market_changed.emit()
 		day_advanced.emit(current_day)
+	if _player_seed_opening_ledger_hearsay_if_empty():
+		market_changed.emit()
 
 
 func _apply_new_game_defaults() -> void:
@@ -723,6 +778,22 @@ func _apply_new_game_defaults() -> void:
 
 func get_port_name(port_id: String) -> String:
 	return str(_port_names.get(port_id, port_id))
+
+
+func get_port_chart_area_id(port_id: String) -> String:
+	var ps := str(port_id)
+	if _port_chart_area_id.has(ps):
+		return str(_port_chart_area_id[ps])
+	return _LEDGER_CHART_AREA_FALLBACK
+
+
+func get_chart_area_display_name(area_id: String) -> String:
+	var aid := str(area_id)
+	return str(_chart_area_labels.get(aid, aid.replace("_", " ").capitalize()))
+
+
+func get_chart_area_description(area_id: String) -> String:
+	return str(_chart_area_notes.get(str(area_id), ""))
 
 
 ## Sea-chart anchor in [0,1]×[0,1] if world.json defines `map_u` / `map_v`; else (-1,-1).
@@ -2220,8 +2291,32 @@ func get_port_market_line() -> String:
 	return "Port stock: " + ", ".join(bits)
 
 
-## Population drain + farms + NPC headcount while docked.
+## Population drain + farms + NPC headcount while docked (full string: digest + food mood + dock rumor). Prefer UI: `get_port_city_supply_digest` + `get_player_tavern_mood_block`.
 func get_port_activity_summary() -> String:
+	if is_at_sea():
+		return ""
+	var digest: String = get_port_city_supply_digest()
+	var mood_s: String = ""
+	if _goods.has("grain"):
+		var eat_cfg: int = get_population_grain_eat_effective(player_port_id)
+		if eat_cfg > 0:
+			var pid := player_port_id
+			var unrest: int = get_port_food_unrest(pid)
+			var fd: float = get_grain_food_days_for_port(pid)
+			var fd_show: String = ">200 d" if fd > 200.0 else "%.1f d" % fd
+			var thr: int = _food_riot_threshold_for_port(pid)
+			var tier: String = _food_unrest_tier_label(unrest)
+			mood_s = "Grain runway ~%s (this ration); mood %s (unrest %d/200, riot checks near ≥%d). " % [fd_show, tier, unrest, thr]
+		else:
+			mood_s = "No population grain ration configured. "
+	var rumor_tail: String = ""
+	if not _last_crop_rumor_ui_line.is_empty():
+		rumor_tail = "\n" + _last_crop_rumor_ui_line
+	return digest + mood_s + rumor_tail
+
+
+## City calendar, harvest rhythm, population draw, farms/mines, industry, war — **without** grain-mood sentence or dock rumor (those go to Tavern UI).
+func get_port_city_supply_digest() -> String:
 	if is_at_sea():
 		return ""
 	var pid := player_port_id
@@ -2258,7 +2353,6 @@ func get_port_activity_summary() -> String:
 				"Workshops drew ~%d ingots, ~%d wire, ~%d timber, ~%d textiles from city stores. "
 				% [imt, iwt, itb, itx]
 			)
-	var unrest: int = get_port_food_unrest(pid)
 	var war_s: String = ""
 	if is_port_at_war(pid):
 		var wd_left: int = get_port_war_days_remaining(pid)
@@ -2273,26 +2367,14 @@ func get_port_activity_summary() -> String:
 			war_s = war_head + "last night ~%d ingots, ~%d wire drawn for arms, hulls, and rigging (metal market tight). " % [wm, ww]
 		else:
 			war_s = war_head + "farms yield less grain/wine; ration demand is up; metal prices elevated. "
-	var food_s: String = ""
-	var pop_scale_s: String = ""
-	if _goods.has("grain"):
-		var eat_cfg: int = get_population_grain_eat_effective(pid)
-		if eat_cfg > 0:
-			var fd: float = get_grain_food_days_for_port(pid)
-			var fd_show: String = ">200 d" if fd > 200.0 else "%.1f d" % fd
-			var thr: int = _food_riot_threshold_for_port(pid)
-			var tier: String = _food_unrest_tier_label(unrest)
-			food_s = "Grain runway ~%s (this ration); mood %s (unrest %d/200, riot checks near ≥%d). " % [fd_show, tier, unrest, thr]
-		else:
-			food_s = "No population grain ration configured. "
-		pop_scale_s = "Farm & mine output ×%.2f vs founding headcount. " % _population_output_scale_for_port(pid)
+	var pop_scale_s: String = "Farm & mine output ×%.2f vs founding headcount. " % _population_output_scale_for_port(pid)
 	var pop_line: String = (
 		"Population ~%d grain/day, ~%d wine/day (base %d + prosperity; wealth %d)"
 		% [g_shown, w_shown, w_base, wealth]
 	)
 	if _goods.has("fish") and f_base > 0:
 		pop_line += ", ~%d fish/day (ration %d)" % [f_shown, f_base]
-	pop_line += ". " + farm_s + mine_s + spoil_s + ind_s + war_s + pop_scale_s + food_s
+	pop_line += ". " + farm_s + mine_s + spoil_s + ind_s + war_s + pop_scale_s
 	pop_line += "NPCs: %d docked, ~%d inbound by sea." % [n_docked, n_in]
 	var doy0: int = get_calendar_day_of_year()
 	var cal_head: String = (
@@ -2305,10 +2387,46 @@ func get_port_activity_summary() -> String:
 		if not _is_harvest_doy(doy0)
 		else "Harvest window — fields are shipping grain and wine into city stores. "
 	)
-	var rumor_tail: String = ""
+	return cal_head + harv_note + pop_line
+
+
+## Grain runway + unrest tier (for Tavern “moods” card). Empty if no grain ration.
+func get_player_port_food_mood_sentence() -> String:
+	if is_at_sea() or not _goods.has("grain"):
+		return ""
+	var pid := str(player_port_id)
+	if not _port_names.has(pid):
+		return ""
+	var eat_cfg: int = get_population_grain_eat_effective(pid)
+	if eat_cfg <= 0:
+		return "No population grain ration configured."
+	var unrest: int = get_port_food_unrest(pid)
+	var fd: float = get_grain_food_days_for_port(pid)
+	var fd_show: String = ">200 d" if fd > 200.0 else "%.1f d" % fd
+	var thr: int = _food_riot_threshold_for_port(pid)
+	var tier: String = _food_unrest_tier_label(unrest)
+	return "Grain runway ~%s (this ration); mood %s (unrest %d/200, riot checks near ≥%d)." % [fd_show, tier, unrest, thr]
+
+
+## Docked tavern card: public food mood + your crop/war reads + last dockside crop rumor line.
+func get_player_tavern_mood_block() -> String:
+	if is_at_sea():
+		return ""
+	var lines: PackedStringArray = []
+	var food_m: String = get_player_port_food_mood_sentence()
+	if not food_m.is_empty():
+		lines.append(food_m)
+	var cr: String = get_player_crop_rumor_intel_strip_line()
+	if not cr.is_empty():
+		lines.append(cr)
+	var wr: String = get_player_war_rumor_intel_strip_line()
+	if not wr.is_empty():
+		lines.append(wr)
 	if not _last_crop_rumor_ui_line.is_empty():
-		rumor_tail = "\n" + _last_crop_rumor_ui_line
-	return cal_head + harv_note + pop_line + rumor_tail
+		lines.append("Dockside crop chatter: " + _last_crop_rumor_ui_line)
+	if lines.is_empty():
+		return "No separate mood reads yet — dock a grain port or wait for harbor talk."
+	return "\n\n".join(lines)
 
 
 ## UI: civic mood label for food unrest (0–200 scale).
@@ -3356,10 +3474,28 @@ func _player_quay_reliability_percent(port_id: String) -> int:
 	return clampi(base + bump, 48, 97)
 
 
+func _player_ledger_build_per_good_snapshot(port_id: String) -> Dictionary:
+	var out: Dictionary = {}
+	var ps := str(port_id)
+	if not _port_names.has(ps):
+		return out
+	for gid_key in _goods.keys():
+		var gid := str(gid_key)
+		var gd: Dictionary = _goods[gid] as Dictionary
+		out[gid] = {
+			"name": str(gd.get("name", gid)),
+			"buy": maxi(0, _compute_player_buy_unit(ps, gid)),
+			"sell": maxi(0, _compute_player_sell_unit(ps, gid)),
+			"toll": maxi(0, _port_toll_per_unit(ps, gid)),
+		}
+	return out
+
+
 func _player_record_ledger_snapshot(port_id: String) -> void:
 	var ps := str(port_id)
 	if not _port_names.has(ps) or not _goods.has("grain"):
 		return
+	var per_good: Dictionary = _player_ledger_build_per_good_snapshot(ps)
 	var buy_g: int = _compute_player_buy_unit(ps, "grain")
 	var sell_g: int = _compute_player_sell_unit(ps, "grain")
 	var rel: float = clampf(float(_player_quay_reliability_percent(ps)) / 100.0, 0.0, 1.0)
@@ -3369,7 +3505,47 @@ func _player_record_ledger_snapshot(port_id: String) -> void:
 		"grain_sell": sell_g,
 		"source": "observed market",
 		"reliability": rel,
+		"per_good": per_good,
 	}
+
+
+## Poor merchants still hear distant quay prices; seed once so the ledger is not blank before the first nightfall log.
+## Returns true if any row was written.
+func _player_seed_opening_ledger_hearsay_if_empty() -> bool:
+	if not _player_ledger_by_port.is_empty():
+		return false
+	if not _goods.has("grain"):
+		return false
+	var home := str(player_port_id)
+	if not _port_names.has(home):
+		return false
+	for pk in _port_names.keys():
+		var ps := str(pk)
+		if not _port_names.has(ps):
+			continue
+		var per_good: Dictionary = _player_ledger_build_per_good_snapshot(ps)
+		var buy_g: int = _compute_player_buy_unit(ps, "grain")
+		var sell_g: int = _compute_player_sell_unit(ps, "grain")
+		var note_day: int
+		var src: String
+		var rel: float
+		if ps == home:
+			note_day = maxi(1, current_day)
+			src = "home quay · remembered cargoes (book opened here)"
+			rel = clampf(0.74 + 0.01 * float(abs(home.hash()) % 9), 0.62, 0.86)
+		else:
+			note_day = maxi(1, current_day - 4 - (abs(ps.hash()) % 16))
+			src = "coastal prices · sailor & chandler talk (unvouched)"
+			rel = clampf(0.52 + 0.012 * float(abs(ps.hash()) % 11), 0.42, 0.68)
+		_player_ledger_by_port[ps] = {
+			"day": note_day,
+			"grain_buy": buy_g,
+			"grain_sell": sell_g,
+			"source": src,
+			"reliability": rel,
+			"per_good": per_good,
+		}
+	return true
 
 
 ## Call at the **start** of advance_day (before day++): yesterday's ask curve for trend after the tick.
@@ -3556,10 +3732,13 @@ func list_player_ledger_rows() -> Array:
 		var rel: float = clampf(float(cell.get("reliability", 0.72)), 0.0, 1.0)
 		var rel_pct: int = clampi(int(round(rel * 100.0)), 0, 100)
 		var risk: String = _food_unrest_tier_label(get_port_food_unrest(ps))
+		var chart_aid: String = get_port_chart_area_id(ps)
 		out.append(
 			{
 				"port_id": ps,
 				"name": get_port_name(ps),
+				"chart_area_id": chart_aid,
+				"chart_area_name": get_chart_area_display_name(chart_aid),
 				"last_day": day0,
 				"age_days": age,
 				"grain_range": ("%d–%d" % [lo, hi]) if lo > 0 or hi > 0 else "—",
@@ -3569,6 +3748,93 @@ func list_player_ledger_rows() -> Array:
 			}
 		)
 	out.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.get("age_days", 999)) < int(b.get("age_days", 999)))
+	return out
+
+
+func list_player_ledger_chart_areas() -> Array:
+	var counts: Dictionary = {}
+	for row in list_player_ledger_rows():
+		var aid := str(row.get("chart_area_id", _LEDGER_CHART_AREA_FALLBACK))
+		counts[aid] = int(counts.get(aid, 0)) + 1
+	var keys: Array = counts.keys()
+	keys.sort_custom(func(a, b): return get_chart_area_display_name(str(a)) < get_chart_area_display_name(str(b)))
+	var out: Array = []
+	for aid_v in keys:
+		var aid := str(aid_v)
+		out.append(
+			{
+				"area_id": aid,
+				"area_name": get_chart_area_display_name(aid),
+				"known_ports": int(counts[aid]),
+			}
+		)
+	return out
+
+
+func list_player_ledger_ports_for_chart_area(area_id: String) -> Array:
+	var want := str(area_id)
+	var out: Array = []
+	for row in list_player_ledger_rows():
+		if str(row.get("chart_area_id", _LEDGER_CHART_AREA_FALLBACK)) != want:
+			continue
+		out.append(row)
+	out.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return str(a.get("name", "")) < str(b.get("name", "")))
+	return out
+
+
+func list_player_ledger_goods_for_port(port_id: String) -> Array:
+	var out: Array = []
+	var ps := str(port_id)
+	if not _port_names.has(ps) or not _player_ledger_by_port.has(ps):
+		return out
+	var cell: Dictionary = _player_ledger_by_port[ps] as Dictionary
+	var day0: int = clampi(int(cell.get("day", 0)), 0, 9999999)
+	var age_notes: int = maxi(0, current_day - day0)
+	var rel_pct: int = clampi(
+		int(round(clampf(float(cell.get("reliability", 0.72)), 0.0, 1.0) * 100.0)), 0, 100
+	)
+	var pg: Variant = cell.get("per_good", null)
+	if typeof(pg) == TYPE_DICTIONARY and not (pg as Dictionary).is_empty():
+		var tmp: Array = []
+		for gk in (pg as Dictionary).keys():
+			var gids := str(gk)
+			if not _goods.has(gids):
+				continue
+			var rv: Variant = (pg as Dictionary)[gk]
+			if typeof(rv) != TYPE_DICTIONARY:
+				continue
+			var rd: Dictionary = rv as Dictionary
+			var nm: String = str(rd.get("name", str((_goods[gids] as Dictionary).get("name", gids))))
+			tmp.append(
+				{
+					"good_id": gids,
+					"name": nm,
+					"buy_unit": maxi(0, int(rd.get("buy", 0))),
+					"sell_unit": maxi(0, int(rd.get("sell", 0))),
+					"toll_per_unit": maxi(0, int(rd.get("toll", 0))),
+					"note_day": day0,
+					"ledger_age_days": age_notes,
+					"reliability_pct": rel_pct,
+				}
+			)
+		tmp.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return str(a.get("name", "")) < str(b.get("name", "")))
+		for t in tmp:
+			out.append(t)
+	elif _goods.has("grain"):
+		var gb: int = maxi(0, int(cell.get("grain_buy", 0)))
+		var gs: int = maxi(0, int(cell.get("grain_sell", 0)))
+		out.append(
+			{
+				"good_id": "grain",
+				"name": str((_goods["grain"] as Dictionary).get("name", "Grain")),
+				"buy_unit": gb,
+				"sell_unit": gs,
+				"toll_per_unit": maxi(0, _port_toll_per_unit(ps, "grain")),
+				"note_day": day0,
+				"ledger_age_days": age_notes,
+				"reliability_pct": rel_pct,
+			}
+		)
 	return out
 
 
@@ -3590,6 +3856,18 @@ func get_player_ledger_block() -> String:
 			]
 		)
 	return "\n".join(lines)
+
+
+## One line for compact UI; full prose lives in `get_player_ledger_block()` (e.g. log export).
+func get_player_ledger_summary_line() -> String:
+	var rows: Array = list_player_ledger_rows()
+	if rows.is_empty():
+		return "Libellum is empty — your purser has no harbor lines yet."
+	var areas_n: int = list_player_ledger_chart_areas().size()
+	return "%d harbor(s) across %d chart area(s); grain band per harbor is in tooltips and in the grain row below." % [
+		rows.size(),
+		maxi(1, areas_n),
+	]
 
 
 func list_player_tavern_rumor_rows() -> Array:
@@ -3701,7 +3979,7 @@ func get_player_intel_verify_coin_cost(intel_kind: String) -> int:
 			return 0
 
 
-## Explain why a cell shows what it shows. `kind`: market_good | influence | ledger | route | harbor
+## Explain why a cell shows what it shows. `kind`: market_good | influence | ledger | ledger_good | route | harbor
 func get_player_data_provenance(kind: String, key: String) -> String:
 	var k := str(kind).to_lower()
 	var idk := str(key)
@@ -3729,11 +4007,41 @@ func get_player_data_provenance(kind: String, key: String) -> String:
 			if not _player_ledger_by_port.has(idk):
 				return "No purser entry yet — spend a night in that harbor after markets close to log prices."
 			var cell: Dictionary = _player_ledger_by_port[idk] as Dictionary
+			var src_s: String = str(cell.get("source", "observed"))
+			if src_s.findn("unvouched") >= 0 or src_s.findn("remembered cargoes") >= 0:
+				return (
+					"Notebook line from wagons and slips before this book was bound — grain bands are tavern chalk and "
+					+ "incoming masters' boasting until you log a night ashore with clerk-counted prices (%s)."
+					% src_s
+				)
 			return (
 				"Snapshot from nightfall on day %d: grain ask/bid as your purser heard them (%s)."
-				% [int(cell.get("day", 0)), str(cell.get("source", "observed"))]
+				% [int(cell.get("day", 0)), src_s]
 			)
-		"route":
+		"ledger_good":
+			var bar: int = idk.find("|")
+			if bar <= 0 or bar >= idk.length() - 1:
+				return "Use port_id|good_id as the key."
+			var port_lg: String = idk.substr(0, bar)
+			var good_lg: String = idk.substr(bar + 1)
+			if not _goods.has(good_lg):
+				return "Unknown good."
+			if not _player_ledger_by_port.has(port_lg):
+				return "No ledger line for that harbor."
+			var cellg: Dictionary = _player_ledger_by_port[port_lg] as Dictionary
+			var src_g: String = str(cellg.get("source", "observed"))
+			var gnm: String = str((_goods[good_lg] as Dictionary).get("name", good_lg))
+			if src_g.findn("unvouched") >= 0 or src_g.findn("remembered cargoes") >= 0:
+				return (
+					"%s in %s — numbers come from the same ledger line as the harbor summary (hearsay or night log); "
+					% [gnm, get_port_name(port_lg)]
+					+ "they are not today’s live clerk tablet unless you are docked there after a fresh advance (%s)."
+					% src_g
+				)
+			return (
+				"%s in %s — logged with the nightfall snapshot on day %d (%s)."
+				% [gnm, get_port_name(port_lg), int(cellg.get("day", 0)), src_g]
+			)
 			if not _port_names.has(idk):
 				return "Unknown destination."
 			return (
@@ -3922,6 +4230,9 @@ func save_campaign() -> bool:
 		"port_consecutive_grain_zero_eat_days": _serialize_port_int_map(_port_consecutive_grain_zero_eat_days),
 		"port_crop_agro": _serialize_port_crop_agro(),
 		"port_prosperity_streak_days": _serialize_port_prosperity_streak_days(),
+		"port_rationing_active": _serialize_port_rationing_active(),
+		"port_rationing_days_active": _serialize_port_int_map(_port_rationing_days_active),
+		"port_preserved_food": _serialize_port_float_map(_port_preserved_food),
 		"player_ship_condition": clampi(player_ship_condition, _SHIP_CONDITION_MIN, _SHIP_CONDITION_MAX),
 		"player_ship_wine_counter": clampi(player_ship_wine_counter, 0, 9999),
 		"player_fleet_ships": clampi(player_fleet_ships, 1, _FLEET_MAX_SHIPS),
@@ -4139,6 +4450,15 @@ func load_campaign() -> bool:
 		var pps: Variant = d.get("port_prosperity_streak_days", null)
 		if typeof(pps) == TYPE_DICTIONARY:
 			_deserialize_port_prosperity_streak_days(pps as Dictionary)
+		var pra: Variant = d.get("port_rationing_active", null)
+		if typeof(pra) == TYPE_DICTIONARY:
+			_deserialize_port_rationing_active(pra as Dictionary)
+		var prd: Variant = d.get("port_rationing_days_active", null)
+		if typeof(prd) == TYPE_DICTIONARY:
+			_deserialize_port_int_map_into(_port_rationing_days_active, prd as Dictionary, 0, 999)
+		var ppf: Variant = d.get("port_preserved_food", null)
+		if typeof(ppf) == TYPE_DICTIONARY:
+			_deserialize_port_preserved_food(ppf as Dictionary)
 		_ensure_port_demographics_post_load()
 	else:
 		_init_port_demographics_from_world()
@@ -4310,6 +4630,7 @@ func load_campaign() -> bool:
 		_player_market_buy_prev.clear()
 		_player_good_last_trade_day.clear()
 		_player_route_intel_refresh_day = 0
+	_player_seed_opening_ledger_hearsay_if_empty()
 	_ensure_player_ship_identity_post_load()
 	_bootstrap_recurring_war_timers()
 	_port_luxury_import_queue.clear()
@@ -4350,13 +4671,33 @@ func _deserialize_player_ui_memory_v42(d: Dictionary) -> void:
 			if typeof(row0) != TYPE_DICTIONARY:
 				continue
 			var rd: Dictionary = row0 as Dictionary
-			_player_ledger_by_port[pid] = {
+			var cell_out: Dictionary = {
 				"day": clampi(int(rd.get("day", 0)), 0, 9999999),
 				"grain_buy": maxi(0, int(rd.get("grain_buy", 0))),
 				"grain_sell": maxi(0, int(rd.get("grain_sell", 0))),
 				"source": str(rd.get("source", "observed market")),
 				"reliability": clampf(float(rd.get("reliability", 0.75)), 0.0, 1.0),
 			}
+			var pg_raw: Variant = rd.get("per_good", null)
+			if typeof(pg_raw) == TYPE_DICTIONARY:
+				var pg_clean: Dictionary = {}
+				for gkk in (pg_raw as Dictionary).keys():
+					var gg := str(gkk)
+					if not _goods.has(gg):
+						continue
+					var rvg0: Variant = (pg_raw as Dictionary)[gkk]
+					if typeof(rvg0) != TYPE_DICTIONARY:
+						continue
+					var rvg: Dictionary = rvg0 as Dictionary
+					pg_clean[gg] = {
+						"name": str(rvg.get("name", str((_goods[gg] as Dictionary).get("name", gg)))),
+						"buy": maxi(0, int(rvg.get("buy", 0))),
+						"sell": maxi(0, int(rvg.get("sell", 0))),
+						"toll": maxi(0, int(rvg.get("toll", 0))),
+					}
+				if not pg_clean.is_empty():
+					cell_out["per_good"] = pg_clean
+			_player_ledger_by_port[pid] = cell_out
 	_player_market_buy_prev.clear()
 	var mp: Variant = d.get("player_market_buy_prev", null)
 	if typeof(mp) == TYPE_DICTIONARY:
@@ -4408,42 +4749,54 @@ func _lane_key(from_id: String, to_id: String) -> String:
 	return "%s|%s" % [from_id, to_id]
 
 
-func _build_port_neighbors() -> void:
-	_port_neighbors.clear()
-	for key in _lane_days.keys():
+func _append_unique_neighbor_to(neigh_out: Dictionary, port_id: String, neighbor_id: String) -> void:
+	if not neigh_out.has(port_id):
+		neigh_out[port_id] = []
+	var arr: Array = neigh_out[port_id] as Array
+	if arr.find(neighbor_id) < 0:
+		arr.append(neighbor_id)
+
+
+func _build_port_neighbors_from(lane_src: Dictionary, neigh_out: Dictionary) -> void:
+	neigh_out.clear()
+	for key in lane_src.keys():
 		var parts: PackedStringArray = String(key).split("|", false)
 		if parts.size() != 2:
 			continue
 		var a: String = str(parts[0])
 		var b: String = str(parts[1])
-		_append_unique_neighbor(a, b)
-		_append_unique_neighbor(b, a)
+		_append_unique_neighbor_to(neigh_out, a, b)
+		_append_unique_neighbor_to(neigh_out, b, a)
 
 
-func _append_unique_neighbor(port_id: String, neighbor_id: String) -> void:
-	if not _port_neighbors.has(port_id):
-		_port_neighbors[port_id] = []
-	var arr: Array = _port_neighbors[port_id] as Array
-	if arr.find(neighbor_id) < 0:
-		arr.append(neighbor_id)
+func _build_port_neighbors() -> void:
+	_build_port_neighbors_from(_lane_days, _port_neighbors)
+
+
+func _voyage_lane_weight_undirected_for(lanes: Dictionary, a: String, b: String) -> int:
+	var w: int = int(lanes.get(_lane_key(a, b), -1))
+	if w >= 0:
+		return w
+	return int(lanes.get(_lane_key(b, a), -1))
 
 
 func _voyage_lane_weight_undirected(a: String, b: String) -> int:
-	var w: int = int(_lane_days.get(_lane_key(a, b), -1))
-	if w >= 0:
-		return w
-	return int(_lane_days.get(_lane_key(b, a), -1))
+	return _voyage_lane_weight_undirected_for(_lane_days, a, b)
 
 
-func _voyage_max_lane_weight() -> int:
+func _voyage_max_lane_weight_for(lanes: Dictionary) -> int:
 	var mx: int = 1
-	for lk in _lane_days.keys():
-		mx = maxi(mx, int(_lane_days[lk]))
+	for lk in lanes.keys():
+		mx = maxi(mx, int(lanes[lk]))
 	return mx
 
 
-func _rebuild_coastal_shortest_path_cache() -> void:
-	_voyage_coastal_shortest_cache.clear()
+func _voyage_max_lane_weight() -> int:
+	return _voyage_max_lane_weight_for(_lane_days)
+
+
+func _rebuild_coastal_shortest_path_cache_for(neigh_src: Dictionary, lane_src: Dictionary, cache_out: Dictionary) -> void:
+	cache_out.clear()
 	if _port_names.is_empty():
 		return
 	for src_key in _port_names.keys():
@@ -4467,14 +4820,14 @@ func _rebuild_coastal_shortest_path_cache() -> void:
 			if pick.is_empty() or pick_dist >= 999999:
 				break
 			used[pick] = true
-			var neigh_raw: Variant = _port_neighbors.get(pick, null)
+			var neigh_raw: Variant = neigh_src.get(pick, null)
 			if typeof(neigh_raw) != TYPE_ARRAY:
 				continue
 			for nb in neigh_raw as Array:
 				var nx: String = str(nb)
 				if bool(used.get(nx, false)):
 					continue
-				var wgt: int = _voyage_lane_weight_undirected(pick, nx)
+				var wgt: int = _voyage_lane_weight_undirected_for(lane_src, pick, nx)
 				if wgt < 0:
 					continue
 				var alt: int = pick_dist + wgt
@@ -4486,15 +4839,35 @@ func _rebuild_coastal_shortest_path_cache() -> void:
 				continue
 			var fin: int = int(best.get(dst, 999999))
 			if fin >= 999999:
-				_voyage_coastal_shortest_cache[_lane_key(src, dst)] = -1
+				cache_out[_lane_key(src, dst)] = -1
 			else:
-				_voyage_coastal_shortest_cache[_lane_key(src, dst)] = fin
+				cache_out[_lane_key(src, dst)] = fin
+
+
+func _rebuild_coastal_shortest_path_cache() -> void:
+	_rebuild_coastal_shortest_path_cache_for(_port_neighbors, _lane_days, _voyage_coastal_shortest_cache)
+
+
+func _rebuild_coastal_shortest_path_cache_npc() -> void:
+	_voyage_coastal_shortest_cache_npc.clear()
+	_port_neighbors_npc.clear()
+	if _npc_lane_days.is_empty():
+		return
+	_build_port_neighbors_from(_npc_lane_days, _port_neighbors_npc)
+	_rebuild_coastal_shortest_path_cache_for(_port_neighbors_npc, _npc_lane_days, _voyage_coastal_shortest_cache_npc)
 
 
 func _coastal_shortest_days_lookup(from_id: String, to_id: String) -> int:
 	var k: String = _lane_key(from_id, to_id)
 	if _voyage_coastal_shortest_cache.has(k):
 		return int(_voyage_coastal_shortest_cache[k])
+	return 999999
+
+
+func _coastal_shortest_days_lookup_npc(from_id: String, to_id: String) -> int:
+	var k: String = _lane_key(from_id, to_id)
+	if _voyage_coastal_shortest_cache_npc.has(k):
+		return int(_voyage_coastal_shortest_cache_npc[k])
 	return 999999
 
 
@@ -4508,12 +4881,20 @@ func _voyage_route_choice_roll(from_id: String, to_id: String) -> float:
 	return float(u) / 1000003.0
 
 
-func _voyage_plan(from_id: String, to_id: String, risk_aversion_01: float) -> Dictionary:
+func _voyage_plan(from_id: String, to_id: String, risk_aversion_01: float, use_npc_graph: bool = false) -> Dictionary:
 	var ra: float = clampf(risk_aversion_01, 0.0, 1.0)
-	var D_c: int = _coastal_shortest_days_lookup(from_id, to_id)
+	var use_npc: bool = use_npc_graph and not _npc_lane_days.is_empty()
+	var D_c: int
+	var lane_fb: Dictionary
+	if use_npc:
+		D_c = _coastal_shortest_days_lookup_npc(from_id, to_id)
+		lane_fb = _npc_lane_days
+	else:
+		D_c = _coastal_shortest_days_lookup(from_id, to_id)
+		lane_fb = _lane_days
 	var disconnected: bool = D_c < 0 or D_c >= 500000
 	if disconnected:
-		var md: int = _voyage_max_lane_weight()
+		var md: int = _voyage_max_lane_weight_for(lane_fb)
 		var dd: int = clampi(_VOYAGE_DISCONNECTED_BASE_DAYS + md, 10, 48)
 		return {"days": dd, "open_01": 0.92, "route_label": "open sea"}
 	var D_b: int = D_c
@@ -4835,7 +5216,10 @@ func _load_world(path: String) -> void:
 	_port_names.clear()
 	_port_map_uv.clear()
 	_lane_days.clear()
+	_npc_lane_days.clear()
 	_voyage_coastal_shortest_cache.clear()
+	_voyage_coastal_shortest_cache_npc.clear()
+	_port_neighbors_npc.clear()
 	_port_initial_stock.clear()
 	_port_npc_trader_count.clear()
 	_port_population_grain.clear()
@@ -4847,9 +5231,15 @@ func _load_world(path: String) -> void:
 	_port_consecutive_grain_full_ration_days.clear()
 	_port_consecutive_grain_zero_eat_days.clear()
 	_port_prosperity_streak_days.clear()
+	_port_rationing_active.clear()
+	_port_rationing_days_active.clear()
+	_port_preserved_food.clear()
 	_port_initial_wealth.clear()
 	_port_role_wealth_bonus.clear()
 	_port_roles.clear()
+	_port_existential_war_burst_days.clear()
+	_port_baseline_momentum_up.clear()
+	_port_baseline_momentum_dn.clear()
 	_port_war_days_remaining.clear()
 	_port_war_recurring.clear()
 	_port_war_peace_remaining.clear()
@@ -4892,6 +5282,9 @@ func _load_world(path: String) -> void:
 	_next_used_hull_listing_id = 1
 	_port_shipyard_classes.clear()
 	_port_cultures.clear()
+	_chart_area_labels.clear()
+	_chart_area_notes.clear()
+	_port_chart_area_id.clear()
 	var text := FileAccess.get_file_as_string(path)
 	if text.is_empty():
 		push_error("HarboursOfPower: missing or empty world file: %s" % path)
@@ -4951,6 +5344,19 @@ func _load_world(path: String) -> void:
 	if typeof(prb_raw) == TYPE_DICTIONARY:
 		for rk in (prb_raw as Dictionary).keys():
 			role_bonuses[str(rk)] = maxi(0, int((prb_raw as Dictionary)[rk]))
+	var chart_raw: Variant = doc.get("chart_areas", null)
+	if typeof(chart_raw) == TYPE_ARRAY:
+		for ca in chart_raw as Array:
+			if typeof(ca) != TYPE_DICTIONARY:
+				continue
+			var cad: Dictionary = ca as Dictionary
+			var caid := str(cad.get("id", ""))
+			if caid.is_empty():
+				continue
+			_chart_area_labels[caid] = str(cad.get("name", caid))
+			var desc: String = str(cad.get("description", cad.get("note", "")))
+			if not desc.is_empty():
+				_chart_area_notes[caid] = desc
 	for p in doc.get("ports", []):
 		if typeof(p) != TYPE_DICTIONARY:
 			continue
@@ -4989,6 +5395,18 @@ func _load_world(path: String) -> void:
 		if not role_s.is_empty() and role_bonuses.has(role_s):
 			rbonus = int(role_bonuses[role_s])
 		_port_role_wealth_bonus[pid] = rbonus
+		var chart_aid := str(pd.get("chart_area_id", ""))
+		if chart_aid.is_empty():
+			chart_aid = str(pd.get("chart_area", ""))
+		if chart_aid.is_empty():
+			chart_aid = _LEDGER_CHART_AREA_FALLBACK
+		_port_chart_area_id[pid] = chart_aid
+		var exb_raw: Variant = pd.get("population_existential_war_burst_days", _POP_EXISTENTIAL_WAR_BURST_OFF)
+		var exb: int = clampi(int(exb_raw), 1, _POP_EXISTENTIAL_WAR_BURST_OFF)
+		if exb < _POP_EXISTENTIAL_WAR_BURST_OFF:
+			_port_existential_war_burst_days[pid] = exb
+		else:
+			_port_existential_war_burst_days.erase(pid)
 		var war_here: bool = bool(pd.get("at_war", false))
 		var war_len: int = clampi(int(pd.get("war_days", _WAR_DEFAULT_DAYS)), 1, 200)
 		_port_war_days_remaining[pid] = war_len if war_here else 0
@@ -5055,6 +5473,16 @@ func _load_world(path: String) -> void:
 		if a.is_empty() or b.is_empty() or days < 0:
 			continue
 		_lane_days[_lane_key(a, b)] = days
+	for nl in doc.get("npc_lanes", []):
+		if typeof(nl) != TYPE_DICTIONARY:
+			continue
+		var nld: Dictionary = nl as Dictionary
+		var na: String = str(nld.get("from", ""))
+		var nb: String = str(nld.get("to", ""))
+		var ndays: int = maxi(1, int(round(float(nld.get("days", 1)))))
+		if na.is_empty() or nb.is_empty():
+			continue
+		_npc_lane_days[_lane_key(na, nb)] = ndays
 	for fr in doc.get("farms", []):
 		if typeof(fr) != TYPE_DICTIONARY:
 			continue
@@ -5137,10 +5565,16 @@ func _load_world(path: String) -> void:
 			_port_trade_price_bias[ps] = {}
 		if not _port_market_demand_override.has(ps):
 			_port_market_demand_override[ps] = {}
+		if not _port_chart_area_id.has(ps):
+			_port_chart_area_id[ps] = _LEDGER_CHART_AREA_FALLBACK
+		var aref: String = str(_port_chart_area_id[ps])
+		if not _chart_area_labels.has(aref):
+			_chart_area_labels[aref] = "Unknown chart (%s)" % aref
 		_init_port_demographics_from_world()
 		_init_port_crop_agro_state()
 		_build_port_neighbors()
 		_rebuild_coastal_shortest_path_cache()
+		_rebuild_coastal_shortest_path_cache_npc()
 		_bootstrap_recurring_war_timers()
 		_ensure_used_hull_listings_for_all_ports()
 		_ensure_sim_agent_port_defaults()
@@ -5692,7 +6126,7 @@ func _npc_voyage_facing_params(agent: Dictionary, here: String, dest: String) ->
 	if here.is_empty() or dest.is_empty() or not _port_names.has(here) or not _port_names.has(dest):
 		return {}
 	_ensure_npc_risk_aversion(agent)
-	var plan: Dictionary = _voyage_plan(here, dest, clampf(float(agent.get("risk_aversion", 0.5)), 0.0, 1.0))
+	var plan: Dictionary = _voyage_plan(here, dest, clampf(float(agent.get("risk_aversion", 0.5)), 0.0, 1.0), true)
 	var d: int = int(plan.get("days", -1))
 	if d < 0:
 		return {}
@@ -7894,7 +8328,7 @@ func _npc_depart_dest_contract_bias(ag: Dictionary, here: String, dest: String) 
 		p_stick += 0.20
 	if slack <= 7:
 		p_stick += 0.14
-	var plan: Dictionary = _voyage_plan(here, cdest, float(ag.get("risk_aversion", 0.5)))
+	var plan: Dictionary = _voyage_plan(here, cdest, float(ag.get("risk_aversion", 0.5)), true)
 	var est_d: int = maxi(1, int(plan.get("days", 4)))
 	if slack <= est_d + 2:
 		p_stick += 0.12
@@ -8670,15 +9104,52 @@ func _run_daily_population_and_npcs() -> void:
 	_agent_production_tick_farms_mines_slaves()
 	for pid in _port_names.keys():
 		_refresh_port_wealth(str(pid))
+	var doy_pop: int = get_calendar_day_of_year()
+	var forage_today: int = _summer_forage_mouths_for_doy(doy_pop)
 	for pid in _port_names.keys():
 		var pid_s := str(pid)
-		var eaten_g: int = 0
 		var eat: int = get_population_grain_eat_effective(pid_s)
-		if eat > 0 and _goods.has("grain"):
-			var ghave: int = _port_stock_qty(pid_s, "grain")
-			eaten_g = mini(eat, ghave)
+		var ghave: int = _port_stock_qty(pid_s, "grain") if _goods.has("grain") else 0
+		var food_days_pre: float = 9999.0
+		if eat > 0:
+			food_days_pre = float(ghave) / float(eat)
+		var rationing: bool = bool(_port_rationing_active.get(pid_s, false))
+		var rationing_days: int = clampi(int(_port_rationing_days_active.get(pid_s, 0)), 0, 999)
+		if rationing:
+			rationing_days = mini(999, rationing_days + 1)
+			if food_days_pre > _RATION_END_FOOD_DAYS or rationing_days > _RATION_MAX_DAYS:
+				rationing = false
+				rationing_days = 0
+		elif eat > 0 and food_days_pre < _RATION_TRIGGER_FOOD_DAYS:
+			rationing = true
+			rationing_days = 1
+		_port_rationing_active[pid_s] = rationing
+		_port_rationing_days_active[pid_s] = rationing_days
+		var eat_today: int = eat
+		if rationing and eat > 0:
+			eat_today = mini(eat, maxi(_RATION_BITE_MIN, int(round(float(eat) * _RATION_BITE_FRAC))))
+		var eaten_g: int = 0
+		if eat_today > 0 and _goods.has("grain"):
+			eaten_g = mini(eat_today, ghave)
 			if eaten_g > 0:
 				_adjust_port_stock(pid_s, "grain", -eaten_g)
+		var preserved_used: int = 0
+		var shortfall: int = maxi(0, eat - eaten_g)
+		if shortfall > 0:
+			var avail_p: float = float(_port_preserved_food.get(pid_s, 0.0))
+			if avail_p >= 1.0:
+				var take: int = mini(shortfall, int(floor(avail_p)))
+				if take > 0:
+					preserved_used = take
+					_port_preserved_food[pid_s] = avail_p - float(take)
+		if rationing:
+			var u_now: int = clampi(int(_port_food_unrest.get(pid_s, 0)), 0, 200)
+			_port_food_unrest[pid_s] = clampi(u_now + _RATION_UNREST_TICK, 0, 200)
+		if eat > 0 and food_days_pre >= _PRESERVED_FOOD_FILL_FOODDAYS_MIN:
+			var cur_p: float = float(_port_preserved_food.get(pid_s, 0.0))
+			var cap_p: float = float(_preserved_food_cap_for_port(pid_s))
+			if cur_p < cap_p:
+				_port_preserved_food[pid_s] = clampf(cur_p + _PRESERVED_FOOD_FILL_PER_DAY, 0.0, cap_p)
 		var eaten_w: int = 0
 		if _goods.has("wine"):
 			var w_base: int = int(_port_population_wine_base.get(pid_s, 1))
@@ -8697,7 +9168,14 @@ func _run_daily_population_and_npcs() -> void:
 				eaten_f = mini(want_f, fhave)
 				if eaten_f > 0:
 					_adjust_port_stock(pid_s, "fish", -eaten_f)
-		_last_pop_digest[pid_s] = {"grain": eaten_g, "wine": eaten_w, "fish": eaten_f}
+		_last_pop_digest[pid_s] = {
+			"grain": eaten_g,
+			"wine": eaten_w,
+			"fish": eaten_f,
+			"preserved": preserved_used,
+			"forage": forage_today,
+			"rationing": 1 if rationing else 0,
+		}
 	_agent_industry_and_war_materiel_tick()
 	_replenish_wine_vineyards_after_bites()
 	for item in _npc_agents:
@@ -9053,6 +9531,30 @@ func _deserialize_port_prosperity_streak_days(data: Dictionary) -> void:
 		_port_prosperity_streak_days[pid] = clampi(int(data[pk]), 0, 999)
 
 
+func _serialize_port_rationing_active() -> Dictionary:
+	var out: Dictionary = {}
+	for pid in _port_names.keys():
+		out[str(pid)] = 1 if bool(_port_rationing_active.get(str(pid), false)) else 0
+	return out
+
+
+func _deserialize_port_rationing_active(data: Dictionary) -> void:
+	for pk in data.keys():
+		var pid := str(pk)
+		if not _port_names.has(pid):
+			continue
+		_port_rationing_active[pid] = int(data[pk]) != 0
+
+
+func _deserialize_port_preserved_food(data: Dictionary) -> void:
+	for pk in data.keys():
+		var pid := str(pk)
+		if not _port_names.has(pid):
+			continue
+		var cap_p: float = float(_preserved_food_cap_for_port(pid))
+		_port_preserved_food[pid] = clampf(float(data[pk]), 0.0, cap_p)
+
+
 func _ensure_port_demographics_post_load() -> void:
 	for pid in _port_names.keys():
 		var ps := str(pid)
@@ -9074,6 +9576,17 @@ func _ensure_port_demographics_post_load() -> void:
 			_port_prosperity_streak_days[ps] = 0
 		if not _port_population_fish_per_day.has(ps):
 			_port_population_fish_per_day[ps] = 0
+		if not _port_rationing_active.has(ps):
+			_port_rationing_active[ps] = false
+		if not _port_rationing_days_active.has(ps):
+			_port_rationing_days_active[ps] = 0
+		if not _port_baseline_momentum_up.has(ps):
+			_port_baseline_momentum_up[ps] = 0
+		if not _port_baseline_momentum_dn.has(ps):
+			_port_baseline_momentum_dn[ps] = 0
+		if not _port_preserved_food.has(ps):
+			var cap_p: float = float(_preserved_food_cap_for_port(ps))
+			_port_preserved_food[ps] = cap_p * _PRESERVED_FOOD_INITIAL_FRAC
 		var capv: int = clampi(int(_port_population_grain_cap.get(ps, 120)), 1, 120)
 		if capv < p0:
 			_port_population_grain_cap[ps] = mini(120, p0 + _POP_GRAIN_CEILING_BOOST)
@@ -9123,6 +9636,12 @@ func _init_port_demographics_from_world() -> void:
 		_port_consecutive_grain_full_ration_days[ps] = 0
 		_port_consecutive_grain_zero_eat_days[ps] = 0
 		_port_prosperity_streak_days[ps] = 0
+		_port_rationing_active[ps] = false
+		_port_rationing_days_active[ps] = 0
+		_port_baseline_momentum_up[ps] = 0
+		_port_baseline_momentum_dn[ps] = 0
+		var cap_pres: float = float(_preserved_food_cap_for_port(ps))
+		_port_preserved_food[ps] = cap_pres * _PRESERVED_FOOD_INITIAL_FRAC
 
 
 func _ensure_port_meal_streak_counters_post_load() -> void:
@@ -9132,6 +9651,63 @@ func _ensure_port_meal_streak_counters_post_load() -> void:
 			_port_consecutive_grain_full_ration_days[ps] = 0
 		if not _port_consecutive_grain_zero_eat_days.has(ps):
 			_port_consecutive_grain_zero_eat_days[ps] = 0
+
+
+## Per-port preserved-foods reserve cap (mouth-days). Scales with the founding cohort so
+## larger cities have more "iron rations" warehoused. Sync tools/sim_100_days.py.
+func _preserved_food_cap_for_port(port_id: String) -> int:
+	var ps := str(port_id)
+	var b: int = maxi(1, int(_port_population_grain_baseline.get(ps, 1)))
+	return maxi(_PRESERVED_FOOD_CAP_MIN, b * _PRESERVED_FOOD_CAP_MULT)
+
+
+## Minimum institutional baseline by port role (baseline cannot drift below this). Sync sim.
+func _population_baseline_floor_for_port(port_id: String) -> int:
+	var rl: String = str(_port_roles.get(str(port_id), ""))
+	if rl == "metropole" or rl == "great_city":
+		return 7
+	if rl == "imperial_port":
+		return 6
+	if rl == "regional_capital" or rl == "breadbasket":
+		return 5
+	return _POP_GRAIN_FLOOR
+
+
+func _recompute_population_grain_cap_for_port(port_id: String) -> void:
+	var ps := str(port_id)
+	if not _port_names.has(ps):
+		return
+	var base: int = clampi(int(_port_population_grain_baseline.get(ps, 1)), 1, 120)
+	var popv: int = clampi(int(_port_population_grain.get(ps, 0)), 0, 120)
+	var cap_calc: int = mini(120, maxi(base + _POP_GRAIN_CEILING_BOOST, int(ceil(float(base) * 1.48))))
+	_port_population_grain_cap[ps] = mini(120, maxi(cap_calc, popv + 1))
+
+
+## Siege / existential campaign: harsher famine cadence when this war’s burst is long enough (per-port threshold in world.json).
+func _famine_streak_to_loss_for_port(port_id: String) -> int:
+	var ps := str(port_id)
+	var th: int = clampi(int(_port_existential_war_burst_days.get(ps, _POP_EXISTENTIAL_WAR_BURST_OFF)), 1, _POP_EXISTENTIAL_WAR_BURST_OFF)
+	if th >= _POP_EXISTENTIAL_WAR_BURST_OFF:
+		return _POP_FAMINE_STREAK_TO_LOSS
+	if not is_port_at_war(ps):
+		return _POP_FAMINE_STREAK_TO_LOSS
+	var burst0: int = maxi(1, int(_port_war_burst_initial.get(ps, get_port_war_days_remaining(ps))))
+	if burst0 < th:
+		return _POP_FAMINE_STREAK_TO_LOSS
+	return maxi(8, int(ceil(float(_POP_FAMINE_STREAK_TO_LOSS) * 0.5)))
+
+
+## Summer foraging supplement (virtual mouths/day, never touches stock). Half-sine over
+## the foraging window so May/June peaks taper into autumn. Sync tools/sim_100_days.py.
+func _summer_forage_mouths_for_doy(doy: int) -> int:
+	if doy < _FORAGE_SUMMER_START_DOY or doy > _FORAGE_SUMMER_END_DOY:
+		return 0
+	var width: float = float(_FORAGE_SUMMER_END_DOY - _FORAGE_SUMMER_START_DOY)
+	if width <= 0.0:
+		return 0
+	var t: float = (float(doy) - float(_FORAGE_SUMMER_START_DOY)) / width
+	var v: float = _FORAGE_SUMMER_PEAK_MOUTHS * sin(PI * t)
+	return clampi(int(round(v)), 0, int(round(_FORAGE_SUMMER_PEAK_MOUTHS)))
 
 
 func _population_output_scale_for_port(port_id: String) -> float:
@@ -9156,18 +9732,19 @@ func _tick_population_demographics() -> void:
 		var u: int = clampi(int(_port_food_unrest.get(ps, 0)), 0, 200)
 		var eat_need: int = get_population_grain_eat_effective(ps)
 		var dig: Variant = _last_pop_digest.get(ps, null)
-		var eaten_g: int = 0
+		var eaten_eff: int = 0
 		if typeof(dig) == TYPE_DICTIONARY:
-			eaten_g = int((dig as Dictionary).get("grain", 0))
+			var dd: Dictionary = dig as Dictionary
+			eaten_eff = int(dd.get("grain", 0)) + int(dd.get("preserved", 0)) + int(dd.get("forage", 0))
 		var full_d: int = clampi(int(_port_consecutive_grain_full_ration_days.get(ps, 0)), 0, 999)
 		var zero_d: int = clampi(int(_port_consecutive_grain_zero_eat_days.get(ps, 0)), 0, 999)
 		if eat_need <= 0:
 			full_d = 0
 			zero_d = 0
-		elif eaten_g >= eat_need:
+		elif eaten_eff >= eat_need:
 			full_d = mini(999, full_d + 1)
 			zero_d = 0
-		elif eaten_g <= 0:
+		elif eaten_eff <= 0:
 			zero_d = mini(999, zero_d + 1)
 			full_d = 0
 		else:
@@ -9175,6 +9752,16 @@ func _tick_population_demographics() -> void:
 			zero_d = 0
 		_port_consecutive_grain_full_ration_days[ps] = full_d
 		_port_consecutive_grain_zero_eat_days[ps] = zero_d
+		var base_ln: int = maxi(1, int(_port_population_grain_baseline.get(ps, 1)))
+		if eat0 >= int(ceil(float(base_ln) * _POP_BASELINE_RISE_FRAC)) and fd >= 1.85 and u < 96:
+			_port_baseline_momentum_up[ps] = mini(999, int(_port_baseline_momentum_up.get(ps, 0)) + 1)
+			_port_baseline_momentum_dn[ps] = 0
+		else:
+			_port_baseline_momentum_up[ps] = 0
+		if eat0 <= int(floor(float(base_ln) * _POP_BASELINE_FALL_FRAC)) and (u > 112 or zero_d >= 6):
+			_port_baseline_momentum_dn[ps] = mini(999, int(_port_baseline_momentum_dn.get(ps, 0)) + 1)
+		else:
+			_port_baseline_momentum_dn[ps] = 0
 		var harsh: bool = (
 			(eat_need > 0 and zero_d >= _POP_FAMINE_HARSH_CONSEC_ZERO_GRAIN_DAYS)
 			or u >= _POP_FAMINE_HARSH_UNREST_MIN
@@ -9188,29 +9775,50 @@ func _tick_population_demographics() -> void:
 		else:
 			fs = maxi(0, fs - 1)
 		_port_famine_streak_days[ps] = fs
-		if fs >= _POP_FAMINE_STREAK_TO_LOSS and eat0 > _POP_GRAIN_FLOOR:
+		var streak_need: int = _famine_streak_to_loss_for_port(ps)
+		if fs >= streak_need and eat0 > _POP_GRAIN_FLOOR:
 			_port_population_grain[ps] = eat0 - 1
 			_port_famine_streak_days[ps] = _POP_FAMINE_STREAK_RESET
 			changed = true
 		eat0 = clampi(int(_port_population_grain.get(ps, 0)), 0, 120)
+		base_ln = maxi(1, int(_port_population_grain_baseline.get(ps, 1)))
+		if int(_port_baseline_momentum_up.get(ps, 0)) >= _POP_BASELINE_RISE_DAYS and base_ln < 120:
+			_port_population_grain_baseline[ps] = base_ln + 1
+			_port_baseline_momentum_up[ps] = 0
+			_recompute_population_grain_cap_for_port(ps)
+			changed = true
+			base_ln = int(_port_population_grain_baseline.get(ps, 1))
+		if int(_port_baseline_momentum_dn.get(ps, 0)) >= _POP_BASELINE_FALL_DAYS:
+			var floor_b: int = _population_baseline_floor_for_port(ps)
+			if base_ln > floor_b:
+				_port_population_grain_baseline[ps] = base_ln - 1
+				_port_baseline_momentum_dn[ps] = 0
+				_recompute_population_grain_cap_for_port(ps)
+				changed = true
+				base_ln = int(_port_population_grain_baseline.get(ps, 1))
 		var wv: int = int(_port_wealth.get(ps, 50))
 		var att: int = _wealth_stock_target_for_port(ps)
 		var pulse0: float = clampf(float(_port_commerce_pulse.get(ps, 0.38)), 0.0, 1.0)
 		var commerce_poor: bool = (
-			pulse0 < _COMMERCE_POOR_PULSE and float(wv) < float(maxi(1, att)) * 1.08
+			pulse0 < _COMMERCE_POOR_PULSE and float(wv) < float(maxi(1, att)) * 0.95
 		)
-		var wealthy: bool = float(wv) > float(maxi(1, att)) * 1.11 and fd >= 3.2 and u < 50
+		var wealthy: bool = float(wv) > float(maxi(1, att)) * 1.04 and fd >= 2.4 and u < 65
 		var poor: bool = (
-			float(wv) < float(maxi(1, att)) * 1.02
-			or fd < 2.1
+			float(wv) < float(maxi(1, att)) * 0.92
+			or fd < 1.5
 			or u > _POP_PROSPERITY_POOR_UNREST_EXCEEDS
 			or commerce_poor
 		)
 		var psr: int = clampi(int(_port_prosperity_streak_days.get(ps, 0)), 0, 999)
 		if wealthy:
-			psr = mini(999, psr + 1)
+			var inc: int = 1
+			var baseline_eat: int = maxi(1, int(_port_population_grain_baseline.get(ps, 1)))
+			if eat0 < baseline_eat:
+				var gap_frac: float = float(baseline_eat - eat0) / float(baseline_eat)
+				inc += int(floor(gap_frac * float(_POP_MIGRATION_PULL)))
+			psr = mini(999, psr + inc)
 		elif poor:
-			psr = 0
+			psr = maxi(0, psr - _POP_PROSPERITY_POOR_DECAY)
 		else:
 			psr = maxi(0, psr - 1)
 		_port_prosperity_streak_days[ps] = psr

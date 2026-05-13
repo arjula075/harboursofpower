@@ -22,6 +22,7 @@ _CROP_INFO_* / _CROP_RUMOR_* (Phase 3–4: inbound crop reports + Sicilian rumor
 _WAR_PEACE_* (post-war food calm),
 _CAPTAIN_TRADE_FEE_* (dock trade coin friction), _HARBOUR_DUE_* / _HARBOUR_BUSY_* / _HARBOUR_WEALTH_PER_COINS_PAID (harbour dues → port prosperity, busier quay bonus),
 _NPC_DEPART_STAY_GATE, _MERCHANT_HOME_COUNT_STEP_MAX, _COMMERCE_PULSE_PREV_FLOOR, world.json autonomy_warmup_days (Sim.load / GameState deferred warmup), optional root `npc_city_grain_contracts_enabled` (Phase 0 NPC civic grain contracts),
+optional `npc_lanes` sparse directed graph: when present, NPC merchant / convoy `_voyage_plan` uses coastal shortest paths on that graph; player voyages still use full `lanes` mesh.
 _NPC_TRAIT_* (Big Five–style fields + depart/memory/lot/dust/agree wholesale hooks),
 _NPC convoy Phase 2–4 + Phase 5 player-at-sea pirate checks (merchant role; twin counters) must match game_state.gd.
 _SCATTERED_IDS_DECAY_DAILY_P / _NPC_CONTACT_BIAS_DOCKED_DECAY_MULT (convoy tail + docked contact-bias decay).
@@ -190,14 +191,39 @@ _POP_GRAIN_FLOOR = 4
 _POP_GRAIN_CEILING_BOOST = 22
 _POP_FAMINE_STREAK_TO_LOSS = 24
 _POP_FAMINE_STREAK_RESET = 8
-_POP_FAMINE_HARSH_CONSEC_ZERO_GRAIN_DAYS = 6
+_POP_FAMINE_HARSH_CONSEC_ZERO_GRAIN_DAYS = 9
 _POP_FAMINE_CALM_CONSEC_FULL_RATION_DAYS = 2
-_POP_FAMINE_HARSH_UNREST_MIN = 92
-_POP_PROSPERITY_STREAK_TO_GAIN = 52
-_POP_PROSPERITY_STREAK_RESET = 26
-_POP_PROSPERITY_POOR_UNREST_EXCEEDS = 88
+_POP_FAMINE_HARSH_UNREST_MIN = 118
+_POP_PROSPERITY_STREAK_TO_GAIN = 30
+_POP_PROSPERITY_STREAK_RESET = 14
+_POP_PROSPERITY_POOR_UNREST_EXCEEDS = 118
+_POP_PROSPERITY_POOR_DECAY = 4
+## Iron-age rural→urban migration pull (see comment in game_state.gd). Keep in sync.
+_POP_MIGRATION_PULL = 4
 _POP_OUTPUT_SCALE_MIN = 0.72
 _POP_OUTPUT_SCALE_MAX = 1.28
+## Civic grain rationing (resilience helper A). Keep in sync with game_state.gd.
+_RATION_TRIGGER_FOOD_DAYS = 5.0
+_RATION_END_FOOD_DAYS = 11.0
+_RATION_BITE_FRAC = 0.62
+_RATION_BITE_MIN = 2
+_RATION_UNREST_TICK = 2
+_RATION_MAX_DAYS = 75
+## Summer foraging (resilience helper B). Keep in sync with game_state.gd.
+_FORAGE_SUMMER_START_DOY = 100
+_FORAGE_SUMMER_END_DOY = 235
+_FORAGE_SUMMER_PEAK_MOUTHS = 4.0
+## Preserved-foods reserve (resilience helper D). Keep in sync with game_state.gd.
+_PRESERVED_FOOD_CAP_MULT = 8
+_PRESERVED_FOOD_CAP_MIN = 24
+_PRESERVED_FOOD_FILL_FOODDAYS_MIN = 45.0
+_PRESERVED_FOOD_FILL_PER_DAY = 0.4
+_PRESERVED_FOOD_INITIAL_FRAC = 0.5
+_POP_BASELINE_RISE_FRAC = 0.88
+_POP_BASELINE_RISE_DAYS = 110
+_POP_BASELINE_FALL_FRAC = 0.58
+_POP_BASELINE_FALL_DAYS = 100
+_POP_EXISTENTIAL_WAR_BURST_OFF = 999
 ## Trireme crew + maintenance (player idle twin). Keep in sync with game_state.gd.
 _SHIP_CREW_WINE_EVERY_N_DAYS = 7
 _SHIP_OFFICER_PAY_DAILY = 1
@@ -367,7 +393,7 @@ _ESCORT_PAY_MIN = 12
 _ESCORT_PAY_MAX = 320
 _ESCORT_HULL_FAST_VOYAGE_MULT = 0.94
 ## Sim tick agents (commerce / rumours / cartels / plague). Keep in sync with autoload/sim_tick_agents.gd + game_state.gd.
-_COMMERCE_POOR_PULSE = 0.19
+_COMMERCE_POOR_PULSE = 0.10
 _COMMERCE_DOCKED_REF = 10.0
 _COMMERCE_HARBOUR_COINS_REF = 120.0
 _COMMERCE_UNITS_REF = 80.0
@@ -518,9 +544,15 @@ class Sim:
         self.port_consecutive_grain_full_ration_days: dict[str, int] = {}
         self.port_consecutive_grain_zero_eat_days: dict[str, int] = {}
         self.port_prosperity_streak_days: dict[str, int] = {}
+        self.port_rationing_active: dict[str, bool] = {}
+        self.port_rationing_days_active: dict[str, int] = {}
+        self.port_preserved_food: dict[str, float] = {}
         self.port_initial_wealth: dict[str, int] = {}
         self.port_role_wealth_bonus: dict[str, int] = {}
         self.port_roles: dict[str, str] = {}
+        self.port_existential_war_burst_days: dict[str, int] = {}
+        self.port_baseline_momentum_up: dict[str, int] = {}
+        self.port_baseline_momentum_dn: dict[str, int] = {}
         self.port_wealth: dict[str, int] = {}
         self.farms: list[dict] = []
         self.mines: list[dict] = []
@@ -528,8 +560,11 @@ class Sim:
         self.world_treasury_coins: int = 0
         self.world_initial_treasury: int = 0
         self.lane_days: dict[str, int] = {}
+        self.npc_lane_days: dict[str, int] = {}
         self.port_neighbors: dict[str, list[str]] = {}
+        self.port_neighbors_npc: dict[str, list[str]] = {}
         self._voyage_coastal_shortest_cache: dict[str, int] = {}
+        self._voyage_coastal_shortest_cache_npc: dict[str, int] = {}
         self.goods: dict[str, dict] = {}
         self.npc_agents: list[dict] = []
         self.npc_next_id = 0
@@ -703,6 +738,11 @@ class Sim:
                 self._luxury_import_cfg["treasury_take_frac"] = clampf(float(lid["treasury_take_frac"]), 0.0, 0.95)
         self.port_role_wealth_bonus.clear()
         self.port_roles.clear()
+        self.port_existential_war_burst_days.clear()
+        self.port_baseline_momentum_up.clear()
+        self.port_baseline_momentum_dn.clear()
+        self.port_order.clear()
+        self.port_names.clear()
         for p in world.get("ports", []):
             pid = str(p["id"])
             self.port_order.append(pid)
@@ -720,6 +760,12 @@ class Sim:
             if role_s:
                 self.port_roles[pid] = role_s
             self.port_role_wealth_bonus[pid] = role_bonuses.get(role_s, 0) if role_s else 0
+            exb_raw = p.get("population_existential_war_burst_days", _POP_EXISTENTIAL_WAR_BURST_OFF)
+            exb = clampi(int(exb_raw), 1, _POP_EXISTENTIAL_WAR_BURST_OFF)
+            if exb < _POP_EXISTENTIAL_WAR_BURST_OFF:
+                self.port_existential_war_burst_days[pid] = exb
+            else:
+                self.port_existential_war_burst_days.pop(pid, None)
             war_here = bool(p.get("at_war", False))
             war_len = clampi(int(p.get("war_days", _WAR_DEFAULT_DAYS)), 1, 200)
             self.port_war_days_remaining[pid] = war_len if war_here else 0
@@ -778,11 +824,20 @@ class Sim:
                     "treasury_sink_frac": clampf(float(mint_raw.get("treasury_sink_frac", 0.09)), 0.0, 0.45),
                 }
         self._prune_port_good_tolls_to_known_goods()
+        self.lane_days.clear()
+        self.npc_lane_days.clear()
         for lane in world.get("lanes", []):
             a, b = str(lane["from"]), str(lane["to"])
             d = int(lane["days"])
             if a and b and d >= 0:
                 self.lane_days[lane_key(a, b)] = d
+        for nl in world.get("npc_lanes", []):
+            if not isinstance(nl, dict):
+                continue
+            na, nb = str(nl.get("from", "")), str(nl.get("to", ""))
+            nd = max(1, int(round(float(nl.get("days", 1)))))
+            if na and nb:
+                self.npc_lane_days[lane_key(na, nb)] = nd
         for fr in world.get("farms", []):
             self.farms.append(
                 {
@@ -825,6 +880,7 @@ class Sim:
                 self._port_shipyard_classes[pk] = [str(x) for x in v] if isinstance(v, list) else []
         self._build_port_neighbors()
         self._rebuild_coastal_shortest_path_cache()
+        self._rebuild_coastal_shortest_path_cache_npc()
         self._load_ship_catalog()
         self._finalize_port_stocks()
         self._bootstrap_npc_agents()
@@ -1095,6 +1151,58 @@ class Sim:
             self.port_consecutive_grain_full_ration_days[ps] = 0
             self.port_consecutive_grain_zero_eat_days[ps] = 0
             self.port_prosperity_streak_days[ps] = 0
+            self.port_rationing_active[ps] = False
+            self.port_rationing_days_active[ps] = 0
+            self.port_baseline_momentum_up[ps] = 0
+            self.port_baseline_momentum_dn[ps] = 0
+            cap_pres = float(self._preserved_food_cap_for_port(ps))
+            self.port_preserved_food[ps] = cap_pres * _PRESERVED_FOOD_INITIAL_FRAC
+
+    def _preserved_food_cap_for_port(self, port_id: str) -> int:
+        ps = str(port_id)
+        b = max(1, int(self.port_population_grain_baseline.get(ps, 1)))
+        return max(_PRESERVED_FOOD_CAP_MIN, b * _PRESERVED_FOOD_CAP_MULT)
+
+    def _population_baseline_floor_for_port(self, port_id: str) -> int:
+        rl = str(self.port_roles.get(str(port_id), ""))
+        if rl in ("metropole", "great_city"):
+            return 7
+        if rl == "imperial_port":
+            return 6
+        if rl in ("regional_capital", "breadbasket"):
+            return 5
+        return _POP_GRAIN_FLOOR
+
+    def _recompute_population_grain_cap_for_port(self, port_id: str) -> None:
+        ps = str(port_id)
+        if ps not in self.port_names:
+            return
+        base = clampi(int(self.port_population_grain_baseline.get(ps, 1)), 1, 120)
+        popv = clampi(int(self.port_population_grain.get(ps, 0)), 0, 120)
+        cap_calc = min(120, max(base + _POP_GRAIN_CEILING_BOOST, int(math.ceil(float(base) * 1.48))))
+        self.port_population_grain_cap[ps] = min(120, max(cap_calc, popv + 1))
+
+    def _famine_streak_to_loss_for_port(self, port_id: str) -> int:
+        ps = str(port_id)
+        th = clampi(int(self.port_existential_war_burst_days.get(ps, _POP_EXISTENTIAL_WAR_BURST_OFF)), 1, _POP_EXISTENTIAL_WAR_BURST_OFF)
+        if th >= _POP_EXISTENTIAL_WAR_BURST_OFF:
+            return _POP_FAMINE_STREAK_TO_LOSS
+        if not self.is_port_at_war(ps):
+            return _POP_FAMINE_STREAK_TO_LOSS
+        burst0 = max(1, int(self.port_war_burst_initial.get(ps, self.get_port_war_days_remaining(ps))))
+        if burst0 < th:
+            return _POP_FAMINE_STREAK_TO_LOSS
+        return max(8, int(math.ceil(float(_POP_FAMINE_STREAK_TO_LOSS) * 0.5)))
+
+    def _summer_forage_mouths_for_doy(self, doy: int) -> int:
+        if doy < _FORAGE_SUMMER_START_DOY or doy > _FORAGE_SUMMER_END_DOY:
+            return 0
+        width = float(_FORAGE_SUMMER_END_DOY - _FORAGE_SUMMER_START_DOY)
+        if width <= 0.0:
+            return 0
+        t = (float(doy) - float(_FORAGE_SUMMER_START_DOY)) / width
+        v = _FORAGE_SUMMER_PEAK_MOUTHS * math.sin(math.pi * t)
+        return clampi(int(round(v)), 0, int(round(_FORAGE_SUMMER_PEAK_MOUTHS)))
 
     def _population_output_scale_for_port(self, port_id: str) -> float:
         ps = str(port_id)
@@ -1116,16 +1224,19 @@ class Sim:
             u = clampi(int(self.port_food_unrest.get(ps, 0)), 0, 200)
             eat_need = self.get_population_grain_eat_effective(ps)
             dig = self.last_pop_digest.get(ps, {})
-            eaten_g = int(dig.get("grain", 0)) if isinstance(dig, dict) else 0
+            if isinstance(dig, dict):
+                eaten_eff = int(dig.get("grain", 0)) + int(dig.get("preserved", 0)) + int(dig.get("forage", 0))
+            else:
+                eaten_eff = 0
             full_d = clampi(int(self.port_consecutive_grain_full_ration_days.get(ps, 0)), 0, 999)
             zero_d = clampi(int(self.port_consecutive_grain_zero_eat_days.get(ps, 0)), 0, 999)
             if eat_need <= 0:
                 full_d = 0
                 zero_d = 0
-            elif eaten_g >= eat_need:
+            elif eaten_eff >= eat_need:
                 full_d = min(999, full_d + 1)
                 zero_d = 0
-            elif eaten_g <= 0:
+            elif eaten_eff <= 0:
                 zero_d = min(999, zero_d + 1)
                 full_d = 0
             else:
@@ -1133,6 +1244,16 @@ class Sim:
                 zero_d = 0
             self.port_consecutive_grain_full_ration_days[ps] = full_d
             self.port_consecutive_grain_zero_eat_days[ps] = zero_d
+            base_ln = max(1, int(self.port_population_grain_baseline.get(ps, 1)))
+            if eat0 >= int(math.ceil(float(base_ln) * _POP_BASELINE_RISE_FRAC)) and fd >= 1.85 and u < 96:
+                self.port_baseline_momentum_up[ps] = min(999, int(self.port_baseline_momentum_up.get(ps, 0)) + 1)
+                self.port_baseline_momentum_dn[ps] = 0
+            else:
+                self.port_baseline_momentum_up[ps] = 0
+            if eat0 <= int(math.floor(float(base_ln) * _POP_BASELINE_FALL_FRAC)) and (u > 112 or zero_d >= 6):
+                self.port_baseline_momentum_dn[ps] = min(999, int(self.port_baseline_momentum_dn.get(ps, 0)) + 1)
+            else:
+                self.port_baseline_momentum_dn[ps] = 0
             harsh = (eat_need > 0 and zero_d >= _POP_FAMINE_HARSH_CONSEC_ZERO_GRAIN_DAYS) or u >= _POP_FAMINE_HARSH_UNREST_MIN
             calm = (eat_need > 0 and full_d >= _POP_FAMINE_CALM_CONSEC_FULL_RATION_DAYS) and u < 38
             fs = clampi(int(self.port_famine_streak_days.get(ps, 0)), 0, 999)
@@ -1143,26 +1264,45 @@ class Sim:
             else:
                 fs = max(0, fs - 1)
             self.port_famine_streak_days[ps] = fs
-            if fs >= _POP_FAMINE_STREAK_TO_LOSS and eat0 > _POP_GRAIN_FLOOR:
+            streak_need = self._famine_streak_to_loss_for_port(ps)
+            if fs >= streak_need and eat0 > _POP_GRAIN_FLOOR:
                 self.port_population_grain[ps] = eat0 - 1
                 self.port_famine_streak_days[ps] = _POP_FAMINE_STREAK_RESET
             eat0 = clampi(int(self.port_population_grain.get(ps, 0)), 0, 120)
+            base_ln = max(1, int(self.port_population_grain_baseline.get(ps, 1)))
+            if int(self.port_baseline_momentum_up.get(ps, 0)) >= _POP_BASELINE_RISE_DAYS and base_ln < 120:
+                self.port_population_grain_baseline[ps] = base_ln + 1
+                self.port_baseline_momentum_up[ps] = 0
+                self._recompute_population_grain_cap_for_port(ps)
+                base_ln = int(self.port_population_grain_baseline.get(ps, 1))
+            if int(self.port_baseline_momentum_dn.get(ps, 0)) >= _POP_BASELINE_FALL_DAYS:
+                floor_b = self._population_baseline_floor_for_port(ps)
+                if base_ln > floor_b:
+                    self.port_population_grain_baseline[ps] = base_ln - 1
+                    self.port_baseline_momentum_dn[ps] = 0
+                    self._recompute_population_grain_cap_for_port(ps)
+                    base_ln = int(self.port_population_grain_baseline.get(ps, 1))
             wv = int(self.port_wealth.get(ps, 50))
             att = self._wealth_stock_target_for_port(ps)
             pulse0 = clampf(float(self.port_commerce_pulse.get(ps, 0.38)), 0.0, 1.0)
-            commerce_poor = pulse0 < _COMMERCE_POOR_PULSE and float(wv) < float(max(1, att)) * 1.08
-            wealthy = float(wv) > float(max(1, att)) * 1.11 and fd >= 3.2 and u < 50
+            commerce_poor = pulse0 < _COMMERCE_POOR_PULSE and float(wv) < float(max(1, att)) * 0.95
+            wealthy = float(wv) > float(max(1, att)) * 1.04 and fd >= 2.4 and u < 65
             poor = (
-                float(wv) < float(max(1, att)) * 1.02
-                or fd < 2.1
+                float(wv) < float(max(1, att)) * 0.92
+                or fd < 1.5
                 or u > _POP_PROSPERITY_POOR_UNREST_EXCEEDS
                 or commerce_poor
             )
             psr = clampi(int(self.port_prosperity_streak_days.get(ps, 0)), 0, 999)
             if wealthy:
-                psr = min(999, psr + 1)
+                inc = 1
+                baseline_eat = max(1, int(self.port_population_grain_baseline.get(ps, 1)))
+                if eat0 < baseline_eat:
+                    gap_frac = float(baseline_eat - eat0) / float(baseline_eat)
+                    inc += int(math.floor(gap_frac * float(_POP_MIGRATION_PULL)))
+                psr = min(999, psr + inc)
             elif poor:
-                psr = 0
+                psr = max(0, psr - _POP_PROSPERITY_POOR_DECAY)
             else:
                 psr = max(0, psr - 1)
             self.port_prosperity_streak_days[ps] = psr
@@ -1415,36 +1555,50 @@ class Sim:
             ag["buy_mastery"] = sk["buy"]
             ag["sell_mastery"] = sk["sell"]
 
-    def _append_unique_neighbor(self, port_id: str, neighbor_id: str) -> None:
-        self.port_neighbors.setdefault(port_id, [])
-        arr = self.port_neighbors[port_id]
+    def _append_unique_neighbor_to(self, neigh_out: dict[str, list[str]], port_id: str, neighbor_id: str) -> None:
+        neigh_out.setdefault(port_id, [])
+        arr = neigh_out[port_id]
         if neighbor_id not in arr:
             arr.append(neighbor_id)
 
-    def _build_port_neighbors(self) -> None:
-        self.port_neighbors.clear()
-        for key in self.lane_days:
+    def _build_port_neighbors_from(self, lane_src: dict[str, int], neigh_out: dict[str, list[str]]) -> None:
+        neigh_out.clear()
+        for key in lane_src:
             parts = str(key).split("|", 1)
             if len(parts) != 2:
                 continue
             a, b = parts[0], parts[1]
-            self._append_unique_neighbor(a, b)
-            self._append_unique_neighbor(b, a)
+            self._append_unique_neighbor_to(neigh_out, a, b)
+            self._append_unique_neighbor_to(neigh_out, b, a)
 
-    def _voyage_lane_weight_undirected(self, a: str, b: str) -> int:
-        w = int(self.lane_days.get(lane_key(a, b), -1))
+    def _build_port_neighbors(self) -> None:
+        self._build_port_neighbors_from(self.lane_days, self.port_neighbors)
+
+    def _voyage_lane_weight_undirected_for(self, lanes: dict[str, int], a: str, b: str) -> int:
+        w = int(lanes.get(lane_key(a, b), -1))
         if w >= 0:
             return w
-        return int(self.lane_days.get(lane_key(b, a), -1))
+        return int(lanes.get(lane_key(b, a), -1))
 
-    def _voyage_max_lane_weight(self) -> int:
+    def _voyage_lane_weight_undirected(self, a: str, b: str) -> int:
+        return self._voyage_lane_weight_undirected_for(self.lane_days, a, b)
+
+    def _voyage_max_lane_weight_for(self, lanes: dict[str, int]) -> int:
         mx = 1
-        for _k, dv in self.lane_days.items():
+        for _k, dv in lanes.items():
             mx = max(mx, int(dv))
         return mx
 
-    def _rebuild_coastal_shortest_path_cache(self) -> None:
-        self._voyage_coastal_shortest_cache.clear()
+    def _voyage_max_lane_weight(self) -> int:
+        return self._voyage_max_lane_weight_for(self.lane_days)
+
+    def _rebuild_coastal_shortest_path_cache_for(
+        self,
+        neigh_src: dict[str, list[str]],
+        lane_src: dict[str, int],
+        cache_out: dict[str, int],
+    ) -> None:
+        cache_out.clear()
         if not self.port_names:
             return
         for src in self.port_order:
@@ -1464,11 +1618,11 @@ class Sim:
                 if not pick or pick_dist >= 999999:
                     break
                 used[pick] = True
-                neigh = self.port_neighbors.get(pick) or []
+                neigh = neigh_src.get(pick) or []
                 for nx in neigh:
                     if used.get(str(nx), False):
                         continue
-                    wgt = self._voyage_lane_weight_undirected(pick, str(nx))
+                    wgt = self._voyage_lane_weight_undirected_for(lane_src, pick, str(nx))
                     if wgt < 0:
                         continue
                     alt = pick_dist + wgt
@@ -1479,14 +1633,35 @@ class Sim:
                     continue
                 fin = int(best.get(str(dst), 999999))
                 if fin >= 999999:
-                    self._voyage_coastal_shortest_cache[lane_key(str(src), str(dst))] = -1
+                    cache_out[lane_key(str(src), str(dst))] = -1
                 else:
-                    self._voyage_coastal_shortest_cache[lane_key(str(src), str(dst))] = fin
+                    cache_out[lane_key(str(src), str(dst))] = fin
+
+    def _rebuild_coastal_shortest_path_cache(self) -> None:
+        self._rebuild_coastal_shortest_path_cache_for(
+            self.port_neighbors, self.lane_days, self._voyage_coastal_shortest_cache
+        )
+
+    def _rebuild_coastal_shortest_path_cache_npc(self) -> None:
+        self._voyage_coastal_shortest_cache_npc.clear()
+        self.port_neighbors_npc.clear()
+        if not self.npc_lane_days:
+            return
+        self._build_port_neighbors_from(self.npc_lane_days, self.port_neighbors_npc)
+        self._rebuild_coastal_shortest_path_cache_for(
+            self.port_neighbors_npc, self.npc_lane_days, self._voyage_coastal_shortest_cache_npc
+        )
 
     def _coastal_shortest_days_lookup(self, from_id: str, to_id: str) -> int:
         k = lane_key(str(from_id), str(to_id))
         if k in self._voyage_coastal_shortest_cache:
             return int(self._voyage_coastal_shortest_cache[k])
+        return 999999
+
+    def _coastal_shortest_days_lookup_npc(self, from_id: str, to_id: str) -> int:
+        k = lane_key(str(from_id), str(to_id))
+        if k in self._voyage_coastal_shortest_cache_npc:
+            return int(self._voyage_coastal_shortest_cache_npc[k])
         return 999999
 
     def _voyage_route_choice_roll(self, from_id: str, to_id: str) -> float:
@@ -1496,12 +1671,18 @@ class Sim:
             h = ((h << 5) + h + ord(ch)) & 0x7FFFFFFF
         return float(h % 1000003) / 1000003.0
 
-    def _voyage_plan(self, from_id: str, to_id: str, risk_aversion_01: float) -> dict:
+    def _voyage_plan(self, from_id: str, to_id: str, risk_aversion_01: float, use_npc_graph: bool = False) -> dict:
         ra = clampf(float(risk_aversion_01), 0.0, 1.0)
-        d_c = self._coastal_shortest_days_lookup(from_id, to_id)
+        use_npc = bool(use_npc_graph) and bool(self.npc_lane_days)
+        if use_npc:
+            d_c = self._coastal_shortest_days_lookup_npc(from_id, to_id)
+            lane_fb = self.npc_lane_days
+        else:
+            d_c = self._coastal_shortest_days_lookup(from_id, to_id)
+            lane_fb = self.lane_days
         disconnected = d_c < 0 or d_c >= 500000
         if disconnected:
-            md = self._voyage_max_lane_weight()
+            md = self._voyage_max_lane_weight_for(lane_fb)
             dd = clampi(_VOYAGE_DISCONNECTED_BASE_DAYS + md, 10, 48)
             return {"days": dd, "open_01": 0.92, "route_label": "open sea"}
         d_b = d_c
@@ -2737,7 +2918,7 @@ class Sim:
             p_stick += 0.20
         if slack <= 7:
             p_stick += 0.14
-        plan = self._voyage_plan(here, cdest, clampf(float(ag.get("risk_aversion", 0.5)), 0.0, 1.0))
+        plan = self._voyage_plan(here, cdest, clampf(float(ag.get("risk_aversion", 0.5)), 0.0, 1.0), True)
         est_d = max(1, int(plan.get("days", 4)))
         if slack <= est_d + 2:
             p_stick += 0.12
@@ -3124,7 +3305,7 @@ class Sim:
         if not here or not dest or here not in self.port_names or dest not in self.port_names:
             return {}
         self._ensure_npc_risk_aversion(agent)
-        plan = self._voyage_plan(here, dest, clampf(float(agent.get("risk_aversion", 0.5)), 0.0, 1.0))
+        plan = self._voyage_plan(here, dest, clampf(float(agent.get("risk_aversion", 0.5)), 0.0, 1.0), True)
         d = int(plan.get("days", -1))
         if d < 0:
             return {}
@@ -6469,14 +6650,51 @@ class Sim:
         self._agent_production_tick_farms_mines_slaves()
         for pid in self.port_order:
             self._refresh_port_wealth(pid)
+        doy_pop = self._calendar_doy_1based()
+        forage_today = self._summer_forage_mouths_for_doy(doy_pop)
         for pid_s in self.port_order:
-            eaten_g = 0
             eat = self.get_population_grain_eat_effective(pid_s)
-            if eat > 0 and "grain" in self.goods:
-                ghave = self._port_stock_qty(pid_s, "grain")
-                eaten_g = min(eat, ghave)
+            ghave = self._port_stock_qty(pid_s, "grain") if "grain" in self.goods else 0
+            food_days_pre = 9999.0
+            if eat > 0:
+                food_days_pre = float(ghave) / float(eat)
+            rationing = bool(self.port_rationing_active.get(pid_s, False))
+            rationing_days = clampi(int(self.port_rationing_days_active.get(pid_s, 0)), 0, 999)
+            if rationing:
+                rationing_days = min(999, rationing_days + 1)
+                if food_days_pre > _RATION_END_FOOD_DAYS or rationing_days > _RATION_MAX_DAYS:
+                    rationing = False
+                    rationing_days = 0
+            elif eat > 0 and food_days_pre < _RATION_TRIGGER_FOOD_DAYS:
+                rationing = True
+                rationing_days = 1
+            self.port_rationing_active[pid_s] = rationing
+            self.port_rationing_days_active[pid_s] = rationing_days
+            eat_today = eat
+            if rationing and eat > 0:
+                eat_today = min(eat, max(_RATION_BITE_MIN, int(round(float(eat) * _RATION_BITE_FRAC))))
+            eaten_g = 0
+            if eat_today > 0 and "grain" in self.goods:
+                eaten_g = min(eat_today, ghave)
                 if eaten_g > 0:
                     self._adjust_port_stock(pid_s, "grain", -eaten_g)
+            preserved_used = 0
+            shortfall = max(0, eat - eaten_g)
+            if shortfall > 0:
+                avail_p = float(self.port_preserved_food.get(pid_s, 0.0))
+                if avail_p >= 1.0:
+                    take = min(shortfall, int(math.floor(avail_p)))
+                    if take > 0:
+                        preserved_used = take
+                        self.port_preserved_food[pid_s] = avail_p - float(take)
+            if rationing:
+                u_now = clampi(int(self.port_food_unrest.get(pid_s, 0)), 0, 200)
+                self.port_food_unrest[pid_s] = clampi(u_now + _RATION_UNREST_TICK, 0, 200)
+            if eat > 0 and food_days_pre >= _PRESERVED_FOOD_FILL_FOODDAYS_MIN:
+                cur_p = float(self.port_preserved_food.get(pid_s, 0.0))
+                cap_p = float(self._preserved_food_cap_for_port(pid_s))
+                if cur_p < cap_p:
+                    self.port_preserved_food[pid_s] = clampf(cur_p + _PRESERVED_FOOD_FILL_PER_DAY, 0.0, cap_p)
             eaten_w = 0
             if "wine" in self.goods:
                 w_base = int(self.port_population_wine_base.get(pid_s, 1))
@@ -6495,7 +6713,14 @@ class Sim:
                     eaten_f = min(want_f, fhave)
                     if eaten_f > 0:
                         self._adjust_port_stock(pid_s, "fish", -eaten_f)
-            self.last_pop_digest[pid_s] = {"grain": eaten_g, "wine": eaten_w, "fish": eaten_f}
+            self.last_pop_digest[pid_s] = {
+                "grain": eaten_g,
+                "wine": eaten_w,
+                "fish": eaten_f,
+                "preserved": preserved_used,
+                "forage": forage_today,
+                "rationing": 1 if rationing else 0,
+            }
         self._agent_industry_and_war_materiel_tick()
         self._replenish_wine_vineyards_after_bites()
         for ag in self.npc_agents:

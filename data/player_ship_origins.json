@@ -1,0 +1,61 @@
+{
+  "schema": "player_ship_origin_v1",
+  "description": "Flavour hooks for how the PC acquired their first ship. Longer prose lives in docs/player_ship_origin_stories.md.",
+  "origins": [
+    {
+      "id": "gamble_win",
+      "title": "Won in a gamble",
+      "summary": "A merchant could not cover his losses; the hull passed to you before witnesses. The harbour argues whether the throw was fair."
+    },
+    {
+      "id": "inheritance_relative",
+      "title": "Inheritance from a relative",
+      "summary": "A distant kinsman died and named you heir to a small vessel and a modest purse after priests and tax-farmers took their cut."
+    },
+    {
+      "id": "bankrupt_merchant_sale",
+      "title": "Bought from a failed house",
+      "summary": "Magistrates sold a bankrupt merchant's assets; you were quickest with silver and a clean enough name."
+    },
+    {
+      "id": "debt_settlement_hull",
+      "title": "Taken in settlement of a debt",
+      "summary": "A debtor offered the hull when coin and grain would not cover what was owed; partners may call it theft with a seal."
+    },
+    {
+      "id": "mentor_bequest",
+      "title": "Old captain's bequest",
+      "summary": "Your late master left you the ship if you buried him ashore and paid his debts; you did both."
+    },
+    {
+      "id": "prize_or_salvage",
+      "title": "Salvage (or a thin story of it)",
+      "summary": "A hull found awash, claimed and refitted; tavern talk disagrees on what became of her crew."
+    },
+    {
+      "id": "navy_surplus_or_demob",
+      "title": "Surplus levy hull",
+      "summary": "After a levy stood down, the arsenal sold slow auxiliaries; you bought one at auction with pooled savings and a guarantor."
+    },
+    {
+      "id": "charter_to_owner",
+      "title": "Charter that became title",
+      "summary": "The owner sickened and heirs quarrelled; you kept contracts and crew fed until documents made you master in fact."
+    },
+    {
+      "id": "smuggler_partner_vanished",
+      "title": "Partner vanished, hull left",
+      "summary": "A partner who knew coves did not return; you paid slip arrears, renamed her, and sail as if you had always owned her."
+    },
+    {
+      "id": "regatta_or_wager_race",
+      "title": "Staked on a race",
+      "summary": "A headland course with the patched merchantman as stake; you won by a length in a gust your rival's friends call bought."
+    },
+    {
+      "id": "collateral_default",
+      "title": "Forfeited collateral",
+      "summary": "You held paper against the ship; the borrower fled; the magistrate ruled forfeit after due notice."
+    }
+  ]
+}

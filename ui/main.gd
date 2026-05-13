@@ -18,6 +18,8 @@ const _CITY_PLACE_LABELS: PackedStringArray = [
 
 const _SEA_CHART_PATH := "res://assets/ui/sea_chart.svg"
 const _STATUS_LOG_MAX_CHARS := 12000
+## Engine `TooltipLabel` width for word wrap (fraction of game viewport width).
+const _TOOLTIP_WRAP_WIDTH_FRAC := 0.3
 
 @onready var _gs: HarboursGameState = get_node("/root/GameState") as HarboursGameState
 @onready var day_label: Label = %DayLabel
@@ -41,6 +43,11 @@ var _city_place_index: int = _PLACE_MARKET
 var _city_place_group: ButtonGroup = ButtonGroup.new()
 var _city_place_buttons_built: bool = false
 var _captains_chart: Control = null
+var _ledger_area_list: ItemList = null
+var _ledger_port_list: ItemList = null
+var _ledger_goods_host: VBoxContainer = null
+var _ledger_last_area_id: String = ""
+var _ledger_last_port_id: String = ""
 
 
 func _ready() -> void:
@@ -66,8 +73,45 @@ func _ready() -> void:
 	admin_window.hide()
 	status_log.text = ""
 	_append_log("Numbers on every table are tagged with source, age, and reliability — not omniscient truth.")
+	get_tree().node_added.connect(_on_scene_tree_node_added_for_tooltips)
+	get_viewport().size_changed.connect(_on_viewport_size_changed_for_tooltips)
 	_rebuild_trade()
 	_refresh_header()
+
+
+func _tooltip_wrap_width_px() -> int:
+	var vp := get_viewport()
+	if vp == null:
+		return 480
+	var w: int = int(vp.get_visible_rect().size.x * _TOOLTIP_WRAP_WIDTH_FRAC)
+	return maxi(160, w)
+
+
+func _apply_wrapped_tooltip_label(lbl: Label) -> void:
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.custom_minimum_size = Vector2(float(_tooltip_wrap_width_px()), 0.0)
+
+
+func _on_scene_tree_node_added_for_tooltips(node: Node) -> void:
+	if not (node is Label):
+		return
+	if str(node.get_class()) != "TooltipLabel":
+		return
+	_apply_wrapped_tooltip_label(node as Label)
+
+
+func _on_viewport_size_changed_for_tooltips() -> void:
+	var w: float = float(_tooltip_wrap_width_px())
+	_recurse_tooltip_labels_set_width(get_tree().root, w)
+
+
+func _recurse_tooltip_labels_set_width(node: Node, width_px: float) -> void:
+	if node is Label and str(node.get_class()) == "TooltipLabel":
+		var lbl: Label = node as Label
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lbl.custom_minimum_size = Vector2(width_px, 0.0)
+	for c in node.get_children():
+		_recurse_tooltip_labels_set_width(c, width_px)
 
 
 func _append_log(line: String) -> void:
@@ -136,29 +180,13 @@ func _refresh_header() -> void:
 	day_label.text = _gs.get_calendar_header_line()
 	money_label.text = "Coins: %d" % _gs.get_money()
 	cargo_label.text = _gs.get_cargo_summary() + "\n" + _gs.get_ship_status_line()
-	var ps: String = _gs.get_port_market_line()
-	var slip: String = _gs.get_used_hull_slip_summary_line()
-	var act: String = _gs.get_port_activity_summary()
-	var port_bits: PackedStringArray = []
-	if not ps.is_empty():
-		port_bits.append(ps)
-	if not slip.is_empty():
-		port_bits.append(slip)
-	var port_joined: String = "\n".join(port_bits)
-	if act.is_empty():
-		port_stock_label.text = port_joined
-	elif port_joined.is_empty():
-		port_stock_label.text = act
+	if _gs.is_at_sea():
+		port_stock_label.visible = false
+		port_stock_label.text = ""
 	else:
-		port_stock_label.text = port_joined + "\n" + act
-	var loc := _gs.get_location_summary()
-	var rum_strip: String = _gs.get_player_crop_rumor_intel_strip_line()
-	if not rum_strip.is_empty():
-		loc += "\n" + rum_strip
-	var war_strip: String = _gs.get_player_war_rumor_intel_strip_line()
-	if not war_strip.is_empty():
-		loc += "\n" + war_strip
-	location_label.text = loc
+		port_stock_label.visible = true
+		port_stock_label.text = "Port stock: on each Market row · Moods & reads: Tavern tab"
+	location_label.text = _gs.get_location_summary()
 
 
 func _append_wrapped(v: VBoxContainer, text: String) -> void:
@@ -166,6 +194,25 @@ func _append_wrapped(v: VBoxContainer, text: String) -> void:
 	lb.text = text
 	lb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(lb)
+
+
+func _card_section(parent: VBoxContainer, title: String) -> VBoxContainer:
+	var panel := PanelContainer.new()
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_top", 8)
+	margin.add_theme_constant_override("margin_right", 10)
+	margin.add_theme_constant_override("margin_bottom", 10)
+	var inner := VBoxContainer.new()
+	inner.add_theme_constant_override("separation", 6)
+	var ttl := Label.new()
+	ttl.text = title
+	ttl.add_theme_font_size_override("font_size", 13)
+	inner.add_child(ttl)
+	margin.add_child(inner)
+	panel.add_child(margin)
+	parent.add_child(panel)
+	return inner
 
 
 func _tbl_cell(txt: String, min_w: float = 0.0) -> Label:
@@ -254,71 +301,109 @@ func _rebuild_city_place_content() -> void:
 
 
 func _build_market_panel(parent: VBoxContainer) -> void:
-	_append_wrapped(
-		parent,
-		"Quay prices are what clerks show you today — trend compares to yesterday’s ask before the dawn bell rolled the calendar."
+	var hint_row := HBoxContainer.new()
+	hint_row.add_theme_constant_override("separation", 8)
+	var hint := Label.new()
+	hint.text = "Each tile is one good: port stock is the city tally on the row; trend compares to yesterday’s ask before the dawn bell."
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hint.add_theme_font_size_override("font_size", 10)
+	hint_row.add_child(hint)
+	var digest_btn := Button.new()
+	digest_btn.text = "City supply digest → log"
+	digest_btn.add_theme_font_size_override("font_size", 10)
+	digest_btn.tooltip_text = "Farms, mines, population — same text the old card showed."
+	digest_btn.pressed.connect(_append_log.bind(_gs.get_port_city_supply_digest()))
+	hint_row.add_child(digest_btn)
+	var stocks_btn := Button.new()
+	stocks_btn.text = "Full port stock line → log"
+	stocks_btn.add_theme_font_size_override("font_size", 10)
+	stocks_btn.tooltip_text = "All goods in one clerk-style sentence."
+	stocks_btn.pressed.connect(_append_log.bind(_gs.get_port_market_line()))
+	hint_row.add_child(stocks_btn)
+	parent.add_child(hint_row)
+	parent.add_child(HSeparator.new())
+	var rows: Array = _gs.list_player_market_table_rows()
+	var cols := HBoxContainer.new()
+	cols.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cols.add_theme_constant_override("separation", 10)
+	for _ci in range(3):
+		var vb := VBoxContainer.new()
+		vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		vb.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		cols.add_child(vb)
+	for i in range(rows.size()):
+		var d: Dictionary = rows[i] as Dictionary
+		var col: VBoxContainer = cols.get_child(i % 3) as VBoxContainer
+		col.add_child(_make_market_good_block(d))
+	parent.add_child(cols)
+
+
+func _make_market_good_block(d: Dictionary) -> VBoxContainer:
+	var block := VBoxContainer.new()
+	block.add_theme_constant_override("separation", 3)
+	var gid := str(d.get("good_id", ""))
+	var src: String = _truncate(str(d.get("source", "")), 44)
+	var line: String = (
+		"%s · port stock %d · buy %dc · sell %dc · toll %dc/u · trend %s · trade age %dd · %d%% · %s"
+		% [
+			str(d.get("name", "")),
+			int(d.get("port_qty", 0)),
+			int(d.get("buy_unit", 0)),
+			int(d.get("sell_unit", 0)),
+			int(d.get("toll_per_unit", 0)),
+			str(d.get("trend", "—")),
+			int(d.get("age_days", 0)),
+			int(d.get("reliability_pct", 0)),
+			src,
+		]
 	)
-	for row in _gs.list_player_market_table_rows():
-		var d: Dictionary = row
-		var gid := str(d.get("good_id", ""))
-		var src: String = _truncate(str(d.get("source", "")), 48)
-		var line: String = (
-			"%s — stock %d · buy %dc · sell %dc · toll %dc/u · trend %s · age %dd trade · reliability %d%% · %s"
-			% [
-				str(d.get("name", "")),
-				int(d.get("port_qty", 0)),
-				int(d.get("buy_unit", 0)),
-				int(d.get("sell_unit", 0)),
-				int(d.get("toll_per_unit", 0)),
-				str(d.get("trend", "—")),
-				int(d.get("age_days", 0)),
-				int(d.get("reliability_pct", 0)),
-				src,
-			]
+	var cap := Label.new()
+	cap.text = line
+	cap.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	cap.add_theme_font_size_override("font_size", 10)
+	block.add_child(cap)
+	var why := Button.new()
+	why.text = "?"
+	why.add_theme_font_size_override("font_size", 10)
+	why.tooltip_text = _gs.get_player_data_provenance("market_good", gid)
+	why.focus_mode = Control.FOCUS_NONE
+	why.pressed.connect(_append_log.bind(_gs.get_player_data_provenance("market_good", gid)))
+	block.add_child(why)
+	var row_btns := HBoxContainer.new()
+	row_btns.add_theme_constant_override("separation", 4)
+	for qty_raw in [1, 5]:
+		var qty: int = int(qty_raw)
+		var bbtn := Button.new()
+		var cost: int = _gs.get_trade_buy_total_coins(gid, qty)
+		bbtn.text = "Buy +%d (%dc)" % [qty, cost]
+		bbtn.add_theme_font_size_override("font_size", 9)
+		bbtn.disabled = (
+			_gs.get_money() < cost
+			or int(d.get("port_qty", 0)) < qty
+			or _gs.get_player_cargo_used() + qty > _gs.get_player_cargo_capacity()
 		)
-		var block := VBoxContainer.new()
-		block.add_theme_constant_override("separation", 4)
-		var cap := Label.new()
-		cap.text = line
-		cap.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		cap.add_theme_font_size_override("font_size", 11)
-		block.add_child(cap)
-		var why := Button.new()
-		why.text = "Why this row reads the way it does"
-		why.add_theme_font_size_override("font_size", 10)
-		why.tooltip_text = _gs.get_player_data_provenance("market_good", gid)
-		why.pressed.connect(_append_log.bind(_gs.get_player_data_provenance("market_good", gid)))
-		block.add_child(why)
-		var row_btns := HBoxContainer.new()
-		row_btns.add_theme_constant_override("separation", 6)
-		for qty_raw in [1, 5]:
-			var qty: int = int(qty_raw)
-			var bbtn := Button.new()
-			var cost: int = _gs.get_trade_buy_total_coins(gid, qty)
-			bbtn.text = "Buy +%d (%dc)" % [qty, cost]
-			bbtn.add_theme_font_size_override("font_size", 10)
-			bbtn.disabled = (
-				_gs.get_money() < cost
-				or int(d.get("port_qty", 0)) < qty
-				or _gs.get_player_cargo_used() + qty > _gs.get_player_cargo_capacity()
-			)
-			bbtn.pressed.connect(_on_buy_pressed.bind(gid, qty))
-			row_btns.add_child(bbtn)
-		for qty_raw in [1, 5]:
-			var qtys: int = int(qty_raw)
-			var sbtn := Button.new()
-			var revenue: int = _gs.get_trade_sell_net_coins(gid, qtys)
-			sbtn.text = "Sell −%d (+%dc)" % [qtys, revenue]
-			sbtn.add_theme_font_size_override("font_size", 10)
-			var player_have: int = _gs.get_player_cargo_qty(gid)
-			sbtn.disabled = player_have < qtys
-			sbtn.pressed.connect(_on_sell_pressed.bind(gid, qtys))
-			row_btns.add_child(sbtn)
-		block.add_child(row_btns)
-		parent.add_child(block)
+		bbtn.pressed.connect(_on_buy_pressed.bind(gid, qty))
+		row_btns.add_child(bbtn)
+	for qty_raw in [1, 5]:
+		var qtys: int = int(qty_raw)
+		var sbtn := Button.new()
+		var revenue: int = _gs.get_trade_sell_net_coins(gid, qtys)
+		sbtn.text = "Sell −%d (+%dc)" % [qtys, revenue]
+		sbtn.add_theme_font_size_override("font_size", 9)
+		var player_have: int = _gs.get_player_cargo_qty(gid)
+		sbtn.disabled = player_have < qtys
+		sbtn.pressed.connect(_on_sell_pressed.bind(gid, qtys))
+		row_btns.add_child(sbtn)
+	block.add_child(row_btns)
+	return block
 
 
 func _build_harbor_panel(parent: VBoxContainer) -> void:
+	var slip: String = _gs.get_used_hull_slip_summary_line()
+	if not slip.is_empty():
+		var slip_card := _card_section(parent, "Slip board")
+		_append_wrapped(slip_card, slip)
 	_append_wrapped(
 		parent,
 		"Harbor: fleet, slip builds, used hulls. Hull repairs still run overnight when timber, textiles, metal, and coin allow."
@@ -436,6 +521,9 @@ func _build_influence_panel(parent: VBoxContainer) -> void:
 
 
 func _build_tavern_panel(parent: VBoxContainer) -> void:
+	var moods := _card_section(parent, "Moods & your reads")
+	_append_wrapped(moods, _gs.get_player_tavern_mood_block())
+	parent.add_child(HSeparator.new())
 	_append_wrapped(parent, _gs.get_player_city_tavern_intel_block())
 	parent.add_child(HSeparator.new())
 	var escort_offer := CheckBox.new()
@@ -516,27 +604,208 @@ func _on_tavern_intel_row_pressed(kind: String) -> void:
 
 
 func _build_ledger_panel(parent: VBoxContainer) -> void:
-	_append_wrapped(parent, _gs.get_player_ledger_block())
-	var grid := GridContainer.new()
-	grid.columns = 7
-	for h in ["Port", "Last night", "Age", "Grain band", "Source", "Rel.", "Why"]:
-		grid.add_child(_tbl_cell(h, 20.0))
-	for row in _gs.list_player_ledger_rows():
-		var d: Dictionary = row
+	var areas_data: Array = _gs.list_player_ledger_chart_areas()
+	if areas_data.is_empty():
+		_append_wrapped(parent, "No chart entries yet — your purser is still mute.")
+		return
+	var hint := Label.new()
+	hint.text = (
+		_gs.get_player_ledger_summary_line()
+		+ " Pick a sea, then a harbor — the lower pane is your remembered buy / sell / toll (not live quay unless you just advanced docked there)."
+	)
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint.add_theme_font_size_override("font_size", 11)
+	hint.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	parent.add_child(hint)
+	var log_digest := Button.new()
+	log_digest.text = "Full harbor digest → status log"
+	log_digest.add_theme_font_size_override("font_size", 10)
+	log_digest.tooltip_text = "Long recap: every harbor’s grain band, source, and reliability (same text as the old ledger header)."
+	log_digest.pressed.connect(_append_log.bind(_gs.get_player_ledger_block()))
+	log_digest.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	parent.add_child(log_digest)
+	var vsplit := VSplitContainer.new()
+	vsplit.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vsplit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vsplit.custom_minimum_size = Vector2(0, 360)
+	var top_hs := HSplitContainer.new()
+	top_hs.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	top_hs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var left := VBoxContainer.new()
+	left.custom_minimum_size = Vector2(200, 0)
+	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var sea_lbl := Label.new()
+	sea_lbl.text = "Chart areas"
+	sea_lbl.add_theme_font_size_override("font_size", 12)
+	left.add_child(sea_lbl)
+	var area_list := ItemList.new()
+	area_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	area_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	area_list.custom_minimum_size = Vector2(200, 96)
+	for ad in areas_data:
+		var rowa: Dictionary = ad
+		var aid := str(rowa.get("area_id", ""))
+		var nm := str(rowa.get("area_name", aid))
+		var nports := int(rowa.get("known_ports", 0))
+		area_list.add_item("%s (%d)" % [nm, nports])
+		var idxa := area_list.item_count - 1
+		area_list.set_item_metadata(idxa, aid)
+		var tip := _gs.get_chart_area_description(aid)
+		if not tip.is_empty():
+			area_list.set_item_tooltip(idxa, tip)
+	left.add_child(area_list)
+	top_hs.add_child(left)
+	var port_col := VBoxContainer.new()
+	port_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	port_col.custom_minimum_size = Vector2(220, 0)
+	var port_lbl := Label.new()
+	port_lbl.text = "Harbors (hover for grain band & source)"
+	port_lbl.add_theme_font_size_override("font_size", 12)
+	port_col.add_child(port_lbl)
+	var port_list := ItemList.new()
+	port_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	port_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	port_list.custom_minimum_size = Vector2(220, 96)
+	port_col.add_child(port_list)
+	top_hs.add_child(port_col)
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.custom_minimum_size = Vector2(0, 260)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var goods_host := VBoxContainer.new()
+	goods_host.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	goods_host.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	goods_host.custom_minimum_size = Vector2(0, 120)
+	scroll.add_child(goods_host)
+	vsplit.add_child(top_hs)
+	vsplit.add_child(scroll)
+	parent.add_child(vsplit)
+	vsplit.split_offset = 200
+	_ledger_area_list = area_list
+	_ledger_port_list = port_list
+	_ledger_goods_host = goods_host
+	top_hs.split_offset = 260
+	area_list.item_selected.connect(_on_ledger_area_item_selected)
+	port_list.item_selected.connect(_on_ledger_port_item_selected)
+	var have_last_area := false
+	for ii in range(area_list.item_count):
+		if str(area_list.get_item_metadata(ii)) == _ledger_last_area_id:
+			have_last_area = true
+			break
+	if not have_last_area:
+		var rd0: Dictionary = areas_data[0] as Dictionary
+		_ledger_last_area_id = str(rd0.get("area_id", ""))
+	var sel_a := 0
+	for ii2 in range(area_list.item_count):
+		if str(area_list.get_item_metadata(ii2)) == _ledger_last_area_id:
+			sel_a = ii2
+			break
+	area_list.select(sel_a)
+	_refresh_ledger_port_list(_ledger_last_area_id)
+
+
+func _on_ledger_area_item_selected(index: int) -> void:
+	if _ledger_area_list == null or not is_instance_valid(_ledger_area_list):
+		return
+	_ledger_last_area_id = str(_ledger_area_list.get_item_metadata(index))
+	_refresh_ledger_port_list(_ledger_last_area_id)
+
+
+func _on_ledger_port_item_selected(index: int) -> void:
+	if _ledger_port_list == null or not is_instance_valid(_ledger_port_list):
+		return
+	_ledger_last_port_id = str(_ledger_port_list.get_item_metadata(index))
+	_refresh_ledger_goods_panel(_ledger_last_port_id)
+
+
+func _refresh_ledger_port_list(area_id: String) -> void:
+	if _ledger_port_list == null or not is_instance_valid(_ledger_port_list):
+		return
+	_ledger_port_list.clear()
+	var rows: Array = _gs.list_player_ledger_ports_for_chart_area(area_id)
+	for rd in rows:
+		var d: Dictionary = rd
 		var pid := str(d.get("port_id", ""))
-		grid.add_child(_tbl_cell(str(d.get("name", "")), 88.0))
-		grid.add_child(_tbl_cell("day %d" % int(d.get("last_day", 0)), 52.0))
-		grid.add_child(_tbl_cell("%dd" % int(d.get("age_days", 0)), 28.0))
-		grid.add_child(_tbl_cell(str(d.get("grain_range", "")), 52.0))
-		grid.add_child(_tbl_cell(_truncate(str(d.get("source", "")), 22), 80.0))
+		var nm := str(d.get("name", pid))
+		var line: String = "%s · %dd · %d%%" % [nm, int(d.get("age_days", 0)), int(d.get("reliability_pct", 0))]
+		var idxp := _ledger_port_list.item_count
+		_ledger_port_list.add_item(line)
+		var tip: String = "%s — grain band %s — %s — food mood: %s" % [
+			nm,
+			str(d.get("grain_range", "—")),
+			str(d.get("source", "")),
+			str(d.get("risk_hint", "")),
+		]
+		_ledger_port_list.set_item_tooltip(idxp, tip)
+		_ledger_port_list.set_item_metadata(idxp, pid)
+	var found_port := false
+	for j in range(_ledger_port_list.item_count):
+		if str(_ledger_port_list.get_item_metadata(j)) == _ledger_last_port_id:
+			_ledger_port_list.select(j)
+			found_port = true
+			_refresh_ledger_goods_panel(_ledger_last_port_id)
+			break
+	if not found_port and _ledger_port_list.item_count > 0:
+		_ledger_last_port_id = str(_ledger_port_list.get_item_metadata(0))
+		_ledger_port_list.select(0)
+		_refresh_ledger_goods_panel(_ledger_last_port_id)
+	elif not found_port:
+		_ledger_last_port_id = ""
+		_refresh_ledger_goods_panel("")
+
+
+func _refresh_ledger_goods_panel(port_id: String) -> void:
+	if _ledger_goods_host == null or not is_instance_valid(_ledger_goods_host):
+		return
+	for c in _ledger_goods_host.get_children():
+		_ledger_goods_host.remove_child(c)
+		c.free()
+	if port_id.is_empty():
+		var empty_l := Label.new()
+		empty_l.text = "Select a harbor to see remembered prices."
+		empty_l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_ledger_goods_host.add_child(empty_l)
+		return
+	var hdr := Label.new()
+	hdr.text = "%s — goods your book carries" % _gs.get_port_name(port_id)
+	hdr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hdr.add_theme_font_size_override("font_size", 12)
+	_ledger_goods_host.add_child(hdr)
+	var prov := Button.new()
+	prov.text = "Why this harbor line exists"
+	prov.add_theme_font_size_override("font_size", 10)
+	prov.tooltip_text = _gs.get_player_data_provenance("ledger", port_id)
+	prov.pressed.connect(_append_log.bind(_gs.get_player_data_provenance("ledger", port_id)))
+	_ledger_goods_host.add_child(prov)
+	var goods_rows: Array = _gs.list_player_ledger_goods_for_port(port_id)
+	if goods_rows.is_empty():
+		var none_l := Label.new()
+		none_l.text = "No per-good rows stored for this harbor yet."
+		none_l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_ledger_goods_host.add_child(none_l)
+		return
+	var grid := GridContainer.new()
+	grid.columns = 8
+	for h in ["Good", "Buy", "Sell", "Toll/u", "Note day", "Age", "Rel.", "Why"]:
+		grid.add_child(_tbl_cell(h, 16.0))
+	for gr in goods_rows:
+		var d: Dictionary = gr
+		var gid := str(d.get("good_id", ""))
+		grid.add_child(_tbl_cell(str(d.get("name", gid)), 72.0))
+		grid.add_child(_tbl_cell(str(int(d.get("buy_unit", 0))), 36.0))
+		grid.add_child(_tbl_cell(str(int(d.get("sell_unit", 0))), 36.0))
+		grid.add_child(_tbl_cell(str(int(d.get("toll_per_unit", 0))), 36.0))
+		grid.add_child(_tbl_cell("day %d" % int(d.get("note_day", 0)), 44.0))
+		grid.add_child(_tbl_cell("%dd" % int(d.get("ledger_age_days", 0)), 32.0))
 		grid.add_child(_tbl_cell("%d%%" % int(d.get("reliability_pct", 0)), 32.0))
 		var wl := Button.new()
 		wl.text = "?"
-		wl.tooltip_text = _gs.get_player_data_provenance("ledger", pid)
+		wl.tooltip_text = _gs.get_player_data_provenance("ledger_good", "%s|%s" % [port_id, gid])
 		wl.focus_mode = Control.FOCUS_NONE
-		wl.pressed.connect(_append_log.bind(_gs.get_player_data_provenance("ledger", pid)))
+		wl.pressed.connect(_append_log.bind(_gs.get_player_data_provenance("ledger_good", "%s|%s" % [port_id, gid])))
 		grid.add_child(wl)
-	parent.add_child(grid)
+	_ledger_goods_host.add_child(grid)
 
 
 func _build_routes_panel(parent: VBoxContainer) -> void:
