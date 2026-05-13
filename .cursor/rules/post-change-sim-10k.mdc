@@ -1,0 +1,22 @@
+---
+description: After HarboursOfPower economy/sim code changes, run 10k Python twin and analyse
+alwaysApply: true
+---
+
+# Post-change simulation check
+
+Whenever you **finish a substantive change** to any of the following (or closely related gameplay/economy code), **before ending the turn**:
+
+1. **Run** from repo root (no graphs unless the user asked for plots):
+
+   `cd /Users/ari.lahti/HarboursOfPower && python3 tools/sim_100_days.py 10000 --no-graphs`
+
+2. **Analyse** the output in a short, structured summary:
+   - Calendar span and **NPC purse** start → end
+   - **Food riots** and **merchant bankruptcies**
+   - **Per-port** table: wealth Δ, grain Δ, final grain-days, min grain-days, max unrest
+   - Anything clearly tied to the change (e.g. war cycles, metal/wire, new fields in metrics)
+
+**Skip or shorten** only for: typo-only edits, comment-only, or changes that cannot affect the twin (pure UI strings with no `game_state` coupling). For anything touching **`autoload/game_state.gd`**, **`tools/sim_100_days.py`**, **`tools/sim_100_days.gd`**, **`data/world.json`**, or **`data/goods.json`**, always run the sim.
+
+If the command fails (path, Python), fix the environment or path and retry once.

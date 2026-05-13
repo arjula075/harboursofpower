@@ -1,0 +1,37 @@
+---
+description: After HarboursOfPower gameplay or player-facing flows change, update the use case map canvas
+alwaysApply: true
+---
+
+# Use case map canvas (must stay in sync)
+
+Whenever you **finish a change** that alters **player-visible behaviour or navigation** — new or removed actions, tabs, buttons, voyage rules, intel flows, save fields the UI depends on, or similar — update the living map:
+
+`canvases/harbours-use-case-map.canvas.tsx`  
+(resolved path: `~/.cursor/projects/Users-ari-lahti-HarboursOfPower/canvases/harbours-use-case-map.canvas.tsx`)
+
+## Files that commonly require a canvas pass
+
+Touch any of these (or add a new UI entry point tied to `GameState`) and reconcile the canvas **in the same change** when behaviour or copy shipped to the player changes:
+
+- `ui/main.gd` (city places, trade, voyage, admin, signals)
+- `autoload/game_state.gd` when it adds/changes **player-invokable** APIs used by UI or new **signals** the UI should surface
+- `main.tscn` or other primary UI scenes if they add/remove controls that change flows
+- `data/world.json`, `data/goods.json`, `data/ships.json` when the change **changes what the player can do** (e.g. new good category with market row, new port capability like mint/tolls), not for pure balance tweaks that do not change affordances
+
+## What to update
+
+- **Use case catalogue** — add/remove/rename rows; keep IDs stable unless the feature is renamed on purpose.
+- **Player states / macro loop / surfaces** — if docked vs at sea, tabs, or header semantics change.
+- **UI ↔ simulation wiring** — new or removed `GameState` signals or main-scene subscriptions.
+- **Cross-links** — if economy tick docs moved, adjust the pointer to `harbours-economy-rules.canvas.tsx`.
+
+## Skip only when
+
+- Refactor with **identical** player-visible behaviour and navigation, **or**
+- Changes confined to assets, internal-only sim, or tests with no UI or player contract change.
+
+## Relation to other rules
+
+- **Economy rules canvas** — still update that canvas when **documented economy / twin behaviour** changes (`update-economy-rules-canvas.mdc`). This use-case canvas is **flow and UI oriented**; both may need edits for one feature.
+- **Post-change sim** — unchanged; run the sim when that rule applies regardless of this doc.

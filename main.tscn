@@ -1,0 +1,183 @@
+[gd_scene load_steps=2 format=3 uid="uid://m3dsg355dfjs"]
+
+[ext_resource type="Script" path="res://ui/main.gd" id="1_main"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 20
+
+[node name="DayLabel" type="Label" parent="MarginContainer/VBox/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Day 1"
+horizontal_alignment = 1
+
+[node name="MoneyLabel" type="Label" parent="MarginContainer/VBox/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Coins: —"
+horizontal_alignment = 1
+
+[node name="CargoLabel" type="Label" parent="MarginContainer/VBox/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Hold: —"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="PortStockLabel" type="Label" parent="MarginContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Port stock: —"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LocationLabel" type="Label" parent="MarginContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Docked at —"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="AdvanceButton" type="Button" parent="MarginContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Advance day"
+
+[node name="SaveLoadRow" type="HBoxContainer" parent="MarginContainer/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="SaveButton" type="Button" parent="MarginContainer/VBox/SaveLoadRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save game"
+
+[node name="LoadButton" type="Button" parent="MarginContainer/VBox/SaveLoadRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Load game"
+
+[node name="HSeparatorTrade" type="HSeparator" parent="MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="CityTitle" type="Label" parent="MarginContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "City"
+horizontal_alignment = 1
+
+[node name="CitySplit" type="HBoxContainer" parent="MarginContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="CityPlacesVBox" type="VBoxContainer" parent="MarginContainer/VBox/CitySplit"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(168, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 4
+
+[node name="TradeScroll" type="ScrollContainer" parent="MarginContainer/VBox/CitySplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.0
+
+[node name="TradeBox" type="VBoxContainer" parent="MarginContainer/VBox/CitySplit/TradeScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="HSeparatorStatus" type="HSeparator" parent="MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="StatusTitle" type="Label" parent="MarginContainer/VBox"]
+layout_mode = 2
+text = "Status / rumors / consequences"
+theme_override_font_sizes/font_size = 12
+
+[node name="StatusLog" type="TextEdit" parent="MarginContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 96)
+editable = false
+wrap_mode = 1
+
+[node name="AdminWindow" type="Window" parent="."]
+unique_name_in_owner = true
+visible = false
+title = "Admin snapshot (F12)"
+initial_position = 2
+size = Vector2i(760, 560)
+unresizable = true
+
+[node name="RootVBox" type="VBoxContainer" parent="AdminWindow"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+theme_override_constants/separation = 8
+
+[node name="Hint" type="Label" parent="AdminWindow/RootVBox"]
+layout_mode = 2
+text = "Read-only snapshot of all ports and NPC holds. F12 or Close to dismiss."
+
+[node name="AdminDumpText" type="TextEdit" parent="AdminWindow/RootVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 400)
+editable = false
+
+[node name="Row" type="HBoxContainer" parent="AdminWindow/RootVBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="RefreshAdmin" type="Button" parent="AdminWindow/RootVBox/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Refresh"
+
+[node name="CloseAdmin" type="Button" parent="AdminWindow/RootVBox/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"

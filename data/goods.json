@@ -1,0 +1,135 @@
+{
+  "goods": [
+    {
+      "id": "grain",
+      "name": "Grain",
+      "unit_buy_price": 2,
+      "unit_sell_price": 1,
+      "stock_target": 120,
+      "need_tier": "food"
+    },
+    {
+      "id": "wine",
+      "name": "Wine",
+      "unit_buy_price": 4,
+      "unit_sell_price": 2,
+      "stock_target": 60,
+      "need_tier": "comfort"
+    },
+    {
+      "id": "salt",
+      "name": "Salt",
+      "unit_buy_price": 3,
+      "unit_sell_price": 1,
+      "stock_target": 100,
+      "need_tier": "food",
+      "market_demand_per_day": 2.4
+    },
+    {
+      "id": "olive_oil",
+      "name": "Olive oil",
+      "unit_buy_price": 5,
+      "unit_sell_price": 2,
+      "stock_target": 56,
+      "need_tier": "comfort",
+      "market_demand_per_day": 2.1
+    },
+    {
+      "id": "pottery",
+      "name": "Pottery",
+      "unit_buy_price": 5,
+      "unit_sell_price": 2,
+      "stock_target": 72,
+      "need_tier": "comfort",
+      "market_demand_per_day": 2.0
+    },
+    {
+      "id": "fish",
+      "name": "Fish",
+      "unit_buy_price": 3,
+      "unit_sell_price": 1,
+      "stock_target": 80,
+      "need_tier": "food"
+    },
+    {
+      "id": "timber",
+      "name": "Timber",
+      "unit_buy_price": 5,
+      "unit_sell_price": 2,
+      "stock_target": 88,
+      "need_tier": "comfort",
+      "market_demand_per_day": 1.8
+    },
+    {
+      "id": "textiles",
+      "name": "Textiles",
+      "unit_buy_price": 6,
+      "unit_sell_price": 3,
+      "stock_target": 64,
+      "need_tier": "comfort",
+      "market_demand_per_day": 1.9
+    },
+    {
+      "id": "metal",
+      "name": "Metal",
+      "unit_buy_price": 9,
+      "unit_sell_price": 5,
+      "stock_target": 72,
+      "need_tier": "metal"
+    },
+    {
+      "id": "wire",
+      "name": "Wire",
+      "unit_buy_price": 6,
+      "unit_sell_price": 3,
+      "stock_target": 96,
+      "need_tier": "metal"
+    },
+    {
+      "id": "gold",
+      "name": "Gold (ingot)",
+      "unit_buy_price": 48,
+      "unit_sell_price": 28,
+      "stock_target": 14,
+      "need_tier": "luxury",
+      "market_demand_per_day": 0.11
+    },
+    {
+      "id": "silver",
+      "name": "Silver (ingot)",
+      "unit_buy_price": 22,
+      "unit_sell_price": 13,
+      "stock_target": 22,
+      "need_tier": "luxury",
+      "market_demand_per_day": 0.16
+    },
+    {
+      "id": "spice",
+      "name": "Spices & silks",
+      "unit_buy_price": 14,
+      "unit_sell_price": 7,
+      "stock_target": 28,
+      "need_tier": "luxury",
+      "market_demand_per_day": 1.1
+    },
+    {
+      "id": "slaves",
+      "name": "Slaves (market)",
+      "unit_buy_price": 11,
+      "unit_sell_price": 6,
+      "stock_target": 55,
+      "need_tier": "",
+      "market_demand_per_day": 1.4
+    },
+    {
+      "id": "marines",
+      "name": "Marines (arms & armour)",
+      "unit_buy_price": 34,
+      "unit_sell_price": 14,
+      "wage_per_unit_per_day": 0.38,
+      "stock_target": 36,
+      "need_tier": "",
+      "market_demand_per_day": 0.32
+    }
+  ]
+}

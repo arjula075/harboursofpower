@@ -1,0 +1,520 @@
+{
+  "autonomy_warmup_days": 24,
+  "npc_city_grain_contracts_enabled": true,
+  "initial_treasury_coins": 9600,
+  "port_role_wealth_bonuses": {
+    "metropole": 42,
+    "great_city": 28,
+    "breadbasket": 24,
+    "regional_capital": 18,
+    "imperial_port": 15,
+    "maritime_town": 6
+  },
+  "ports": [
+    {
+      "id": "ostia",
+      "name": "Ostia",
+      "map_u": 0.52,
+      "map_v": 0.2,
+      "role": "imperial_port",
+      "industrial_metal_per_day": 4,
+      "industrial_wire_per_day": 3,
+      "industrial_timber_per_day": 3,
+      "industrial_textiles_per_day": 2,
+      "initial_stock": {
+        "grain": 195,
+        "wine": 36,
+        "salt": 38,
+        "olive_oil": 16,
+        "pottery": 44,
+        "fish": 26,
+        "timber": 22,
+        "textiles": 30,
+        "metal": 36,
+        "wire": 22,
+        "spice": 3,
+        "slaves": 70,
+        "gold": 3,
+        "silver": 6
+      },
+      "npc_traders": 7,
+      "population_grain_per_day": 14,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 2,
+      "initial_wealth": 148,
+      "mint": {
+        "enabled": true,
+        "gold_per_batch": 1,
+        "silver_per_batch": 2,
+        "coins_per_batch": 78,
+        "max_batches_per_day": 10,
+        "treasury_sink_frac": 0.09
+      },
+      "trade_price_bias": {
+        "metal": -0.06,
+        "timber": -0.04
+      },
+      "tolls": {
+        "grain": 1,
+        "wine": 1
+      }
+    },
+    {
+      "id": "neapolis",
+      "name": "Neapolis",
+      "map_u": 0.58,
+      "map_v": 0.26,
+      "role": "great_city",
+      "industrial_metal_per_day": 2,
+      "industrial_wire_per_day": 2,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 3,
+      "initial_stock": {
+        "grain": 86,
+        "wine": 76,
+        "salt": 24,
+        "olive_oil": 50,
+        "pottery": 56,
+        "fish": 34,
+        "timber": 26,
+        "textiles": 46,
+        "metal": 17,
+        "wire": 21,
+        "spice": 9,
+        "slaves": 54
+      },
+      "npc_traders": 7,
+      "population_grain_per_day": 9,
+      "population_wine_per_day": 3,
+      "population_fish_per_day": 3,
+      "initial_wealth": 169,
+      "trade_price_bias": {
+        "wine": -0.05,
+        "olive_oil": 0.06
+      },
+      "market_demand_per_day": {
+        "spice": 1.8
+      },
+      "tolls": {
+        "spice": 1,
+        "olive_oil": 1
+      }
+    },
+    {
+      "id": "rhegium",
+      "name": "Rhegium",
+      "map_u": 0.63,
+      "map_v": 0.36,
+      "role": "maritime_town",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 2,
+      "industrial_textiles_per_day": 0,
+      "initial_stock": {
+        "grain": 55,
+        "wine": 54,
+        "salt": 19,
+        "olive_oil": 46,
+        "pottery": 34,
+        "fish": 46,
+        "timber": 20,
+        "textiles": 18,
+        "metal": 11,
+        "wire": 7,
+        "spice": 5,
+        "slaves": 38
+      },
+      "npc_traders": 6,
+      "population_grain_per_day": 6,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 119,
+      "trade_price_bias": {
+        "fish": 0.05,
+        "wine": 0.04
+      },
+      "tolls": {
+        "wine": 1
+      }
+    },
+    {
+      "id": "messana",
+      "name": "Messana",
+      "map_u": 0.68,
+      "map_v": 0.41,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 2,
+      "industrial_wire_per_day": 3,
+      "industrial_timber_per_day": 3,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 148,
+        "wine": 46,
+        "salt": 25,
+        "olive_oil": 32,
+        "pottery": 42,
+        "fish": 52,
+        "timber": 28,
+        "textiles": 24,
+        "metal": 23,
+        "wire": 30,
+        "spice": 11,
+        "slaves": 56
+      },
+      "npc_traders": 9,
+      "population_grain_per_day": 10,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 5,
+      "initial_wealth": 152,
+      "trade_price_bias": {
+        "grain": -0.08,
+        "wine": -0.04
+      }
+    },
+    {
+      "id": "panormus",
+      "name": "Panormus",
+      "map_u": 0.6,
+      "map_v": 0.45,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 2,
+      "industrial_wire_per_day": 2,
+      "industrial_timber_per_day": 2,
+      "industrial_textiles_per_day": 2,
+      "initial_stock": {
+        "grain": 92,
+        "wine": 58,
+        "salt": 24,
+        "olive_oil": 36,
+        "pottery": 40,
+        "fish": 50,
+        "timber": 26,
+        "textiles": 26,
+        "metal": 16,
+        "wire": 20,
+        "spice": 8,
+        "slaves": 48
+      },
+      "npc_traders": 7,
+      "population_grain_per_day": 9,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 144,
+      "trade_price_bias": {
+        "grain": -0.06,
+        "fish": 0.04
+      },
+      "market_demand_per_day": {
+        "timber": 1.2
+      }
+    },
+    {
+      "id": "carthage",
+      "name": "Carthage",
+      "map_u": 0.47,
+      "map_v": 0.52,
+      "role": "metropole",
+      "industrial_metal_per_day": 3,
+      "industrial_wire_per_day": 5,
+      "industrial_timber_per_day": 4,
+      "industrial_textiles_per_day": 3,
+      "initial_stock": {
+        "grain": 92,
+        "wine": 102,
+        "salt": 56,
+        "olive_oil": 40,
+        "pottery": 30,
+        "fish": 70,
+        "timber": 34,
+        "textiles": 38,
+        "metal": 29,
+        "wire": 44,
+        "spice": 20,
+        "slaves": 88,
+        "gold": 2,
+        "silver": 5
+      },
+      "npc_traders": 10,
+      "population_grain_per_day": 11,
+      "population_wine_per_day": 4,
+      "population_fish_per_day": 5,
+      "initial_wealth": 207,
+      "trade_price_bias": {
+        "grain": -0.05,
+        "spice": 0.08,
+        "slaves": 0.05
+      },
+      "market_demand_per_day": {
+        "spice": 2.2,
+        "slaves": 1.8,
+        "gold": 0.14,
+        "silver": 0.2
+      },
+      "tolls": {
+        "grain": 1,
+        "salt": 1,
+        "slaves": 1
+      },
+      "mint": {
+        "enabled": true,
+        "gold_per_batch": 1,
+        "silver_per_batch": 2,
+        "coins_per_batch": 72,
+        "max_batches_per_day": 6,
+        "treasury_sink_frac": 0.1
+      }
+    },
+    {
+      "id": "hippo",
+      "name": "Hippo Regius",
+      "map_u": 0.44,
+      "map_v": 0.56,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 125,
+        "wine": 38,
+        "salt": 48,
+        "olive_oil": 28,
+        "pottery": 22,
+        "fish": 28,
+        "timber": 14,
+        "textiles": 12,
+        "metal": 10,
+        "wire": 8,
+        "spice": 5,
+        "slaves": 24
+      },
+      "npc_traders": 4,
+      "population_grain_per_day": 7,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 2,
+      "initial_wealth": 118,
+      "trade_price_bias": {
+        "grain": -0.07,
+        "salt": -0.05
+      }
+    },
+    {
+      "id": "tingis",
+      "name": "Tingis",
+      "map_u": 0.28,
+      "map_v": 0.48,
+      "role": "maritime_town",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 2,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 62,
+        "wine": 44,
+        "salt": 40,
+        "olive_oil": 42,
+        "pottery": 26,
+        "fish": 54,
+        "timber": 18,
+        "textiles": 15,
+        "metal": 14,
+        "wire": 20,
+        "spice": 11,
+        "slaves": 30
+      },
+      "npc_traders": 5,
+      "population_grain_per_day": 6,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 5,
+      "initial_wealth": 119,
+      "trade_price_bias": {
+        "fish": 0.05,
+        "spice": 0.05
+      },
+      "market_demand_per_day": {
+        "olive_oil": 1.1
+      },
+      "tolls": {
+        "spice": 1,
+        "metal": 1
+      }
+    }
+  ],
+  "farms": [
+    {
+      "id": "latium_fields",
+      "name": "Latium grain belt",
+      "port_id": "ostia",
+      "grain_per_day": 19,
+      "wine_per_day": 2,
+      "fish_per_day": 1
+    },
+    {
+      "id": "campania_vine",
+      "name": "Campania farms & vines",
+      "port_id": "neapolis",
+      "grain_per_day": 8,
+      "wine_per_day": 8,
+      "fish_per_day": 1
+    },
+    {
+      "id": "bruttium_pastures",
+      "name": "Bruttium pastures",
+      "port_id": "rhegium",
+      "grain_per_day": 4,
+      "wine_per_day": 7,
+      "fish_per_day": 3
+    },
+    {
+      "id": "sicily_estates",
+      "name": "Sicilian estates",
+      "port_id": "messana",
+      "grain_per_day": 12,
+      "wine_per_day": 2,
+      "fish_per_day": 4
+    },
+    {
+      "id": "panormus_coast",
+      "name": "Western Sicily coast & orchards",
+      "port_id": "panormus",
+      "grain_per_day": 10,
+      "wine_per_day": 4,
+      "fish_per_day": 4
+    },
+    {
+      "id": "africa_granary",
+      "name": "African coastal farms",
+      "port_id": "carthage",
+      "grain_per_day": 14,
+      "wine_per_day": 4,
+      "fish_per_day": 6
+    },
+    {
+      "id": "numidia_fields",
+      "name": "Numidian grain & pastures",
+      "port_id": "hippo",
+      "grain_per_day": 12,
+      "wine_per_day": 2,
+      "fish_per_day": 2
+    },
+    {
+      "id": "mauretania_coast",
+      "name": "Mauretanian fisheries & vines",
+      "port_id": "tingis",
+      "grain_per_day": 5,
+      "wine_per_day": 3,
+      "fish_per_day": 6
+    }
+  ],
+  "mines": [
+    {
+      "id": "elba_iron",
+      "name": "Elban iron pits",
+      "port_id": "ostia",
+      "metal_per_day": 5,
+      "wire_per_day": 1
+    },
+    {
+      "id": "campanian_smelter",
+      "name": "Campanian smelters & wireworks",
+      "port_id": "neapolis",
+      "metal_per_day": 3,
+      "wire_per_day": 4
+    },
+    {
+      "id": "sila_ore",
+      "name": "Sila upland ore",
+      "port_id": "rhegium",
+      "metal_per_day": 2,
+      "wire_per_day": 0
+    },
+    {
+      "id": "sicily_foundries",
+      "name": "Sicilian foundries",
+      "port_id": "messana",
+      "metal_per_day": 2,
+      "wire_per_day": 6
+    },
+    {
+      "id": "africa_wireworks",
+      "name": "African wire & ingot yards",
+      "port_id": "carthage",
+      "metal_per_day": 2,
+      "wire_per_day": 7
+    },
+    {
+      "id": "hippo_ore",
+      "name": "Numidian hill ore",
+      "port_id": "hippo",
+      "metal_per_day": 1,
+      "wire_per_day": 0
+    },
+    {
+      "id": "tingis_smelter",
+      "name": "Atlantic smelters",
+      "port_id": "tingis",
+      "metal_per_day": 2,
+      "wire_per_day": 2
+    },
+    {
+      "id": "numidian_alluvial_gold",
+      "name": "Numidian washings & alluvial gold",
+      "port_id": "hippo",
+      "metal_per_day": 0,
+      "wire_per_day": 0,
+      "gold_per_day": 1,
+      "silver_per_day": 0
+    },
+    {
+      "id": "mauretanian_silver_lead",
+      "name": "Mauretanian silver–lead diggings",
+      "port_id": "tingis",
+      "metal_per_day": 0,
+      "wire_per_day": 0,
+      "gold_per_day": 0,
+      "silver_per_day": 2
+    }
+  ],
+  "lanes": [
+    { "from": "ostia", "to": "neapolis", "days": 1 },
+    { "from": "neapolis", "to": "ostia", "days": 1 },
+    { "from": "neapolis", "to": "rhegium", "days": 3 },
+    { "from": "rhegium", "to": "neapolis", "days": 3 },
+    { "from": "rhegium", "to": "messana", "days": 1 },
+    { "from": "messana", "to": "rhegium", "days": 1 },
+    { "from": "messana", "to": "carthage", "days": 4 },
+    { "from": "carthage", "to": "messana", "days": 4 },
+    { "from": "messana", "to": "panormus", "days": 2 },
+    { "from": "panormus", "to": "messana", "days": 2 },
+    { "from": "panormus", "to": "carthage", "days": 3 },
+    { "from": "carthage", "to": "panormus", "days": 3 },
+    { "from": "rhegium", "to": "panormus", "days": 2 },
+    { "from": "panormus", "to": "rhegium", "days": 2 },
+    { "from": "carthage", "to": "hippo", "days": 2 },
+    { "from": "hippo", "to": "carthage", "days": 2 },
+    { "from": "carthage", "to": "tingis", "days": 5 },
+    { "from": "tingis", "to": "carthage", "days": 5 },
+    { "from": "ostia", "to": "rhegium", "days": 4 },
+    { "from": "rhegium", "to": "ostia", "days": 4 }
+  ],
+  "port_cultures": {
+    "ostia": "italic",
+    "neapolis": "greek",
+    "rhegium": "greek",
+    "messana": "sicilian",
+    "panormus": "sicilian",
+    "carthage": "phoenician",
+    "hippo": "phoenician",
+    "tingis": "phoenician"
+  },
+  "port_shipyards": {
+    "ostia": ["italic_coastal", "greek_merchant"],
+    "neapolis": ["greek_merchant", "greek_trireme", "levantine_luxury"],
+    "rhegium": ["italic_coastal", "greek_merchant", "greek_trireme"],
+    "messana": ["sicilian_grain", "greek_merchant", "greek_trireme"],
+    "panormus": ["sicilian_grain", "phoenician_deep", "greek_merchant"],
+    "carthage": ["phoenician_deep", "levantine_luxury", "carthage_heavy_galley"],
+    "hippo": ["phoenician_deep", "italic_coastal"],
+    "tingis": ["phoenician_deep", "levantine_luxury"]
+  }
+}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="700" viewBox="0 0 1000 700">
+  <defs>
+    <linearGradient id="parchment" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#efe6d4"/>
+      <stop offset="55%" style="stop-color:#e4d6bf"/>
+      <stop offset="100%" style="stop-color:#d8c9a8"/>
+    </linearGradient>
+    <linearGradient id="seaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d4f68"/>
+      <stop offset="100%" style="stop-color:#152a3d"/>
+    </linearGradient>
+    <linearGradient id="landGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4c4a0"/>
+      <stop offset="100%" style="stop-color:#b8a078"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer frame -->
+  <rect x="0" y="0" width="1000" height="700" fill="#2a1f14"/>
+  <rect x="10" y="10" width="980" height="680" rx="6" fill="url(#parchment)"/>
+  <rect x="22" y="22" width="956" height="656" rx="4" fill="none" stroke="#6b5344" stroke-width="3"/>
+  <rect x="30" y="30" width="940" height="640" rx="2" fill="none" stroke="#8a7358" stroke-width="1" stroke-dasharray="6 4"/>
+
+  <!-- Sea -->
+  <rect x="38" y="58" width="924" height="604" rx="3" fill="url(#seaGrad)"/>
+  <rect x="38" y="58" width="924" height="604" rx="3" fill="none" stroke="#0a1520" stroke-width="10" opacity="0.2"/>
+
+  <!-- Decorative rhumb lines -->
+  <g opacity="0.08" stroke="#f0e6d8" stroke-width="0.9" fill="none">
+    <line x1="100" y1="120" x2="900" y2="580"/>
+    <line x1="120" y1="600" x2="880" y2="100"/>
+    <line x1="500" y1="70" x2="500" y2="650"/>
+    <line x1="60" y1="360" x2="940" y2="360"/>
+    <ellipse cx="500" cy="360" rx="380" ry="240"/>
+    <ellipse cx="500" cy="360" rx="260" ry="160"/>
+  </g>
+
+  <!-- Mauretania / Tingis -->
+  <path fill="url(#landGrad)" stroke="#4a3d2e" stroke-width="1.3"
+        d="M 95 300 Q 140 280 220 295 L 280 310 Q 310 325 305 355 L 285 395 Q 220 410 150 385 L 100 350 Q 85 325 95 300 Z"/>
+
+  <!-- North Africa -->
+  <path fill="url(#landGrad)" stroke="#4a3d2e" stroke-width="1.3"
+        d="M 280 310 L 420 305 Q 520 298 620 318 L 780 325 Q 880 332 935 350 L 948 400 Q 930 520 850 540 L 400 555 Q 220 545 120 480 L 100 420 Q 120 360 200 345 Z"/>
+
+  <!-- Italy -->
+  <path fill="url(#landGrad)" stroke="#4a3d2e" stroke-width="1.4"
+        d="M 430 95 L 520 88 Q 600 95 655 140 L 695 200 Q 715 265 725 330 L 735 395 Q 720 430 680 425 L 640 400 Q 600 350 565 285 L 530 210 Q 500 165 465 130 L 420 115 Z"/>
+
+  <!-- Apennine shade -->
+  <path fill="#a89878" opacity="0.4" stroke="none"
+        d="M 655 140 L 695 200 L 685 240 L 640 200 Z"/>
+
+  <!-- Sicily -->
+  <path fill="url(#landGrad)" stroke="#4a3d2e" stroke-width="1.3"
+        d="M 545 285 L 640 268 Q 730 285 745 340 L 738 430 Q 680 465 600 445 L 555 400 Q 525 340 545 285 Z"/>
+
+  <!-- Sardinia -->
+  <ellipse cx="395" cy="195" rx="38" ry="52" fill="url(#landGrad)" stroke="#4a3d2e" stroke-width="1.2"/>
+
+  <!-- Corsica -->
+  <ellipse cx="455" cy="125" rx="22" ry="48" fill="url(#landGrad)" stroke="#4a3d2e" stroke-width="1.1"/>
+
+  <!-- Coastal shallows -->
+  <path fill="#3a5f78" opacity="0.22" stroke="none"
+        d="M 280 310 Q 400 290 520 320 T 780 340 L 900 380 Q 820 420 600 410 T 280 380 Z"/>
+
+  <!-- Title -->
+  <text x="500" y="48" text-anchor="middle" fill="#4a3d2e" font-family="Georgia, serif" font-size="24" font-weight="bold" letter-spacing="0.15em">MAR INTERNUM</text>
+  <text x="500" y="68" text-anchor="middle" fill="#6b5a45" font-family="Georgia, serif" font-size="11" font-style="italic">chartarum tabula</text>
+
+  <!-- Compass -->
+  <g transform="translate(900 118)">
+    <circle r="40" fill="#e8dcc8" stroke="#5c4a36" stroke-width="1.5"/>
+    <path d="M 0 -30 L 7 0 L 0 30 L -7 0 Z" fill="#4a3d2e"/>
+    <path d="M -30 0 L 0 -7 L 30 0 L 0 7 Z" fill="#7a6848"/>
+    <text x="0" y="-48" text-anchor="middle" fill="#4a3d2e" font-family="Georgia, serif" font-size="12" font-weight="bold">N</text>
+  </g>
+
+  <!-- Scale hint -->
+  <g transform="translate(70 632)">
+    <rect x="0" y="0" width="100" height="6" fill="#c9b896" stroke="#4a3d2e" stroke-width="0.7"/>
+    <line x1="50" y1="0" x2="50" y2="6" stroke="#4a3d2e" stroke-width="0.7"/>
+  </g>
+  <text x="120" y="638" fill="#d8c9a8" font-family="Georgia, serif" font-size="9" opacity="0.85">dierum spatia</text>
+
+  <!-- Corner flourish -->
+  <path fill="none" stroke="#6b5344" stroke-width="1" opacity="0.55"
+        d="M 850 620 Q 900 600 920 640 M 880 610 Q 910 630 900 655"/>
+</svg>

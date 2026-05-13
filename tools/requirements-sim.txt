@@ -1,0 +1,2 @@
+# Optional: time-series graphs from tools/sim_100_days.py
+matplotlib>=3.7
