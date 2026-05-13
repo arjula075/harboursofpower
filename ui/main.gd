@@ -359,7 +359,13 @@ func _build_harbor_panel(parent: VBoxContainer) -> void:
 
 
 func _build_influence_panel(parent: VBoxContainer) -> void:
-	_append_wrapped(parent, _gs.get_player_city_relationship_block())
+	_append_wrapped(
+		parent,
+		"Influence — registers, temple marks, and quay mood. Each metric row carries source, age, and stated confidence."
+	)
+	var reg := _gs.get_player_city_official_intel_block()
+	if not reg.is_empty():
+		_append_wrapped(parent, reg)
 	var grid := GridContainer.new()
 	grid.columns = 6
 	for h in ["Metric", "Value", "Source", "Age", "Rel.", "Why"]:
