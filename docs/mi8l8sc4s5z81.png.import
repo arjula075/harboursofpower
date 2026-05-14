@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://iaw5cwts3li0"
-path="res://.godot/imported/carthage_port.png-8392ed9cbb0e5f82a433ef2c080fa175.ctex"
+uid="uid://bm08fag02m2ty"
+path="res://.godot/imported/mi8l8sc4s5z81.png-d42a5a4605d02c00f46d654f71bee286.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tools/sim_analysis/carthage_port.png"
-dest_files=["res://.godot/imported/carthage_port.png-8392ed9cbb0e5f82a433ef2c080fa175.ctex"]
+source_file="res://docs/mi8l8sc4s5z81.png"
+dest_files=["res://.godot/imported/mi8l8sc4s5z81.png-d42a5a4605d02c00f46d654f71bee286.ctex"]
 
 [params]
 

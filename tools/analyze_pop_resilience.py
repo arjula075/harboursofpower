@@ -1,6 +1,6 @@
 """Per-port population resilience analysis (post-resilience-helpers).
 
-Runs the same 10000-day twin scenario, tracks per-port `population_grain` every day,
+Runs the same long-run twin scenario (default 5000 days), tracks per-port `population_grain` every day,
 and prints:
 
   baseline / end / min / max / mean / median pop
@@ -10,7 +10,7 @@ and prints:
   end-of-run preserved-food reserve as % of cap
 
 Usage:
-  python3 tools/analyze_pop_resilience.py 10000
+  python3 tools/analyze_pop_resilience.py 5000
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ def fmt_float(v: float, width: int = 6, precision: int = 1) -> str:
 
 
 def main() -> None:
-    days = int(sys.argv[1]) if len(sys.argv) > 1 else 10000
+    days = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
     rng = random.Random(_RNG_SEED)
     sim = Sim(rng)
     sim.load()

@@ -17,7 +17,7 @@ Touch any of these (or add a new UI entry point tied to `GameState`) and reconci
 - `ui/main.gd` (city places, trade, voyage, admin, signals)
 - `autoload/game_state.gd` when it adds/changes **player-invokable** APIs used by UI or new **signals** the UI should surface
 - `main.tscn` or other primary UI scenes if they add/remove controls that change flows
-- `data/world.json`, `data/goods.json`, `data/ships.json` when the change **changes what the player can do** (e.g. new good category with market row, new port capability like mint/tolls), not for pure balance tweaks that do not change affordances
+- `data/world_full.json`, `data/goods.json`, `data/ships.json` when the change **changes what the player can do** (e.g. new good category with market row, new port capability like mint/tolls), not for pure balance tweaks that do not change affordances
 
 ## What to update
 

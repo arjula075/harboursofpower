@@ -1,7 +1,47 @@
 {
   "autonomy_warmup_days": 24,
+  "default_player_port_id": "ostia",
   "npc_city_grain_contracts_enabled": true,
-  "initial_treasury_coins": 9600,
+  "institutional_trade": {
+    "enabled": true,
+    "contract_types": [
+      "grain_delivery",
+      "temple_supply",
+      "military_provisioning",
+      "convoy_escort",
+      "harbor_priority",
+      "toll_privilege",
+      "exclusive_purchase",
+      "city_patronage"
+    ],
+    "phase3": {
+      "enabled": true,
+      "bands": [
+        [
+          "ostia",
+          "neapolis",
+          "rhegium",
+          "messana",
+          "panormus"
+        ],
+        [
+          "carthage",
+          "hippo",
+          "tingis"
+        ]
+      ],
+      "ally_toll_mul": 0.86,
+      "enemy_toll_mul": 1.14,
+      "ally_buy_mul": 0.985,
+      "route_ally_bonus": 0.1,
+      "route_hostile_penalty": 0.24,
+      "escort_same_band_p": 0.075
+    },
+    "phase5": {
+      "enabled": true
+    }
+  },
+  "initial_treasury_coins": 140000,
   "port_role_wealth_bonuses": {
     "metropole": 42,
     "great_city": 28,
@@ -3348,7 +3388,7 @@
       "id": "akragas_hinterland",
       "name": "Akragas hinterland",
       "port_id": "akragas",
-      "grain_per_day": 12,
+      "grain_per_day": 18,
       "wine_per_day": 5,
       "fish_per_day": 3
     },
@@ -3452,7 +3492,7 @@
       "id": "catane_hinterland",
       "name": "Catane hinterland",
       "port_id": "catane",
-      "grain_per_day": 12,
+      "grain_per_day": 18,
       "wine_per_day": 2,
       "fish_per_day": 3
     },
@@ -3476,7 +3516,7 @@
       "id": "chersonesos_hinterland",
       "name": "Chersonesos hinterland",
       "port_id": "chersonesos",
-      "grain_per_day": 12,
+      "grain_per_day": 18,
       "wine_per_day": 5,
       "fish_per_day": 3
     },
@@ -3508,7 +3548,7 @@
       "id": "cyrene_hinterland",
       "name": "Cyrene hinterland",
       "port_id": "cyrene",
-      "grain_per_day": 12,
+      "grain_per_day": 18,
       "wine_per_day": 5,
       "fish_per_day": 3
     },
@@ -3548,7 +3588,7 @@
       "id": "gela_hinterland",
       "name": "Gela hinterland",
       "port_id": "gela",
-      "grain_per_day": 12,
+      "grain_per_day": 18,
       "wine_per_day": 2,
       "fish_per_day": 3
     },
@@ -3572,7 +3612,7 @@
       "id": "hippo_hinterland",
       "name": "Hippo hinterland",
       "port_id": "hippo",
-      "grain_per_day": 12,
+      "grain_per_day": 18,
       "wine_per_day": 2,
       "fish_per_day": 3
     },
@@ -3652,7 +3692,7 @@
       "id": "messana_hinterland",
       "name": "Messana hinterland",
       "port_id": "messana",
-      "grain_per_day": 12,
+      "grain_per_day": 18,
       "wine_per_day": 2,
       "fish_per_day": 3
     },
@@ -3724,7 +3764,7 @@
       "id": "olbia_pontic_hinterland",
       "name": "Olbia Pontica hinterland",
       "port_id": "olbia_pontic",
-      "grain_per_day": 12,
+      "grain_per_day": 18,
       "wine_per_day": 5,
       "fish_per_day": 3
     },
@@ -3740,7 +3780,7 @@
       "id": "panormus_hinterland",
       "name": "Panormus hinterland",
       "port_id": "panormus",
-      "grain_per_day": 12,
+      "grain_per_day": 18,
       "wine_per_day": 2,
       "fish_per_day": 6
     },

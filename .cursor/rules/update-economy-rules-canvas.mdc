@@ -10,7 +10,7 @@ Whenever you **finish a change** that alters **documented behaviour** in any of:
 - `autoload/game_state.gd`
 - `tools/sim_100_days.py`
 - `tools/sim_100_days.gd`
-- `data/world.json` (ports, roles, industry, war, population fields, `port_role_wealth_bonuses`, …)
+- `data/world_full.json` (ports, roles, industry, war, population fields, `port_role_wealth_bonuses`, …)
 - `data/goods.json` (prices, tiers, stock targets, market demand defaults)
 
 you **must** update the standalone rules sheet:
@@ -20,7 +20,7 @@ you **must** update the standalone rules sheet:
 
 ## What to update
 
-- Add, remove, or edit sections so they still match **tick order**, **formulas (qualitatively)**, **constants** when defaults change, and **data-driven** rules (`world.json` / `goods.json`).
+- Add, remove, or edit sections so they still match **tick order**, **formulas (qualitatively)**, **constants** when defaults change, and **data-driven** rules (`world_full.json` / `goods.json`).
 - If you introduce a new cross-cutting system (e.g. a new tax, toll, or good tier), add a short **H2 + Text/Table** block; do not leave stale claims in the canvas.
 
 ## Skip only when

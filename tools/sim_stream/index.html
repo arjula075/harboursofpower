@@ -89,10 +89,26 @@
 
     <section class="panel">
       <div class="panel-h">
-        <h2>NPC purse &amp; riots over time</h2>
+        <h2>NPC purse &amp; mean city size</h2>
         <span class="hint">client-side history (max 600 ticks since this page opened)</span>
       </div>
       <svg id="spark" class="spark" viewBox="0 0 800 140" preserveAspectRatio="none" width="100%" height="140"></svg>
+    </section>
+
+    <section class="panel">
+      <div class="panel-h">
+        <h2>Grain &amp; metal &mdash; mean dock buy (coins/unit)</h2>
+        <span class="hint">unweighted mean across ports, NPC wholesale counterparty &middot; same history window as chart above</span>
+      </div>
+      <svg id="sparkPrices" class="spark" viewBox="0 0 800 140" preserveAspectRatio="none" width="100%" height="140"></svg>
+    </section>
+
+    <section class="panel">
+      <div class="panel-h">
+        <h2>Global average food unrest</h2>
+        <span class="hint">mean <code>food_unrest</code> (0–200) across ports &middot; dashed guides: uneasy 40 · tense 90 · critical 130</span>
+      </div>
+      <svg id="sparkUnrest" class="spark" viewBox="0 0 800 140" preserveAspectRatio="none" width="100%" height="140"></svg>
     </section>
 
     <section class="panel">
@@ -121,6 +137,8 @@
     { key: "stock_grain",         label: "grain",       type: "num",   def: "desc" },
     { key: "grain_food_days",     label: "food d",      type: "num",   def: "asc",  fmt: v => v.toFixed(1) },
     { key: "food_unrest",         label: "unrest",      type: "num",   def: "desc", isMood: true },
+    { key: "food_worry",          label: "worry",       type: "num",   def: "desc" },
+    { key: "food_panic",          label: "panic",       type: "num",   def: "desc" },
     { key: "population_grain",    label: "pop",         type: "num",   def: "desc" },
     { key: "population_grain_cap",label: "pop cap",     type: "num",   def: "desc" },
     { key: "famine_streak_days",  label: "famine",      type: "num",   def: "desc" },
@@ -131,16 +149,20 @@
     { key: "plague_days",         label: "plague",      type: "num",   def: "desc" },
   ];
 
+  /** Mean food_unrest below this counts as dashboard "calm" (green), same as port mood. */
+  const CALM_UNREST_MAX = 40;
+
   const state = {
     src: "latest.json",
     trendSrc: "trend.jsonl",
     last: null,
     prev: null,
-    history: [],     // [{ tick, day, npc_purse, riots, bust }]
+    history: [],     // [{ tick, day, npc_purse, riots, bust, population_mean, price_grain_mean, price_metal_mean, food_unrest_mean }]
     historyMax: 20000,
-    sort: { key: "food_unrest", dir: "desc" },
+    sort: { key: "population_grain", dir: "desc" },
     rendered: false,
     trendLoaded: false,
+    prevCalmSpellAvg: null,
   };
 
   function $(id) { return document.getElementById(id); }
@@ -149,25 +171,45 @@
     const u = +unrest || 0;
     if (u >= 130) return "mood-critical";
     if (u >= 90)  return "mood-tense";
-    if (u >= 40)  return "mood-uneasy";
+    if (u >= CALM_UNREST_MAX)  return "mood-uneasy";
     return "mood-calm";
   }
   function moodLabel(unrest) {
     const u = +unrest || 0;
     if (u >= 130) return "Critical";
     if (u >= 90)  return "Tense";
-    if (u >= 40)  return "Uneasy";
+    if (u >= CALM_UNREST_MAX)  return "Uneasy";
     return "Calm";
+  }
+  function meanFoodUnrest(ports) {
+    const vals = Object.values(ports || {}).map(p => +p.food_unrest || 0);
+    if (!vals.length) return null;
+    return vals.reduce((a, b) => a + b, 0) / vals.length;
+  }
+  function metropolePops(ports) {
+    return Object.values(ports || {})
+      .filter(p => p.role === "metropole")
+      .map(p => +p.population_grain || 0);
+  }
+  function meanMetropolePop(ports) {
+    const vals = metropolePops(ports);
+    if (!vals.length) return null;
+    return vals.reduce((a, b) => a + b, 0) / vals.length;
   }
   function delta(curr, prev) {
     if (prev == null) return null;
-    return (+curr) - (+prev);
+    // JS float subtraction reintroduces precision noise (e.g. 1.86000000003).
+    // Round to 2 decimals so deltas match the on-disk snapshot precision.
+    return Math.round(((+curr) - (+prev)) * 100) / 100;
   }
   function deltaSpan(d, fmtFn) {
     if (d == null) return "";
     const cls = d > 0 ? "delta-up" : d < 0 ? "delta-dn" : "delta-zero";
     const sign = d > 0 ? "+" : d < 0 ? "" : "±";
-    const txt = fmtFn ? fmtFn(Math.abs(d)) : Math.abs(d).toLocaleString();
+    const abs = Math.abs(d);
+    // If the column has a formatter (e.g. v.toFixed(2)), use it on the magnitude;
+    // otherwise integer-like values get toLocaleString.
+    const txt = (typeof fmtFn === "function") ? fmtFn(abs) : abs.toLocaleString();
     return ` <span class="${cls}">${sign}${txt}</span>`;
   }
   function tsAgo(updated_at) {
@@ -192,10 +234,23 @@
         npc_purse: r.npc_purse,
         riots: r.riot_events_total,
         bust: r.bankruptcy_events_total,
+        population_mean: (r.population_mean != null && r.population_mean !== "")
+          ? +r.population_mean
+          : null,
+        price_grain_mean: (r.price_grain_mean != null && r.price_grain_mean !== "")
+          ? +r.price_grain_mean
+          : null,
+        price_metal_mean: (r.price_metal_mean != null && r.price_metal_mean !== "")
+          ? +r.price_metal_mean
+          : null,
+        food_unrest_mean: (r.food_unrest_mean != null && r.food_unrest_mean !== "")
+          ? +r.food_unrest_mean
+          : null,
       }));
       if (state.history.length > state.historyMax) {
         state.history = state.history.slice(-state.historyMax);
       }
+      state.prevCalmSpellAvg = null;
     } catch (e) {
       // soft-fail
     }
@@ -234,12 +289,20 @@
         npc_purse: snap.npc_total_money,
         riots: snap.riot_events_total,
         bust: snap.bankruptcy_events_total,
+        population_mean: (snap.pop_summary && snap.pop_summary.population_mean != null)
+          ? +snap.pop_summary.population_mean
+          : null,
+        price_grain_mean: (snap.price_grain_mean != null) ? +snap.price_grain_mean : null,
+        price_metal_mean: (snap.price_metal_mean != null) ? +snap.price_metal_mean : null,
+        food_unrest_mean: (snap.food_unrest_mean != null) ? +snap.food_unrest_mean : null,
       });
       if (state.history.length > state.historyMax) state.history.shift();
     }
     renderHeader(snap);
     renderKpis(snap);
     renderSpark();
+    renderSparkPrices();
+    renderSparkUnrest();
     renderPorts(snap);
     state.rendered = true;
   }
@@ -287,13 +350,148 @@
         sub: "city coffers (post mint sinks)",
       },
     ];
+    const portsNow = snap.ports || {};
+    const portsPrev = prev?.ports || {};
+    const uMean = (snap.food_unrest_mean != null) ? +snap.food_unrest_mean : meanFoodUnrest(portsNow);
+    const uMeanPrev = (prev?.food_unrest_mean != null) ? +prev.food_unrest_mean : meanFoodUnrest(portsPrev);
+    if (uMean != null) {
+      const unrestFmt = v => (+v).toFixed(1);
+      items.push({
+        label: "Average unrest",
+        value: unrestFmt(uMean) + deltaSpan(delta(uMean, uMeanPrev), unrestFmt),
+        sub: "mean food_unrest (0–200) across ports",
+      });
+      const cs = calmSpellStats(state.history);
+      const spellFmt = v => (+v).toFixed(1);
+      let calmVal = "—";
+      let calmSub = `mean spell length (ticks ≈ days) while mean unrest &lt; ${CALM_UNREST_MAX} (calm)`;
+      if (cs.avgLength != null) {
+        const ticksStr = `${spellFmt(cs.avgLength)} ticks`;
+        calmVal =
+          (cs.inCalmNow ? `<span class="mood-calm">${ticksStr}</span>` : ticksStr) +
+          deltaSpan(delta(cs.avgLength, state.prevCalmSpellAvg), spellFmt);
+        calmSub =
+          `${cs.completed} completed spell(s) · open run ${cs.currentLength} tick(s)` +
+          (cs.inCalmNow ? "" : " · world not calm");
+      } else if (state.history.length >= 2) {
+        calmSub =
+          `no completed calm spell yet (mean must stay &lt; ${CALM_UNREST_MAX}) · open run ${cs.currentLength} tick(s)`;
+      }
+      state.prevCalmSpellAvg = cs.avgLength;
+      items.push({
+        label: "Avg calm period",
+        value: calmVal,
+        sub: calmSub,
+      });
+    }
+    const ps = snap.pop_summary || {};
+    const pps = prev?.pop_summary || null;
+    if (ps.ports_total) {
+      const meanFmt = v => (+v).toFixed(1);
+      const medianFmt = v => (+v).toFixed(0);
+      const initTotal = ps.population_initial_total || 0;
+      const popTotal = ps.population_total || 0;
+      const gapPct = initTotal > 0
+        ? ((popTotal - initTotal) / initTotal * 100).toFixed(1)
+        : "0.0";
+      const gapSign = popTotal >= initTotal ? "+" : "";
+      items.push({
+        label: "City size (mean / median)",
+        value:
+          `${meanFmt(ps.population_mean)}` +
+          deltaSpan(delta(ps.population_mean, pps?.population_mean), meanFmt) +
+          ` <span style="color:var(--fg-mute)">/ ${medianFmt(ps.population_median)}</span>` +
+          deltaSpan(delta(ps.population_median, pps?.population_median), medianFmt),
+        sub: `total pop ${fmt(popTotal)} vs initial ${fmt(initTotal)} (${gapSign}${gapPct}%)`,
+      });
+      const mMean = meanMetropolePop(portsNow);
+      const mMeanPrev = meanMetropolePop(portsPrev);
+      const mN = metropolePops(portsNow).length;
+      if (mMean != null) {
+        const popFmt = v => (+v).toFixed(1);
+        items.push({
+          label: "Metropoles — mean pop",
+          value: popFmt(mMean) + deltaSpan(delta(mMean, mMeanPrev), popFmt),
+          sub: `${mN} port(s) with role metropole (grain mouths)`,
+        });
+      } else {
+        items.push({
+          label: "Metropoles — mean pop",
+          value: "—",
+          sub: "no role=metropole in snapshot (re-run sim_stream for per-port role)",
+        });
+      }
+      const underNow = ps.ports_under_initial || 0;
+      const overNow = ps.ports_over_initial || 0;
+      const atNow = ps.ports_at_initial || 0;
+      const totalPorts = ps.ports_total || 0;
+      items.push({
+        label: "Cities below initial size",
+        value:
+          `${underNow} / ${totalPorts}` +
+          deltaSpan(delta(underNow, pps?.ports_under_initial)),
+        sub: `${overNow} above · ${atNow} matching initial cohort`,
+      });
+    }
     $("kpis").innerHTML = items.map(it => `
       <div class="kpi">
         <div class="label">${it.label}</div>
-        <div class="value">${it.value}</div>
+        <div class="value${it.valueClass ? " " + it.valueClass : ""}">${it.value}</div>
         <div class="sub">${it.sub}</div>
       </div>
     `).join("");
+  }
+
+  /** For spark overlay: carry last known mean so the polyline stays continuous when early ticks lack data. */
+  function filledPopMeans(raw) {
+    const n = raw.length;
+    if (!n) return null;
+    let first = -1;
+    for (let i = 0; i < n; i++) {
+      if (raw[i] != null && !Number.isNaN(raw[i])) { first = i; break; }
+    }
+    if (first < 0) return null;
+    const out = new Array(n);
+    let v = raw[first];
+    for (let i = 0; i < first; i++) out[i] = v;
+    for (let i = first; i < n; i++) {
+      if (raw[i] != null && !Number.isNaN(raw[i])) v = raw[i];
+      out[i] = v;
+    }
+    return out;
+  }
+
+  /**
+   * Contiguous "calm" spells in history when global mean unrest is green (below uneasy).
+   * Uses forward-filled mean unrest (same gap handling as the unrest sparkline).
+   * Returns average length of completed spells only; current open spell length separate.
+   */
+  function calmSpellStats(history) {
+    const raw = (history || []).map(p =>
+      (p.food_unrest_mean != null && !Number.isNaN(+p.food_unrest_mean)) ? +p.food_unrest_mean : null
+    );
+    const filled = filledPopMeans(raw);
+    if (!filled || !filled.length) {
+      return { avgLength: null, completed: 0, currentLength: 0, inCalmNow: false };
+    }
+    const lengths = [];
+    let run = 0;
+    let inCalm = false;
+    for (let i = 0; i < filled.length; i++) {
+      const calm = filled[i] < CALM_UNREST_MAX;
+      if (calm) {
+        run++;
+        inCalm = true;
+      } else {
+        if (inCalm && run > 0) lengths.push(run);
+        run = 0;
+        inCalm = false;
+      }
+    }
+    const currentLength = inCalm ? run : 0;
+    const sum = lengths.reduce((a, b) => a + b, 0);
+    const avgLength = lengths.length ? sum / lengths.length : null;
+    return { avgLength, completed: lengths.length, currentLength, inCalmNow: inCalm };
   }
 
   function renderSpark() {
@@ -303,19 +501,119 @@
     if (h0.length < 2) { svg.innerHTML = ""; return; }
     const xs = h0.map((_, i) => i);
     const purses = h0.map(p => p.npc_purse);
-    const riots  = h0.map(p => p.riots);
+    const popMeans = h0.map(p =>
+      (p.population_mean != null && !Number.isNaN(+p.population_mean)) ? +p.population_mean : null
+    );
     const minP = Math.min(...purses), maxP = Math.max(...purses);
-    const minR = Math.min(...riots),  maxR = Math.max(...riots);
+    const finitePop = popMeans.filter(v => v != null);
     const xScale = i => pad + (i / (xs.length - 1)) * (w - 2 * pad);
     const yScalePurse = v => h - pad - ((v - minP) / Math.max(1, maxP - minP)) * (h - 2 * pad);
-    const yScaleRiots = v => h - pad - ((v - minR) / Math.max(1, maxR - minR)) * (h - 2 * pad);
     const polyP = purses.map((v, i) => `${xScale(i)},${yScalePurse(v)}`).join(" ");
-    const polyR = riots.map((v, i) => `${xScale(i)},${yScaleRiots(v)}`).join(" ");
+    let polyPop = "";
+    let popLegend = "";
+    const filled = filledPopMeans(popMeans);
+    if (filled && finitePop.length >= 1) {
+      const minM = Math.min(...finitePop), maxM = Math.max(...finitePop);
+      const yScalePop = v => h - pad - ((v - minM) / Math.max(1e-6, maxM - minM)) * (h - 2 * pad);
+      polyPop = filled.map((v, i) => `${xScale(i)},${yScalePop(v)}`).join(" ");
+      popLegend = `  ·  Mean city size (grain mouths) ${minM.toFixed(1)}–${maxM.toFixed(1)}`;
+    }
     const last = h0[h0.length - 1];
+    const popLine = polyPop
+      ? `<polyline fill="none" stroke="#fb923c" stroke-width="1.2" stroke-dasharray="4,3" points="${polyPop}" />`
+      : "";
     svg.innerHTML = `
       <polyline fill="none" stroke="#5eead4" stroke-width="1.5" points="${polyP}" />
-      <polyline fill="none" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="3,3" points="${polyR}" />
-      <text x="${w - pad}" y="14" text-anchor="end" fill="#94a3b8" font-size="11">NPC purse range ${fmt(minP)}–${fmt(maxP)}  ·  Riots ${minR}–${maxR}</text>
+      ${popLine}
+      <text x="${w - pad}" y="14" text-anchor="end" fill="#94a3b8" font-size="11">NPC purse range ${fmt(minP)}–${fmt(maxP)}${popLegend}</text>
+      <text x="${w - pad}" y="${h - pad - 2}" text-anchor="end" fill="#94a3b8" font-size="11">latest tick ${last.tick} · d${last.day}</text>
+    `;
+  }
+
+  function renderSparkPrices() {
+    const svg = $("sparkPrices");
+    const w = 800, h = 140, pad = 6;
+    const h0 = state.history;
+    if (h0.length < 2) { svg.innerHTML = ""; return; }
+    const xs = h0.map((_, i) => i);
+    const grainRaw = h0.map(p =>
+      (p.price_grain_mean != null && !Number.isNaN(+p.price_grain_mean)) ? +p.price_grain_mean : null
+    );
+    const metalRaw = h0.map(p =>
+      (p.price_metal_mean != null && !Number.isNaN(+p.price_metal_mean)) ? +p.price_metal_mean : null
+    );
+    const xScale = i => pad + (i / (xs.length - 1)) * (w - 2 * pad);
+
+    let polyGrain = "";
+    let grainLegend = "";
+    const filledGrain = filledPopMeans(grainRaw);
+    const finiteGrain = grainRaw.filter(v => v != null);
+    if (filledGrain && finiteGrain.length >= 1) {
+      const minG = Math.min(...finiteGrain), maxG = Math.max(...finiteGrain);
+      const yScaleG = v => h - pad - ((v - minG) / Math.max(1e-6, maxG - minG)) * (h - 2 * pad);
+      polyGrain = filledGrain.map((v, i) => `${xScale(i)},${yScaleG(v)}`).join(" ");
+      grainLegend = `Grain ${minG.toFixed(2)}–${maxG.toFixed(2)}`;
+    }
+
+    let polyMetal = "";
+    let metalLegend = "";
+    const finiteMetal = metalRaw.filter(v => v != null);
+    const metalVisible = finiteMetal.length >= 1 && Math.max(...finiteMetal) > 0;
+    const filledMetal = filledPopMeans(metalRaw);
+    if (metalVisible && filledMetal) {
+      const minM = Math.min(...finiteMetal), maxM = Math.max(...finiteMetal);
+      const yScaleM = v => h - pad - ((v - minM) / Math.max(1e-6, maxM - minM)) * (h - 2 * pad);
+      polyMetal = filledMetal.map((v, i) => `${xScale(i)},${yScaleM(v)}`).join(" ");
+      metalLegend = `  ·  Metal ${minM.toFixed(2)}–${maxM.toFixed(2)}`;
+    } else {
+      metalLegend = finiteMetal.length ? "  ·  Metal flat 0 (no good?)" : "  ·  Metal (n/a)";
+    }
+
+    const lineGrain = polyGrain
+      ? `<polyline fill="none" stroke="#fcd34d" stroke-width="1.5" points="${polyGrain}" />`
+      : "";
+    const lineMetal = polyMetal
+      ? `<polyline fill="none" stroke="#c4b5fd" stroke-width="1.2" stroke-dasharray="4,3" points="${polyMetal}" />`
+      : "";
+    const last = h0[h0.length - 1];
+    const legendTop = grainLegend ? `${grainLegend}${metalLegend}` : "no price series";
+    svg.innerHTML = `
+      ${lineGrain}
+      ${lineMetal}
+      <text x="${w - pad}" y="14" text-anchor="end" fill="#94a3b8" font-size="11">${legendTop}</text>
+      <text x="${w - pad}" y="${h - pad - 2}" text-anchor="end" fill="#94a3b8" font-size="11">latest tick ${last.tick} · d${last.day}</text>
+    `;
+  }
+
+  function renderSparkUnrest() {
+    const svg = $("sparkUnrest");
+    const w = 800, h = 140, pad = 6;
+    const h0 = state.history;
+    if (h0.length < 2) { svg.innerHTML = ""; return; }
+    const U_MAX = 200;
+    const xScale = i => pad + (i / (h0.length - 1)) * (w - 2 * pad);
+    const yScale = u => {
+      const clamped = Math.max(0, Math.min(U_MAX, +u || 0));
+      return h - pad - (clamped / U_MAX) * (h - 2 * pad);
+    };
+    const raw = h0.map(p =>
+      (p.food_unrest_mean != null && !Number.isNaN(+p.food_unrest_mean)) ? +p.food_unrest_mean : null
+    );
+    const filled = filledPopMeans(raw);
+    if (!filled) { svg.innerHTML = ""; return; }
+    const poly = filled.map((v, i) => `${xScale(i)},${yScale(v)}`).join(" ");
+    const finite = raw.filter(v => v != null);
+    const minU = finite.length ? Math.min(...finite) : 0;
+    const maxU = finite.length ? Math.max(...finite) : 0;
+    const last = h0[h0.length - 1];
+    const guides = [40, 90, 130].map(th => {
+      const y = yScale(th);
+      return `<line x1="${pad}" y1="${y}" x2="${w - pad}" y2="${y}" stroke="#334155" stroke-dasharray="3,4" stroke-opacity="0.75" />`;
+    }).join("");
+    svg.innerHTML = `
+      ${guides}
+      <polyline fill="none" stroke="#f59e0b" stroke-width="1.6" points="${poly}" />
+      <text x="${w - pad}" y="14" text-anchor="end" fill="#94a3b8" font-size="11">mean unrest ${minU.toFixed(1)}–${maxU.toFixed(1)} (axis 0–${U_MAX})</text>
       <text x="${w - pad}" y="${h - pad - 2}" text-anchor="end" fill="#94a3b8" font-size="11">latest tick ${last.tick} · d${last.day}</text>
     `;
   }
@@ -359,7 +657,7 @@
             d = (+v) - (+pp[c.key]);
             if (Math.abs(d) < (c.fmt ? 0.05 : 1)) d = 0;
           }
-          inner = txt + (d != null ? deltaSpan(d, c.fmt ? Math.abs : null) : "");
+          inner = txt + (d != null ? deltaSpan(d, c.fmt || null) : "");
         }
         if (c.key === "wealthRatio") {
           const ratio = Math.min(2, +v || 0);

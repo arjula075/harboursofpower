@@ -3,7 +3,7 @@ extends SceneTree
 ## Headless run: `Godot --headless --path . -s res://tools/sim_100_days.gd`
 ## Player does not sail or trade; world + NPCs + population run this many ticks.
 
-const DAYS := 10000
+const DAYS := 5000
 
 
 func _progress_log_step(total: int) -> int:
@@ -82,7 +82,7 @@ func _print_block(title: String, m: Dictionary) -> void:
 		print(
 			(
 				"  port %-10s  wealth=%4d (attract=%4d)  grain=%4d  wine=%4d  m=%3d w=%3d  spoil=%2d  "
-				+ "food_days=%5.1f  unrest=%3d (%s)  pop=%d out×%.2f fam=%d pro=%d  ind_mw=%2d/%2d  npc docked=%d inbound=%d  %s"
+				+ "food_days=%5.1f  unrest=%3d W%2d P%2d (%s)  pop=%d out×%.2f fam=%d pro=%d  ind_mw=%2d/%2d  npc docked=%d inbound=%d  %s"
 			)
 			% [
 				str(pid),
@@ -95,6 +95,8 @@ func _print_block(title: String, m: Dictionary) -> void:
 				int(p.get("grain_spoiled", 0)),
 				float(p.get("grain_food_days", 9999.0)),
 				int(p.get("food_unrest", 0)),
+				int(p.get("food_worry", 0)),
+				int(p.get("food_panic", 0)),
 				mood,
 				pop_m,
 				pop_sc,

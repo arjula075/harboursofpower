@@ -2,16 +2,12 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cuwa7c48oq6xf"
-path="res://.godot/imported/hippo_port.png-373406731c3c748b480e2e154d26f258.ctex"
-metadata={
-"vram_texture": false
-}
+uid="uid://cfnghoblqjvum"
+valid=false
 
 [deps]
 
-source_file="res://tools/sim_analysis/hippo_port.png"
-dest_files=["res://.godot/imported/hippo_port.png-373406731c3c748b480e2e154d26f258.ctex"]
+source_file="res://docs/reference_greek_phoenician_colonies_mediterranean.png"
 
 [params]
 

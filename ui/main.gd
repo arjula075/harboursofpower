@@ -18,8 +18,9 @@ const _CITY_PLACE_LABELS: PackedStringArray = [
 
 const _SEA_CHART_PATH := "res://assets/ui/sea_chart.svg"
 const _STATUS_LOG_MAX_CHARS := 12000
-## Engine `TooltipLabel` width for word wrap (fraction of game viewport width).
-const _TOOLTIP_WRAP_WIDTH_FRAC := 0.3
+const _NarrowTooltipButton := preload("res://ui/narrow_tooltip_button.gd")
+## Fallback wrap for engine `TooltipLabel` (ItemList, etc.): capped so it never tracks full panel width.
+const _TOOLTIP_WRAP_WIDTH_FRAC := 0.22
 
 @onready var _gs: HarboursGameState = get_node("/root/GameState") as HarboursGameState
 @onready var day_label: Label = %DayLabel
@@ -82,20 +83,33 @@ func _ready() -> void:
 func _tooltip_wrap_width_px() -> int:
 	var vp := get_viewport()
 	if vp == null:
-		return 480
+		return 320
 	var w: int = int(vp.get_visible_rect().size.x * _TOOLTIP_WRAP_WIDTH_FRAC)
-	return maxi(160, w)
+	return clampi(w, 200, 320)
 
 
 func _apply_wrapped_tooltip_label(lbl: Label) -> void:
 	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl.custom_minimum_size = Vector2(float(_tooltip_wrap_width_px()), 0.0)
+	var w: float = float(_tooltip_wrap_width_px())
+	lbl.custom_minimum_size = Vector2(w, 0.0)
+	lbl.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	lbl.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+
+func _is_engine_tooltip_label(node: Node) -> bool:
+	if not (node is Label):
+		return false
+	if str((node as Label).get_class()) == "TooltipLabel":
+		return true
+	var p: Node = node.get_parent()
+	if p == null:
+		return false
+	var gp: Node = p.get_parent()
+	return p is MarginContainer and gp is PopupPanel
 
 
 func _on_scene_tree_node_added_for_tooltips(node: Node) -> void:
-	if not (node is Label):
-		return
-	if str(node.get_class()) != "TooltipLabel":
+	if not _is_engine_tooltip_label(node):
 		return
 	_apply_wrapped_tooltip_label(node as Label)
 
@@ -106,10 +120,12 @@ func _on_viewport_size_changed_for_tooltips() -> void:
 
 
 func _recurse_tooltip_labels_set_width(node: Node, width_px: float) -> void:
-	if node is Label and str(node.get_class()) == "TooltipLabel":
+	if _is_engine_tooltip_label(node):
 		var lbl: Label = node as Label
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.custom_minimum_size = Vector2(width_px, 0.0)
+		lbl.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		lbl.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	for c in node.get_children():
 		_recurse_tooltip_labels_set_width(c, width_px)
 
@@ -176,6 +192,27 @@ func _on_player_encounter_report(summary: String) -> void:
 		_append_log(summary)
 
 
+func _append_institutional_charter_digest_to_log() -> void:
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append(_gs.get_player_institutional_charter_law_block())
+	lines.append(_gs.get_player_institutional_breach_law_block())
+	lines.append(_gs.get_player_institutional_alliance_map_block())
+	for row in _gs.list_player_institutional_charter_board_rows():
+		var d: Dictionary = row as Dictionary
+		lines.append(
+			"%s → %s · %s ×%d · due day %d · nights left %d"
+			% [
+				str(d.get("issuer_name", "")),
+				str(d.get("dest_name", "")),
+				str(d.get("good_id", "")),
+				int(d.get("qty", 0)),
+				int(d.get("due_day", 0)),
+				int(d.get("days_remaining", 0)),
+			]
+		)
+	_append_log("\n\n".join(lines))
+
+
 func _refresh_header() -> void:
 	day_label.text = _gs.get_calendar_header_line()
 	money_label.text = "Coins: %d" % _gs.get_money()
@@ -226,6 +263,12 @@ func _tbl_cell(txt: String, min_w: float = 0.0) -> Label:
 
 
 func _truncate(s: String, max_len: int) -> String:
+	if s.length() <= max_len:
+		return s
+	return s.substr(0, maxi(0, max_len - 1)) + "…"
+
+
+func _tooltip_trunc(s: String, max_len: int = 110) -> String:
 	if s.length() <= max_len:
 		return s
 	return s.substr(0, maxi(0, max_len - 1)) + "…"
@@ -304,18 +347,18 @@ func _build_market_panel(parent: VBoxContainer) -> void:
 	var hint_row := HBoxContainer.new()
 	hint_row.add_theme_constant_override("separation", 8)
 	var hint := Label.new()
-	hint.text = "Each tile is one good: port stock is the city tally on the row; trend compares to yesterday’s ask before the dawn bell."
+	hint.text = "Each tile is one good: port stock is the civic tally; grain/fish buy caps follow quaestor surplus (granary ring-fence). Trend compares to yesterday’s ask before the dawn bell."
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hint.add_theme_font_size_override("font_size", 10)
 	hint_row.add_child(hint)
-	var digest_btn := Button.new()
+	var digest_btn := _NarrowTooltipButton.new()
 	digest_btn.text = "City supply digest → log"
 	digest_btn.add_theme_font_size_override("font_size", 10)
 	digest_btn.tooltip_text = "Farms, mines, population — same text the old card showed."
 	digest_btn.pressed.connect(_append_log.bind(_gs.get_port_city_supply_digest()))
 	hint_row.add_child(digest_btn)
-	var stocks_btn := Button.new()
+	var stocks_btn := _NarrowTooltipButton.new()
 	stocks_btn.text = "Full port stock line → log"
 	stocks_btn.add_theme_font_size_override("font_size", 10)
 	stocks_btn.tooltip_text = "All goods in one clerk-style sentence."
@@ -344,11 +387,14 @@ func _make_market_good_block(d: Dictionary) -> VBoxContainer:
 	block.add_theme_constant_override("separation", 3)
 	var gid := str(d.get("good_id", ""))
 	var src: String = _truncate(str(d.get("source", "")), 44)
+	var pq: int = int(d.get("port_qty", 0))
+	var bc: int = int(d.get("buy_cap", pq))
+	var stock_s: String = ("%d (≤%d shippable)" % [pq, bc]) if bc < pq else ("%d" % pq)
 	var line: String = (
-		"%s · port stock %d · buy %dc · sell %dc · toll %dc/u · trend %s · trade age %dd · %d%% · %s"
+		"%s · port stock %s · buy %dc · sell %dc · toll %dc/u · trend %s · trade age %dd · %d%% · %s"
 		% [
 			str(d.get("name", "")),
-			int(d.get("port_qty", 0)),
+			stock_s,
 			int(d.get("buy_unit", 0)),
 			int(d.get("sell_unit", 0)),
 			int(d.get("toll_per_unit", 0)),
@@ -363,7 +409,7 @@ func _make_market_good_block(d: Dictionary) -> VBoxContainer:
 	cap.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	cap.add_theme_font_size_override("font_size", 10)
 	block.add_child(cap)
-	var why := Button.new()
+	var why := _NarrowTooltipButton.new()
 	why.text = "?"
 	why.add_theme_font_size_override("font_size", 10)
 	why.tooltip_text = _gs.get_player_data_provenance("market_good", gid)
@@ -378,9 +424,10 @@ func _make_market_good_block(d: Dictionary) -> VBoxContainer:
 		var cost: int = _gs.get_trade_buy_total_coins(gid, qty)
 		bbtn.text = "Buy +%d (%dc)" % [qty, cost]
 		bbtn.add_theme_font_size_override("font_size", 9)
+		var buy_cap: int = int(d.get("buy_cap", int(d.get("port_qty", 0))))
 		bbtn.disabled = (
 			_gs.get_money() < cost
-			or int(d.get("port_qty", 0)) < qty
+			or buy_cap < qty
 			or _gs.get_player_cargo_used() + qty > _gs.get_player_cargo_capacity()
 		)
 		bbtn.pressed.connect(_on_buy_pressed.bind(gid, qty))
@@ -433,7 +480,7 @@ func _build_harbor_panel(parent: VBoxContainer) -> void:
 		grid.add_child(_tbl_cell(str(d.get("risk", "")), 80.0))
 		grid.add_child(_tbl_cell(str(d.get("captain", "")), 48.0))
 		grid.add_child(_tbl_cell(str(d.get("status", "")), 56.0))
-		var whyh := Button.new()
+		var whyh := _NarrowTooltipButton.new()
 		whyh.text = "?"
 		whyh.tooltip_text = _gs.get_player_data_provenance("harbor", "fleet")
 		whyh.focus_mode = Control.FOCUS_NONE
@@ -462,7 +509,7 @@ func _build_influence_panel(parent: VBoxContainer) -> void:
 		grid.add_child(_tbl_cell(_truncate(str(d.get("source", "")), 28), 100.0))
 		grid.add_child(_tbl_cell("%dd" % int(d.get("age_days", 0)), 28.0))
 		grid.add_child(_tbl_cell("%d%%" % int(d.get("reliability_pct", 0)), 32.0))
-		var wi := Button.new()
+		var wi := _NarrowTooltipButton.new()
 		wi.text = "?"
 		wi.tooltip_text = _gs.get_player_data_provenance("influence", str(d.get("metric", "")))
 		wi.focus_mode = Control.FOCUS_NONE
@@ -514,9 +561,45 @@ func _build_influence_panel(parent: VBoxContainer) -> void:
 		graft_btn.pressed.connect(_on_customs_graft_pressed)
 		pol.add_child(graft_btn)
 		parent.add_child(pol)
+	if _gs.institutional_phase5_player_surface_enabled():
+		parent.add_child(HSeparator.new())
+		var inst := _card_section(parent, "Charter clerk — contracts & alliances")
+		_append_wrapped(inst, _gs.get_player_institutional_charter_law_block())
+		_append_wrapped(inst, _gs.get_player_institutional_breach_law_block())
+		_append_wrapped(inst, _gs.get_player_institutional_alliance_map_block())
+		var rows: Array = _gs.list_player_institutional_charter_board_rows()
+		if rows.is_empty():
+			_append_wrapped(
+				inst,
+				"Live register: no civic grain tickets are outstanding this dawn (clerks only list signed hauls)."
+			)
+		else:
+			_append_wrapped(
+				inst,
+				"Live register — outstanding civic grain hauls (issuer → consignee, quantity, due dawn, nights left):"
+			)
+			var charter_grid := GridContainer.new()
+			charter_grid.columns = 6
+			for h in ["Issuer", "Dest", "Good", "Qty", "Due day", "Nights"]:
+				charter_grid.add_child(_tbl_cell(h, 20.0))
+			for row in rows:
+				var d: Dictionary = row as Dictionary
+				charter_grid.add_child(_tbl_cell(_truncate(str(d.get("issuer_name", "")), 16), 100.0))
+				charter_grid.add_child(_tbl_cell(_truncate(str(d.get("dest_name", "")), 16), 100.0))
+				charter_grid.add_child(_tbl_cell(str(d.get("good_id", "")), 44.0))
+				charter_grid.add_child(_tbl_cell(str(int(d.get("qty", 0))), 32.0))
+				charter_grid.add_child(_tbl_cell(str(int(d.get("due_day", 0))), 52.0))
+				charter_grid.add_child(_tbl_cell(str(int(d.get("days_remaining", 0))), 40.0))
+			inst.add_child(charter_grid)
+		var digest_btn := _NarrowTooltipButton.new()
+		digest_btn.text = "Full charter digest → log"
+		digest_btn.add_theme_font_size_override("font_size", 10)
+		digest_btn.tooltip_text = "Law, breach text, alliance map, and every live ticket in one clerk bundle."
+		digest_btn.pressed.connect(_append_institutional_charter_digest_to_log)
+		inst.add_child(digest_btn)
 	_append_wrapped(
 		parent,
-		"Later: public-works tithe, sealed privilege, contract broker — for now temple, mint, and quaestor gifts cover most face."
+		"Temple, mint, and quaestor gifts still cover most face; sealed privileges and tithes remain clerk gossip."
 	)
 
 
@@ -549,7 +632,7 @@ func _build_tavern_panel(parent: VBoxContainer) -> void:
 		act.pressed.connect(_on_tavern_intel_row_pressed.bind(kind))
 		act.disabled = _intel_row_disabled(kind)
 		grid.add_child(act)
-		var wq := Button.new()
+		var wq := _NarrowTooltipButton.new()
 		wq.text = "?"
 		wq.tooltip_text = "Paid work tightens reads or buys clerk time — still not omniscience."
 		wq.focus_mode = Control.FOCUS_NONE
@@ -617,7 +700,7 @@ func _build_ledger_panel(parent: VBoxContainer) -> void:
 	hint.add_theme_font_size_override("font_size", 11)
 	hint.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	parent.add_child(hint)
-	var log_digest := Button.new()
+	var log_digest := _NarrowTooltipButton.new()
 	log_digest.text = "Full harbor digest → status log"
 	log_digest.add_theme_font_size_override("font_size", 10)
 	log_digest.tooltip_text = "Long recap: every harbor’s grain band, source, and reliability (same text as the old ledger header)."
@@ -652,7 +735,7 @@ func _build_ledger_panel(parent: VBoxContainer) -> void:
 		area_list.set_item_metadata(idxa, aid)
 		var tip := _gs.get_chart_area_description(aid)
 		if not tip.is_empty():
-			area_list.set_item_tooltip(idxa, tip)
+			area_list.set_item_tooltip(idxa, _tooltip_trunc(tip, 120))
 	left.add_child(area_list)
 	top_hs.add_child(left)
 	var port_col := VBoxContainer.new()
@@ -737,7 +820,7 @@ func _refresh_ledger_port_list(area_id: String) -> void:
 			str(d.get("source", "")),
 			str(d.get("risk_hint", "")),
 		]
-		_ledger_port_list.set_item_tooltip(idxp, tip)
+		_ledger_port_list.set_item_tooltip(idxp, _tooltip_trunc(tip, 120))
 		_ledger_port_list.set_item_metadata(idxp, pid)
 	var found_port := false
 	for j in range(_ledger_port_list.item_count):
@@ -772,7 +855,7 @@ func _refresh_ledger_goods_panel(port_id: String) -> void:
 	hdr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hdr.add_theme_font_size_override("font_size", 12)
 	_ledger_goods_host.add_child(hdr)
-	var prov := Button.new()
+	var prov := _NarrowTooltipButton.new()
 	prov.text = "Why this harbor line exists"
 	prov.add_theme_font_size_override("font_size", 10)
 	prov.tooltip_text = _gs.get_player_data_provenance("ledger", port_id)
@@ -799,7 +882,7 @@ func _refresh_ledger_goods_panel(port_id: String) -> void:
 		grid.add_child(_tbl_cell("day %d" % int(d.get("note_day", 0)), 44.0))
 		grid.add_child(_tbl_cell("%dd" % int(d.get("ledger_age_days", 0)), 32.0))
 		grid.add_child(_tbl_cell("%d%%" % int(d.get("reliability_pct", 0)), 32.0))
-		var wl := Button.new()
+		var wl := _NarrowTooltipButton.new()
 		wl.text = "?"
 		wl.tooltip_text = _gs.get_player_data_provenance("ledger_good", "%s|%s" % [port_id, gid])
 		wl.focus_mode = Control.FOCUS_NONE
@@ -819,7 +902,7 @@ func _build_routes_panel(parent: VBoxContainer) -> void:
 	if rows.is_empty():
 		_append_wrapped(
 			parent,
-			"No open routes from this roadstead — check lanes in data/world.json or your hull’s limits."
+			"No open routes from this roadstead — check `npc_lanes` / coastal graph in world data or your hull’s limits."
 		)
 		return
 	_append_wrapped(
@@ -858,7 +941,7 @@ func _build_routes_panel(parent: VBoxContainer) -> void:
 		sail.text = "Sail"
 		sail.pressed.connect(_on_destination_chosen.bind(pid))
 		grid.add_child(sail)
-		var wr := Button.new()
+		var wr := _NarrowTooltipButton.new()
 		wr.text = "?"
 		wr.tooltip_text = _gs.get_player_data_provenance("route", pid)
 		wr.focus_mode = Control.FOCUS_NONE
@@ -982,10 +1065,16 @@ func _build_dock_fleet_section(parent: VBoxContainer) -> void:
 	var build_days: int = _gs.get_fleet_new_ship_build_days()
 	var yard_left: int = _gs.get_player_fleet_shipyard_days_remaining()
 	var fleet_lbl := Label.new()
-	fleet_lbl.text = (
-		"Fleet: %d/%d ships · hold %d/%d units · new hull: %dc labor + port timber/textiles/metal · ~%d days in slip (nominal hull value ~%dc; used slips often beat waiting)."
-		% [fleet_n, _gs.get_player_fleet_max_ships(), fleet_used, fleet_cap, labor, build_days, nominal]
-	)
+	if build_days <= 0:
+		fleet_lbl.text = (
+			"Fleet: %d/%d ships · hold %d/%d units · new hull: %dc labor + port timber/textiles/metal · same-day join (nominal hull value ~%dc; used slips often beat list price)."
+			% [fleet_n, _gs.get_player_fleet_max_ships(), fleet_used, fleet_cap, labor, nominal]
+		)
+	else:
+		fleet_lbl.text = (
+			"Fleet: %d/%d ships · hold %d/%d units · new hull: %dc labor + port timber/textiles/metal · ~%d days in slip (nominal hull value ~%dc; used slips often beat waiting)."
+			% [fleet_n, _gs.get_player_fleet_max_ships(), fleet_used, fleet_cap, labor, build_days, nominal]
+		)
 	fleet_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	fleet_lbl.add_theme_font_size_override("font_size", 11)
 	fleet_box.add_child(fleet_lbl)
@@ -995,7 +1084,10 @@ func _build_dock_fleet_section(parent: VBoxContainer) -> void:
 		yd.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		fleet_box.add_child(yd)
 	var fleet_btn := Button.new()
-	fleet_btn.text = "Order new hull (+%dc labor · ~%d d)" % [labor, build_days]
+	if build_days <= 0:
+		fleet_btn.text = "Order new hull (+%dc labor · immediate)" % labor
+	else:
+		fleet_btn.text = "Order new hull (+%dc labor · ~%d d)" % [labor, build_days]
 	fleet_btn.disabled = not _gs.player_can_order_new_fleet_ship()
 	fleet_btn.pressed.connect(_on_buy_fleet_ship_pressed)
 	fleet_box.add_child(fleet_btn)
@@ -1068,7 +1160,7 @@ func _on_buy_fleet_ship_pressed() -> void:
 		_refresh_header()
 		return
 	_append_log(
-		"Cannot order new hull (at sea, fleet cap, slip building, or need %dc labor + materials)."
+		"Cannot order new hull (at sea, fleet cap, or need %dc labor + timber/textiles/metal in port)."
 		% _gs.get_fleet_ship_purchase_cost()
 	)
 

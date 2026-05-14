@@ -1,0 +1,31 @@
+# full-world sweep :: world_full.json :: 600 ticks/scenario :: 12 runs
+{"scenario": "baseline", "agents": 1748, "hulls": 1750, "riots": 257, "bankruptcies": 39, "min_grain_days_seen": 0.0, "median_end_grain_days": 56.166666666666664, "max_unrest_seen": 200, "sum_wealth_delta": 27074, "sum_grain_stock_delta": 99936, "npc_balance_sheet_delta": -80735, "world_treasury_end": 0, "name": "baseline"}
+{"scenario": "wl0.12", "agents": 1744, "hulls": 1749, "riots": 244, "bankruptcies": 26, "min_grain_days_seen": 0.0, "median_end_grain_days": 53.285714285714285, "max_unrest_seen": 200, "sum_wealth_delta": 25459, "sum_grain_stock_delta": 96934, "npc_balance_sheet_delta": -109898, "world_treasury_end": 0, "name": "wl0.12"}
+{"scenario": "wl0.11", "agents": 1748, "hulls": 1750, "riots": 266, "bankruptcies": 26, "min_grain_days_seen": 0.0, "median_end_grain_days": 58.09090909090909, "max_unrest_seen": 200, "sum_wealth_delta": 26013, "sum_grain_stock_delta": 101498, "npc_balance_sheet_delta": -90465, "world_treasury_end": 0, "name": "wl0.11"}
+{"scenario": "wl0.10", "agents": 1750, "hulls": 1756, "riots": 285, "bankruptcies": 30, "min_grain_days_seen": 0.0, "median_end_grain_days": 60.0, "max_unrest_seen": 200, "sum_wealth_delta": 26218, "sum_grain_stock_delta": 98897, "npc_balance_sheet_delta": -91256, "world_treasury_end": 185, "name": "wl0.10"}
+{"scenario": "cc0.050", "agents": 1747, "hulls": 1748, "riots": 276, "bankruptcies": 35, "min_grain_days_seen": 0.0, "median_end_grain_days": 58.833333333333336, "max_unrest_seen": 200, "sum_wealth_delta": 26809, "sum_grain_stock_delta": 100239, "npc_balance_sheet_delta": -79899, "world_treasury_end": 173, "name": "cc0.050"}
+{"scenario": "cc0.045", "agents": 1747, "hulls": 1750, "riots": 237, "bankruptcies": 32, "min_grain_days_seen": 0.0, "median_end_grain_days": 54.57142857142857, "max_unrest_seen": 200, "sum_wealth_delta": 27783, "sum_grain_stock_delta": 97571, "npc_balance_sheet_delta": -107639, "world_treasury_end": 0, "name": "cc0.045"}
+{"scenario": "cc0.038", "agents": 1746, "hulls": 1751, "riots": 264, "bankruptcies": 40, "min_grain_days_seen": 0.0, "median_end_grain_days": 58.833333333333336, "max_unrest_seen": 200, "sum_wealth_delta": 25098, "sum_grain_stock_delta": 98089, "npc_balance_sheet_delta": -83586, "world_treasury_end": 0, "name": "cc0.038"}
+{"scenario": "gs0.015", "agents": 1745, "hulls": 1751, "riots": 264, "bankruptcies": 30, "min_grain_days_seen": 0.0, "median_end_grain_days": 65.83333333333333, "max_unrest_seen": 200, "sum_wealth_delta": 28025, "sum_grain_stock_delta": 106671, "npc_balance_sheet_delta": -80958, "world_treasury_end": 0, "name": "gs0.015"}
+{"scenario": "gs0.019", "agents": 1747, "hulls": 1750, "riots": 261, "bankruptcies": 39, "min_grain_days_seen": 0.0, "median_end_grain_days": 51.5, "max_unrest_seen": 200, "sum_wealth_delta": 25493, "sum_grain_stock_delta": 93833, "npc_balance_sheet_delta": -107140, "world_treasury_end": 0, "name": "gs0.019"}
+{"scenario": "combo_tame", "agents": 1747, "hulls": 1750, "riots": 264, "bankruptcies": 32, "min_grain_days_seen": 0.0, "median_end_grain_days": 56.285714285714285, "max_unrest_seen": 200, "sum_wealth_delta": 27316, "sum_grain_stock_delta": 102442, "npc_balance_sheet_delta": -116695, "world_treasury_end": 214, "name": "combo_tame"}
+{"scenario": "combo_tight_grain", "agents": 1745, "hulls": 1749, "riots": 271, "bankruptcies": 25, "min_grain_days_seen": 0.0, "median_end_grain_days": 47.333333333333336, "max_unrest_seen": 200, "sum_wealth_delta": 24651, "sum_grain_stock_delta": 91875, "npc_balance_sheet_delta": -91730, "world_treasury_end": 24, "name": "combo_tight_grain"}
+{"scenario": "combo_growth_brake", "agents": 1747, "hulls": 1748, "riots": 241, "bankruptcies": 40, "min_grain_days_seen": 0.0, "median_end_grain_days": 55.0, "max_unrest_seen": 200, "sum_wealth_delta": 25466, "sum_grain_stock_delta": 99313, "npc_balance_sheet_delta": -106669, "world_treasury_end": 56, "name": "combo_growth_brake"}
+
+=== ranked (best first) ===
+  1201160.0  cc0.045: riots=237 bust=32 min_grain≈0.00 med_end=54.6 max_unrest=200 Δwealth_sum=+27783 Δnpc_bs=-107639
+  1222760.0  combo_growth_brake: riots=241 bust=40 min_grain≈0.00 med_end=55.0 max_unrest=200 Δwealth_sum=+25466 Δnpc_bs=-106669
+  1234960.0  wl0.12: riots=244 bust=26 min_grain≈0.00 med_end=53.3 max_unrest=200 Δwealth_sum=+25459 Δnpc_bs=-109898
+  1302560.0  baseline: riots=257 bust=39 min_grain≈0.00 med_end=56.2 max_unrest=200 Δwealth_sum=+27074 Δnpc_bs=-80735
+  1322560.0  gs0.019: riots=261 bust=39 min_grain≈0.00 med_end=51.5 max_unrest=200 Δwealth_sum=+25493 Δnpc_bs=-107140
+  1335760.0  gs0.015: riots=264 bust=30 min_grain≈0.00 med_end=65.8 max_unrest=200 Δwealth_sum=+28025 Δnpc_bs=-80958
+  1336160.0  combo_tame: riots=264 bust=32 min_grain≈0.00 med_end=56.3 max_unrest=200 Δwealth_sum=+27316 Δnpc_bs=-116695
+  1337760.0  cc0.038: riots=264 bust=40 min_grain≈0.00 med_end=58.8 max_unrest=200 Δwealth_sum=+25098 Δnpc_bs=-83586
+  1344960.0  wl0.11: riots=266 bust=26 min_grain≈0.00 med_end=58.1 max_unrest=200 Δwealth_sum=+26013 Δnpc_bs=-90465
+  1369760.0  combo_tight_grain: riots=271 bust=25 min_grain≈0.00 med_end=47.3 max_unrest=200 Δwealth_sum=+24651 Δnpc_bs=-91730
+  1396760.0  cc0.050: riots=276 bust=35 min_grain≈0.00 med_end=58.8 max_unrest=200 Δwealth_sum=+26809 Δnpc_bs=-79899
+  1440760.0  wl0.10: riots=285 bust=30 min_grain≈0.00 med_end=60.0 max_unrest=200 Δwealth_sum=+26218 Δnpc_bs=-91256
+
+Best scenario: cc0.045  (_WEALTH_LERP=0.14, _COMMERCE_WEALTH_TARGET_COEF=0.045, _GRAIN_SPOIL_FRACTION=0.017)
+Full table: /Users/ari.lahti/HarboursOfPower/tools/full_world_balance_sweep_last.json
+DONE

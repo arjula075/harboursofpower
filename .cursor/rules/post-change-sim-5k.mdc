@@ -1,0 +1,26 @@
+---
+description: After HarboursOfPower economy/sim code changes, run 5k Python twin and analyse
+alwaysApply: true
+---
+
+# Post-change simulation check
+
+Whenever you **finish a substantive change** to any of the following (or closely related gameplay/economy code), **before ending the turn**:
+
+1. **Run** from repo root (no graphs unless the user asked for plots). Default twin world is **`data/world_full.json`** (full Mediterranean chart).
+
+   `cd /Users/ari.lahti/HarboursOfPower && python3 tools/sim_100_days.py 5000 --no-graphs`
+
+   For long turnaround (e.g. local iteration), you may add **`--npc-scale 0.25 --npc-mass 4`** as documented in the economy rules canvas; state that in the summary when used. Default for merge-quality checks is **no** coarse-graining unless the change only affects coarse-graining itself.
+
+   On the full chart, 5000 ticks is still long-running (~tens of minutes); plan wall clock accordingly.
+
+2. **Analyse** the output in a short, structured summary:
+   - Calendar span and **NPC purse** start → end
+   - **Food riots** and **merchant bankruptcies**
+   - **Per-port** signals: if the log lists all ports, use the printed table; if the output is long, summarise **worst / best** ports by wealth Δ, grain-days, and max unrest, plus any region clearly tied to the change
+   - Anything clearly tied to the change (e.g. war cycles, metal/wire, new fields in metrics)
+
+**Skip or shorten** only for: typo-only edits, comment-only, or changes that cannot affect the twin (pure UI strings with no `game_state` coupling). For anything touching **`autoload/game_state.gd`**, **`tools/sim_100_days.py`**, **`tools/sim_100_days.gd`**, **`data/world_full.json`**, or **`data/goods.json`**, always run the sim.
+
+If the command fails (path, Python), fix the environment or path and retry once.

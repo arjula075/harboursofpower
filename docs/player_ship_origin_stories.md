@@ -59,5 +59,5 @@ You held paper against a ship as security. The borrower weighed anchor for a por
 ## Implementation notes
 
 - **IDs** in backticks are stable keys if you later load this from JSON or GDScript.
-- **Tone**: Mediterranean-adjacent merchant age; adjust deities, titles, and legal words to match your world.json cultures.
+- **Tone**: Mediterranean-adjacent merchant age; adjust deities, titles, and legal words to match your world data (`data/world_full.json`) cultures.
 - **Gameplay**: These are flavour only unless you add fields like `player_ship_origin_id` and tie small modifiers (reputation, starting debt, crew mood) to specific origins.

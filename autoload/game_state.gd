@@ -9,13 +9,15 @@ const _SimAgents := preload("res://autoload/sim_tick_agents.gd")
 const _NPC_DEPART_STAY_GATE := 0.45
 ## Max home-port merchants added or removed per port per day (smoother autonomous economy). Sync sim.
 const _MERCHANT_HOME_COUNT_STEP_MAX := 6
-## Parse / sanity ceiling for `world.json` `npc_traders` (not a gameplay balance cap).
+## Parse / sanity ceiling for world data field `npc_traders` (not a gameplay balance cap).
 const _PORT_NPC_TRADERS_LOAD_MAX := 999
 ## Bankruptcy rookie: only respawn if the home harbour still has wholesale activity, pulse life, or enough stock to haul.
 const _NPC_BANKRUPTCY_REPLACE_MIN_PULSE := 0.20
 const _NPC_BANKRUPTCY_REPLACE_MIN_PORT_STOCK_UNITS := 36
 
-const SAVE_VERSION := 42
+const SAVE_VERSION := 49
+## Canonical world graph + tuning: `data/world_full.json` (full Mediterranean chart; `WORLD_DATA_PATH`).
+const WORLD_DATA_PATH := "res://data/world_full.json"
 ## Phase 1 convoy/piracy scaffold: captain hat + escort job contract (no combat yet).
 ## Phase 2: NPC merchant convoys — same-dest dock cohort, join roll (home/culture/agree + route openness); shared voyage days/open-sea = max over hulls; `scattered_ids` (detach memory, daily decay) + `contact_candidate_bias` (leader boarding weight; fades docked). Sync tools/sim_100_days.py.
 ## Phase 3: Escort job match + pay on convoy arrival. Sync tools/sim_100_days.py.
@@ -26,14 +28,60 @@ const SAVE_VERSION := 42
 ## Phase 5d: per-port mercantile standing (`player_port_civic_reputation_01`); local officials brief true-ish grain / war fear when that score is high enough.
 ## Phase 5e: temple offerings — coin eases gale odds on **next** departure; capped rep from vows; civic rep drifts toward neutral daily.
 ## Phase 6: player hired as NPC convoy escort (`convoy_escort_player`), voyage sync after world tick, pay on arrival, pirate vs player escort.
-## Phase 0 (NPC-only): civic **grain delivery** contracts — advance + deadline, sparse `npc_city_trust_01`, `merchant_repute_01`; sticky depart + voyage scoring; breach = local fine + trust hit. Toggle `world.json` `npc_city_grain_contracts_enabled`. Player UI later.
+## Phase 0 (NPC-only): civic **grain delivery** contracts — advance + deadline, sparse `npc_city_trust_01`, `merchant_repute_01`; sticky depart + voyage scoring; breach = local fine + trust hit. Toggle `npc_city_grain_contracts_enabled` in the world data file. Canonical **institutional** schema: `institutional_contracts` (+ `institutional_next_contract_id`) on each NPC; mirrors grain row when `institutional_trade.enabled` (default true). **Institutional Phase 5** surfaces law + live NPC tickets in City → Influence when `institutional_trade.phase5.enabled` (default on).
+## Phase 1 institutional: when `institutional_trade.enabled`, sparse `npc_route_habit_01` (per-dest inertia), daily decay toward 0; `npc_city_trust_01` drifts toward `merchant_repute_01`; voyage dest score + weighted random depart sample reinforce familiar/trusted ports. Sync tools/sim_100_days.py.
+## Phase 2 institutional (NPC, `institutional_trade.enabled` + civic grain): spot vs contract — harbour-due + import-toll relief + cheaper wholesale grain buy at issuer while short; voyage score nudge toward issuer to load; stickier depart bias vs skipping contract dest; slightly higher peer-loan cap. Sync tools/sim_100_days.py.
+## Phase 3 institutional: optional `institutional_trade.phase3` alliance **bands** (arrays of port ids) → same-band import toll relief + mild wholesale buy relief; cross-band sales **into ports at war** pay higher toll; voyage score nudge/penalty; convoy escort accept rolls favour same-band captains. Gated by `institutional_trade.enabled` + `phase3.enabled` + non-empty resolved bands. Sync tools/sim_100_days.py.
 const _NPC_CITY_GRAIN_CONTRACT_OFFER_P := 0.034
 const _NPC_CITY_GRAIN_CONTRACT_QTY_MIN := 5
 const _NPC_CITY_GRAIN_CONTRACT_QTY_MAX := 22
 const _NPC_CITY_GRAIN_CONTRACT_DUE_MIN := 16
 const _NPC_CITY_GRAIN_CONTRACT_DUE_MAX := 52
+## Continuous adjacency grain provisioning (hub ↔ lane-neighbour spoke). Sync tools/sim_100_days.py.
+const _ADJ_SPOKE_RESERVE_DAYS := 4.5
+const _ADJ_DAILY_COMMIT := 8
+const _ADJ_DAILY_COMMIT_MIN := 4
+const _ADJ_DAILY_COMMIT_MAX := 22
+const _ADJ_EARMARK_CAP := 160
+const _ADJ_PRIV_UNIT_MULT := 0.955
 const _NPC_CITY_TRUST_PORT_MAX_KEYS := 8
 const _NPC_CITY_CONTRACT_TREASURY_FRAC := 0.08
+## Institutional trade layer — Phase 0 schema (parties + terms + expiry + state). Sync tools/sim_100_days.py.
+const _INST_CONTRACT_TYPE_GRAIN := "grain_delivery"
+const _INST_CONTRACT_STATE_ACTIVE := "active"
+const _INST_CONTRACT_STATE_FULFILLED := "fulfilled"
+const _INST_CONTRACT_STATE_BREACHED := "breached"
+const _INST_PARTY_KIND_PORT := "port"
+const _INST_PARTY_KIND_NPC_MERCHANT := "npc_merchant"
+const _INST_PARTY_ROLE_ISSUER := "issuer"
+const _INST_PARTY_ROLE_CARRIER := "carrier"
+const _INST_PARTY_ROLE_CONSIGNEE := "consignee"
+const _INST_CONTRACTS_PER_AGENT_MAX := 4
+## Phase 1: route habit + trust inertia (active when `institutional_trade.enabled`). Sync sim.
+const _NPC_ROUTE_HABIT_PORT_MAX_KEYS := 8
+const _NPC_ROUTE_HABIT_ARRIVAL_BUMP := 0.09
+const _NPC_ROUTE_HABIT_SCORE_MUL := 0.36
+const _NPC_ROUTE_TRUST_SCORE_MUL := 0.22
+const _NPC_ROUTE_RANDOM_SAMPLE := 14
+const _NPC_ROUTE_WEIGHT_MIN := 0.072
+const _NPC_ROUTE_HABIT_DECAY_LERP := 0.013
+const _NPC_CITY_TRUST_DECAY_LERP := 0.0055
+## Phase 2: contract lane perks + obligation stickiness (grain civic row mirrored to institutional). Sync sim.
+const _INST_P2_HARBOUR_DUE_PARTY_MUL := 0.78
+const _INST_P2_ISSUER_GRAIN_BUY_MULT := 0.942
+const _INST_P2_TOLL_GRAIN_PARTY_MUL := 0.58
+const _INST_P2_ISSUER_LOAD_SCORE_BONUS := 0.52
+const _INST_P2_DEPART_STICK_ADD := 0.08
+const _INST_P2_PEER_LOAN_MAX_PRINCIPAL_MUL := 1.12
+## Phase 3 alliance economics (optional world_full.json `institutional_trade.phase3`). Sync sim.
+## Institutional Phase 4 (patronage): optional `institutional_trade.phase4` — issuer food stress bids civic grain contracts (offer rate + advance); loyal repute bumps offers; fulfilled hauls tip issuer wealth; `merchant_house_id` for trading houses. Sync sim.
+## Institutional Phase 5 (player surface): optional `institutional_trade.phase5.enabled` (default on when block absent). City → Influence — charter clerk: live NPC civic grain lanes, alliance map, breach law, contract catalogue. Player civic grain offers use the same breach math when added later.
+const _INST_P3_ALLY_TOLL_MUL_MIN := 0.72
+const _INST_P3_ALLY_TOLL_MUL_MAX := 0.99
+const _INST_P3_ENEMY_TOLL_MUL_MIN := 1.02
+const _INST_P3_ENEMY_TOLL_MUL_MAX := 1.38
+const _INST_P3_ALLY_BUY_MUL_MIN := 0.97
+const _INST_P3_ALLY_BUY_MUL_MAX := 0.999
 const _CONVOY_MAX_MERCHANTS := 4
 const _ESCORT_PAY_BASE := 16
 const _ESCORT_PAY_PER_DAY := 5
@@ -122,15 +170,17 @@ const _NPC_TRAIT_CONSC := "trait_conscientiousness"
 const _NPC_TRAIT_EXTRA := "trait_extraversion"
 const _NPC_TRAIT_AGREE := "trait_agreeableness"
 const _NPC_TRAIT_NEURO := "trait_neuroticism"
-## Food stress: population grain demand vs granary (after full daily tick). Riots when unrest hits threshold.
+## Food stress: citizen-visible tracks (rationing worry + panic after sustained unfed days). Riots when composite hits threshold while in famine.
 const _FOOD_UNREST_DECAY := 16
-const _FOOD_UNREST_DECAY_WHEN_TIGHT := 3  # when granary runway is thin but today’s ration was met; sync sim
+const _FOOD_UNREST_DECAY_WHEN_TIGHT := 3  # gentle bleed on unfed days before starvation threshold; sync sim
+## "Good food, better mood": fully fed AND ≥5 food-days of grain on hand vents
+## unrest 50% faster than the standard decay. Threshold deliberately low because
+## almost no full-Med port keeps 10+ days in steady state. Sync tools/sim_100_days.py.
+const _FOOD_UNREST_DECAY_WHEN_PLENTIFUL := 24
+const _FOOD_UNREST_PLENTIFUL_FOOD_DAYS := 5.0
 const _FOOD_UNREST_SHORTAGE := 9
 const _FOOD_UNREST_PER_MISS := 2
-const _FOOD_UNREST_PANIC_LT1DAY := 11
-const _FOOD_UNREST_CRITICAL_DAYS := 8  # extra when runway < 0.5 days
-const _FOOD_RIOT_THRESHOLD := 190  # near cap; riot only under closing granary stress + rare roll (sync sim)
-const _FOOD_RIOT_ELIGIBLE_RUNWAY_MAX := 0.30  # worst closing runway (post-trade/spoil) below this (sync sim)
+const _FOOD_RIOT_THRESHOLD := 190  # near cap; riot roll only when composite high and famine-eligible (sync sim)
 const _FOOD_RIOT_ROLL_BASE := 0.0009  # daily chance when eligible (then scales with overshoot); keep sync sim
 const _FOOD_RIOT_ROLL_PER_OVER := 750.0  # p += (unrest - threshold) / this; keep in sync with tools/sim_100_days.py
 const _FOOD_RIOT_NO_FAMINE_VENT := 22  # ineligible for grain riot this day — bleed mob tension (sync sim)
@@ -143,15 +193,15 @@ const _WAR_PEACE_FOOD_UNREST_VENT := 34
 const _WAR_PEACE_RIOT_GRACE_DAYS := 16
 const _WAR_PEACE_RIOT_THRESHOLD_BONUS := 34
 const _FOOD_RIOT_NEAR_MISS_VENT := 12  # if unrest crosses riot line but no riot, bleed off a little (avoids daily re-rolls)
-## If either civilian or effective grain runway is below this, add a small daily unrest tick (pressure before outright missed rations). Sync sim.
-const _FOOD_UNREST_TIGHT_RUNWAY_DAYS := 5.0
-const _FOOD_UNREST_TIGHT_RUNWAY_DRIP := 2
 ## Population v1: famine streak → grain mouths lost; prosperity streak + headroom → growth (`_POP_PROSPERITY_POOR_UNREST_EXCEEDS` for `poor`). Farm/mine daily output scales with headcount vs founding cohort. Keep in sync with tools/sim_100_days.py.
 const _POP_GRAIN_FLOOR := 4
 const _POP_GRAIN_CEILING_BOOST := 22
 ## Consecutive harsh days before −1 grain mouth (no dedicated crop-failure layer yet — keep rare). Sync tools/sim_100_days.py.
-const _POP_FAMINE_STREAK_TO_LOSS := 24
+## Raised slightly (was 24) so mass −1 events are a little rarer; per-port jitter spreads the rest.
+const _POP_FAMINE_STREAK_TO_LOSS := 26
 const _POP_FAMINE_STREAK_RESET := 8
+## Per-port deterministic spread on harsh-day threshold (±(j//2)); keeps 75 ports from losing mouths the same tick.
+const _POP_FAMINE_LOSS_JITTER := 11
 ## Famine streak harsh/calm: meal-based, not granary runway. Short shortages and single unrest spikes shouldn't doom a city; the iron-age default is resilience, not collapse-every-season. Sync tools/sim_100_days.py.
 const _POP_FAMINE_HARSH_CONSEC_ZERO_GRAIN_DAYS := 9
 const _POP_FAMINE_CALM_CONSEC_FULL_RATION_DAYS := 2
@@ -160,22 +210,44 @@ const _POP_FAMINE_HARSH_UNREST_MIN := 118
 ## Prosperity → growth: lowered streak from 52 → 30 so a healthy month yields +1 mouth. Reset 14 keeps subsequent gains paced. Sync tools/sim_100_days.py.
 const _POP_PROSPERITY_STREAK_TO_GAIN := 30
 const _POP_PROSPERITY_STREAK_RESET := 14
+## Spread prosperity +1 timing across the map (±(j//2) days) so mean city size does not sawtooth in sync.
+const _POP_PROSPERITY_STREAK_JITTER := 13
+## After a +1 mouth, streak reset varies slightly so the next gain is not lockstep across ports.
+const _POP_PROSPERITY_RESET_JITTER := 9
 ## Only sustained Critical-tier unrest blocks prosperity (was 88 — wiped streaks during ordinary tension). On `poor`, streak now decays by `_POP_PROSPERITY_POOR_DECAY` instead of resetting to 0 (single bad day no longer erases weeks of recovery). Sync tools/sim_100_days.py.
 const _POP_PROSPERITY_POOR_UNREST_EXCEEDS := 118
 const _POP_PROSPERITY_POOR_DECAY := 4
+## Gate for the "wealthy enough to attract pop" check each tick. Relaxed from
+## 1.04 / unrest<65 so coastal cities have a realistic shot at growing between
+## war pulses and pirate-raid stretches. Sync tools/sim_100_days.py.
+const _POP_PROSPERITY_WEALTH_FACTOR := 1.00
+const _POP_PROSPERITY_UNREST_MAX := 75
+const _POP_PROSPERITY_FOOD_DAYS_MIN := 2.4
+## Extra migration pull when below institutional cap (added after regional overrides). Metropoles should separate from mean city size.
+const _POP_MIGRATION_PULL_METROPOLE := 6
+const _POP_MIGRATION_PULL_GREAT_CITY := 3
+const _POP_MIGRATION_PULL_IMPERIAL_PORT := 2
 ## Iron-age rural→urban migration pull: when current pop is below the founding baseline AND the day is `wealthy`, the prosperity streak gains an extra +`floor(gap_frac × _POP_MIGRATION_PULL)` on top of the natural +1. Models second-sons, refugees, and rural surplus flowing into the metropolis (big cities = bigger empty-homes pull). Disabled once pop ≥ baseline so natural growth continues at +1/day past the founding cohort. Sync tools/sim_100_days.py.
 const _POP_MIGRATION_PULL := 4
 ## Low commerce pulse counts toward “poor” for population prosperity (busy ports recover). 0.10 (was 0.19) keeps only truly dead trade hubs in the `poor` bucket. Sync sim.
 const _COMMERCE_POOR_PULSE := 0.10
 const _POP_OUTPUT_SCALE_MIN := 0.72
 const _POP_OUTPUT_SCALE_MAX := 1.28
-## Civic grain rationing (resilience helper A): when granary runway drops under the trigger, officials cut the per-day grain bite to `_RATION_BITE_FRAC` (min `_RATION_BITE_MIN`). Granary stretches ~40% further; demographics tick sees a partial-ration day (neither full nor zero), so the famine streak holds steady instead of climbing. Auto-ends when runway recovers or after `_RATION_MAX_DAYS`. Costs a small daily unrest tick. Sync tools/sim_100_days.py.
-const _RATION_TRIGGER_FOOD_DAYS := 5.0
-const _RATION_END_FOOD_DAYS := 11.0
+## Civic grain rationing (resilience helper A): when granary runway drops under the trigger, officials cut the per-day grain bite to `_RATION_BITE_FRAC` (min `_RATION_BITE_MIN`). Granary stretches ~40% further; demographics tick sees a partial-ration day (neither full nor zero), so the famine streak holds steady instead of climbing. Auto-ends when runway recovers or after `_RATION_MAX_DAYS`. Triggers visible civic rationing (food worry in finalize). Sync tools/sim_100_days.py.
+const _RATION_TRIGGER_FOOD_DAYS := 10.0
+const _RATION_END_FOOD_DAYS := 22.0
 const _RATION_BITE_FRAC := 0.62
 const _RATION_BITE_MIN := 2
-const _RATION_UNREST_TICK := 2
-const _RATION_MAX_DAYS := 75
+const _RATION_MAX_DAYS := 150
+## Quay sells **surplus** grain/fish only: clerks ring-fence stock for rationed civitas until the next harvest window (same calendar band for fish where `population_fish_per_day` &gt; 0). Official mouths = max(war-adjusted census ration, institutional baseline). Sync tools/sim_100_days.py.
+const _GRANARY_RING_MAX_LIABILITY_DAYS := 180
+const _GRANARY_RING_HARVEST_GUARD_DAYS := 22
+const _GRANARY_RING_PREHARVEST_MIN_DAYS := 10
+const _GRANARY_RING_SLACK_UNITS := 12
+## Citizens do not see granary stock; unrest follows visible rationing + sustained hunger (twin sync).
+const _FOOD_UNREST_STARVATION_STREAK_THRESHOLD := 3
+## Daily worry while civic rationing is in effect (official policy people see).
+const _FOOD_UNREST_WORRY_RATIONING_DAILY := 4
 ## Summer foraging (resilience helper B): half-sine bonus over DOY [`_FORAGE_SUMMER_START_DOY`, `_FORAGE_SUMMER_END_DOY`], peak `_FORAGE_SUMMER_PEAK_MOUTHS` mouths/day of virtual food (berries, figs, wild greens, shore fish) — never touches the granary, but counts toward `eaten_eff` in the demographics tick. Sync tools/sim_100_days.py.
 const _FORAGE_SUMMER_START_DOY := 100
 const _FORAGE_SUMMER_END_DOY := 235
@@ -186,15 +258,31 @@ const _PRESERVED_FOOD_CAP_MIN := 24
 const _PRESERVED_FOOD_FILL_FOODDAYS_MIN := 45.0
 const _PRESERVED_FOOD_FILL_PER_DAY := 0.4
 const _PRESERVED_FOOD_INITIAL_FRAC := 0.5
-## Baseline drift: `port_population_grain_baseline` is the city’s “institutional” size (migration target, farm scale ref). It rises slowly when population & food stay healthy; it falls slowly under prolonged collapse — not fixed to world.json forever. Small ports can outgrow old baselines; metropoles can shrink after generations of crisis. Sync tools/sim_100_days.py.
+## Baseline drift: `port_population_grain_baseline` is the city’s “institutional” size (migration target, farm scale ref). It rises slowly when population & food stay healthy; it falls slowly under prolonged collapse — not fixed to world_full.json forever. Small ports can outgrow old baselines; metropoles can shrink after generations of crisis. Sync tools/sim_100_days.py.
 const _POP_BASELINE_RISE_FRAC := 0.88
 const _POP_BASELINE_RISE_DAYS := 110
+## Metropolitan inertia: imperial-scale cities recover their baseline twice as
+## fast when below their initial cohort (institutional gravity — patronage,
+## temple workforces, garrison rotation rebuild populations). Sync tools/sim_100_days.py.
+const _POP_BASELINE_RISE_DAYS_BIG_INERTIA := 55
+const _POP_BIG_CITY_ROLES: Array[String] = ["metropole", "great_city", "imperial_port"]
+## Institutional 2x cap: a port's baseline cannot drift above
+## `initial_baseline × _POP_BASELINE_CAP_MULT` without a triggering event
+## (war victory, mint commissioning, imperial reassignment — future hooks).
+## At the cap the migration-pull bonus drops to a minimum (not zero) so the
+## city can still occasionally absorb a migrant wave. Sync tools/sim_100_days.py.
+const _POP_BASELINE_CAP_MULT := 2.0
+const _POP_MIGRATION_PULL_AT_CAP := 1
+## Regional migration-pull overrides. Egypt's Nile delta produces grain but
+## historically didn't absorb large foreign-born migration the way coastal
+## trade hubs did — capped at 2 vs the default 4.
+const _POP_MIGRATION_PULL_BY_AREA := {
+	"egypt_cyrenaica": 2,
+}
 const _POP_BASELINE_FALL_FRAC := 0.58
 const _POP_BASELINE_FALL_DAYS := 100
-## Existential war: if `is_port_at_war` and this port’s initial burst length ≥ `population_existential_war_burst_days` (world.json; default 999 = off), famine streak needs half as many harsh days before −1 mouth (siege / Third-Punic style collapse). Sync tools/sim_100_days.py.
+## Existential war: if `is_port_at_war` and this port’s initial burst length ≥ `population_existential_war_burst_days` (world_full.json; default 999 = off), famine streak needs half as many harsh days before −1 mouth (siege / Third-Punic style collapse). Sync tools/sim_100_days.py.
 const _POP_EXISTENTIAL_WAR_BURST_OFF := 999
-## While at war, unrest tracks “civilian” grain stress: panic uses stock ÷ peacetime ration (war ration alone must not read as famine). If granary meets peacetime draw but not full war ration, add only mild strain. Keep in sync with tools/sim_100_days.py.
-const _FOOD_UNREST_WAR_RATION_GAP_PER := 1
 ## p2 Need-based reservation: smooth exponential curves (player vs NPC counterparty use different depth).
 ## Keep in sync with tools/sim_100_days.py.
 const _RESERVE_REF_GRAIN_DAYS := 2.25
@@ -219,20 +307,20 @@ const _FAR_TRADE_LANE_REF_DAYS := 2.75
 const _FAR_TRADE_LANE_COEF := 0.14
 const _FAR_TRADE_SPREAD_MAX := 0.24
 const _LUXURY_FAR_COMBINED_MAX := 0.48
-## Port at war (world.json `at_war` or random cycle): daily metal/wire materiel draw + stronger metal-tier reservation. Keep in sync with tools/sim_100_days.py.
+## Port at war (world_full.json `at_war` or random cycle): daily metal/wire materiel draw + stronger metal-tier reservation. Keep in sync with tools/sim_100_days.py.
 const _WAR_METAL_DEMAND_STRESS := 0.24
 const _WAR_METAL_RESERVE_CAP := 0.52
 ## While at war: farms ship less grain/wine to the port; population grain ration rises. Keep in sync with tools/sim_100_days.py.
-const _WAR_FARM_OUTPUT_MULT := 0.72
-const _WAR_GRAIN_RATION_MULT := 1.22
+const _WAR_FARM_OUTPUT_MULT := 0.80
+const _WAR_GRAIN_RATION_MULT := 1.10
 ## Default / recurring campaign length when `war_days` omitted (typical ~2–3 months).
 const _WAR_DEFAULT_DAYS := 75
 const _WAR_MIGRATE_V7_REMAINING_DAYS := 18
 ## Random local wars: each recurring port draws peace then a war burst (independent RNG per port). Longer peace = less frequent wars. Keep in sync with tools/sim_100_days.py.
-const _WAR_CYCLE_PEACE_MIN := 200
-const _WAR_CYCLE_PEACE_MAX := 480
-const _WAR_RECURRING_BURST_MIN := 50
-const _WAR_RECURRING_BURST_MAX := 85
+const _WAR_CYCLE_PEACE_MIN := 380
+const _WAR_CYCLE_PEACE_MAX := 900
+const _WAR_RECURRING_BURST_MIN := 18
+const _WAR_RECURRING_BURST_MAX := 38
 ## Daily war materiel: ingots + wire (drawn bronze/copper & rigging — same need_tier as metal). Base + population scale + skim of huge local stocks.
 const _WAR_MATERIEL_METAL_BASE := 8
 const _WAR_MATERIEL_METAL_LINEAR := 4
@@ -245,12 +333,12 @@ const _WAR_MATERIEL_WIRE_MAX := 48
 const _WAR_MATERIEL_WIRE_STOCK_SKIM_DIV := 140
 const _WAR_MATERIEL_WIRE_STOCK_SKIM_MAX := 36
 const _WAR_MATERIEL_DAILY_HARD_CAP := 140
-## Peace-time industry: daily draw from port stock (world.json `industrial_*_per_day`). Applied before war materiel. Keep in sync with tools/sim_100_days.py.
+## Peace-time industry: daily draw from port stock (world_full.json `industrial_*_per_day`). Applied before war materiel. Keep in sync with tools/sim_100_days.py.
 const _INDUSTRIAL_SINK_METAL_MAX := 48
 const _INDUSTRIAL_SINK_WIRE_MAX := 36
 const _INDUSTRIAL_SINK_TIMBER_MAX := 24
 const _INDUSTRIAL_SINK_TEXTILES_MAX := 20
-## Port market: near-future demand vs stock + daily flow vs local production (world.json overrides + goods.json defaults). Keep in sync with tools/sim_100_days.py.
+## Port market: near-future demand vs stock + daily flow vs local production (world_full.json overrides + goods.json defaults). Keep in sync with tools/sim_100_days.py.
 const _MARKET_HORIZON_DAYS := 7.0
 const _MARKET_STOCK_PRESSURE_WEIGHT := 0.26
 const _MARKET_FLOW_PRESSURE_WEIGHT := 0.16
@@ -287,13 +375,14 @@ const _FLEET_NEW_SHIP_LABOR_COINS := 72
 const _FLEET_NEW_SHIP_TIMBER := 45
 const _FLEET_NEW_SHIP_TEXTILES := 32
 const _FLEET_NEW_SHIP_METAL := 24
-const _FLEET_NEW_SHIP_BUILD_DAYS := 90
+## 0 = same-day delivery (+1 hull when labour/materials are paid); >0 queues shipyard countdown. Sync tools/sim_100_days.py.
+const _FLEET_NEW_SHIP_BUILD_DAYS := 0
 const _FLEET_MAX_SHIPS := 12
 const _FLEET_REPAIR_COIN_PER_EXTRA_SHIP := 1
 ## Coin destroyed on dock trades (porters, measures, petty dues); not added to port stock math. Keep in sync with tools/sim_100_days.py.
 const _CAPTAIN_TRADE_FEE_BUY_DIV := 32
 const _CAPTAIN_TRADE_FEE_SELL_DIV := 40
-## Per-port `tolls` in world.json: coins per unit on **sales into the city** (import duty). Buys from the quay are not tolled.
+## Per-port `tolls` in world_full.json: coins per unit on **sales into the city** (import duty). Buys from the quay are not tolled.
 ## NPCs may smuggle duties or pay graft to skip.
 ## When a port levies any toll, wholesale buy/sell curves tilt slightly in merchants' favour so most stay solvent.
 const _TOLL_MERCHANT_BUY_RELIEF := 0.048
@@ -353,10 +442,12 @@ const _CROP_HARVEST_DAILY_SCALE := (
 	/ float(_HARVEST_DAYS)
 )
 const _PORT_ROLE_BREADBASKET := "breadbasket"
-## Extra multiplier on farm grain & wine into ports with world.json role `breadbasket`. Sync tools/sim_100_days.py.
+## Extra multiplier on farm grain & wine into ports with world_full.json role `breadbasket`. Sync tools/sim_100_days.py.
 const _BREADBASKET_FARM_GRAIN_WINE_MULT := 1.15
 ## Global bump to farm **grain** only (not wine/fish): raises annual grain mass above nominal 360× `grain_per_day` closure. Sync tools/sim_100_days.py.
 const _FARM_GRAIN_MASS_MULT := 1.58
+## Multiplies farm **grain, wine, and fish** into port stocks (and `_estimated_farm_supply_per_day`). Set `2.0` to stress-test food sufficiency vs demographics; revert to `1.0` for baseline. Sync tools/sim_100_days.py.
+const _FARM_FOOD_PRODUCTION_MULT := 2.0
 ## Per-port crop moisture/growth (twin-parity, no RNG). Moisture tracks a seasonal target; growth lags moisture. Sync tools/sim_100_days.py.
 const _CROP_MOISTURE_ADJUST_RATE := 0.055
 const _CROP_GROWTH_LAG_RATE := 0.11
@@ -374,13 +465,6 @@ const _CROP_PHASE2_BIAS_STRESS_HI := 0.58
 const _CROP_PHASE2_BIAS_MAX_ADD := 0.20
 const _CROP_PHASE2_BIAS_MAJOR_EXTRA := 0.08
 const _CROP_PHASE2_BIAS_MAJOR_STRESS_MIN := 0.46
-const _CROP_PHASE2_UNREST_STRESS_MID := 0.48
-const _CROP_PHASE2_UNREST_STRESS_HIGH := 0.62
-const _CROP_PHASE2_UNREST_MAJOR_STRESS_MIN := 0.54
-const _CROP_PHASE2_UNREST_ADD_MID := 1
-const _CROP_PHASE2_UNREST_ADD_HIGH := 2
-const _CROP_PHASE2_UNREST_ADD_MAJOR := 1
-const _CROP_PHASE2_UNREST_DAILY_CAP := 4
 const _CROP_PHASE2_HOARD_STRESS_LO := 0.36
 const _CROP_PHASE2_HOARD_MAJOR_BOOST := 0.26
 const _CROP_PHASE2_NPC_GRAIN_SELL_FLOOR_SHIFT := 0.15
@@ -478,10 +562,10 @@ var _pending_player_encounter_msg: String = ""
 var current_day: int = 1
 
 var _port_names: Dictionary = {}  # id -> display name
-## Optional chart positions from world.json `map_u` / `map_v` in [0,1] for UI sea-chart.
+## Optional chart positions from world_full.json `map_u` / `map_v` in [0,1] for UI sea-chart.
 var _port_map_uv: Dictionary = {}  # id -> Vector2
 var _lane_days: Dictionary = {}  # "from|to" -> int days
-## Sparse NPC voyage graph from world.json `npc_lanes` (optional). When non-empty, NPC merchants use this
+## Sparse NPC voyage graph from world_full.json `npc_lanes` (optional). When non-empty, NPC merchants use this
 ## graph for `_voyage_plan` coastal shortest days; player keeps full `lanes`. Sync tools/sim_100_days.py.
 var _npc_lane_days: Dictionary = {}  # "from|to" -> int days
 ## port_id -> Array[String] neighbor port ids (undirected).
@@ -495,15 +579,16 @@ var _voyage_coastal_shortest_cache_npc: Dictionary = {}
 var _goods: Dictionary = {}  # id -> { name, buy, sell, stock_target, optional market_demand_per_day }
 ## Per-port commodity stock (city + warehouses abstraction).
 var _port_stocks: Dictionary = {}  # port_id -> Dictionary good_id -> int
-## Parsed from world.json before goods exist — finalized in _finalize_port_stocks().
+## Parsed from world_full.json before goods exist — finalized in _finalize_port_stocks().
 var _port_initial_stock: Dictionary = {}  # port_id -> Dictionary good_id -> int
-## Per-port simulation tuning (from world.json).
-var _port_npc_trader_count: Dictionary = {}  # port_id -> int (from world.json; clamped 1.._PORT_NPC_TRADERS_LOAD_MAX on load)
+## Per-port simulation tuning (from world_full.json).
+var _port_npc_trader_count: Dictionary = {}  # port_id -> int (from world_full.json; clamped 1.._PORT_NPC_TRADERS_LOAD_MAX on load)
 var _port_population_grain: Dictionary = {}  # port_id -> int eaten from port stock per day
 var _port_population_wine_base: Dictionary = {}  # port_id -> base wine units / day before wealth scaling
 var _port_population_fish_per_day: Dictionary = {}  # port_id -> fixed fish ration / day (coastal protein)
 ## founding cohort size (from world at load); farm/mine output scales vs this.
 var _port_population_grain_baseline: Dictionary = {}  # port_id -> int
+var _port_population_grain_baseline_initial: Dictionary = {}  # port_id -> int (founding cohort, never drifts)
 var _port_population_grain_cap: Dictionary = {}  # port_id -> int max grain mouths
 var _port_famine_streak_days: Dictionary = {}  # port_id -> int consecutive harsh-food days
 ## Consecutive days population received a full grain ration (eaten >= need); resets famine streak when ≥ `_POP_FAMINE_CALM_CONSEC_FULL_RATION_DAYS` and unrest < 38.
@@ -517,11 +602,11 @@ var _port_rationing_days_active: Dictionary = {}  # port_id -> int
 ## Preserved-foods reserve (mouth-day units; float for fractional daily refill, see `_PRESERVED_FOOD_*`).
 var _port_preserved_food: Dictionary = {}  # port_id -> float
 var _port_initial_wealth: Dictionary = {}  # port_id -> optional starting liquidity (abstract coin)
-## world.json `port_role_wealth_bonuses` keyed by port `role` — added to stock-implied wealth attractor.
+## world_full.json `port_role_wealth_bonuses` keyed by port `role` — added to stock-implied wealth attractor.
 var _port_role_wealth_bonus: Dictionary = {}  # port_id -> int
-## world.json each port `role` id (e.g. breadbasket) for mechanics beyond wealth bonus.
+## world_full.json each port `role` id (e.g. breadbasket) for mechanics beyond wealth bonus.
 var _port_roles: Dictionary = {}  # port_id -> String
-## Optional per port: `population_existential_war_burst_days` in world.json — if current war’s `burst_initial` ≥ this (and value < `_POP_EXISTENTIAL_WAR_BURST_OFF`), famine losses accelerate for that campaign.
+## Optional per port: `population_existential_war_burst_days` in world_full.json — if current war’s `burst_initial` ≥ this (and value < `_POP_EXISTENTIAL_WAR_BURST_OFF`), famine losses accelerate for that campaign.
 var _port_existential_war_burst_days: Dictionary = {}  # port_id -> int
 ## Counters for baseline drift (not saved; reset on load).
 var _port_baseline_momentum_up: Dictionary = {}  # port_id -> int
@@ -536,21 +621,21 @@ var _wealth_stock_target_tick_start: Dictionary = {}  # port_id -> int
 var _farms: Array = []
 ## Mines: daily ingot + wire output into a port (same tick as farms).
 var _mines: Array = []
-## world.json `mint` on a port: civic batches consume port-stock Au/Ag → world treasury (with sink frac).
+## world_full.json `mint` on a port: civic batches consume port-stock Au/Ag → world treasury (with sink frac).
 var _port_mint_cfg: Dictionary = {} # port_id -> { gold_per_batch, silver_per_batch, coins_per_batch, max_batches_per_day, treasury_sink_frac }
-## Optional root `luxury_import` in world.json; defaults used if absent. Bullion excluded from auto-queue (mines + mint handle Au/Ag).
+## Optional root `luxury_import` in world_full.json; defaults used if absent. Bullion excluded from auto-queue (mines + mint handle Au/Ag).
 var _luxury_import_cfg: Dictionary = {}
 ## port_id -> Array of { "g": good_id, "q": int, "d": int } — days until consignment lands.
 var _port_luxury_import_queue: Dictionary = {}
 ## State-mint coin pool (NPC spawn draws first; municipal mint pulse refills). Not a full bank ledger.
 var _world_treasury_coins: int = 0
-## Snapshot of world.json `initial_treasury_coins` for migrating saves older than SAVE_VERSION 26.
+## Snapshot of world_full.json `initial_treasury_coins` for migrating saves older than SAVE_VERSION 26.
 var _world_initial_treasury_coins: int = 0
 ## Last resolved population bites (for UI / admin).
 var _last_pop_digest: Dictionary = {}  # port_id -> { "grain": int, "wine": int }
-## Per port: days of war left (0 = peace). Seeded from world.json at_war + war_days; ticks down daily. Keep in sync with sim.
+## Per port: days of war left (0 = peace). Seeded from world_full.json at_war + war_days; ticks down daily. Keep in sync with sim.
 var _port_war_days_remaining: Dictionary = {}  # port_id -> int
-## If true (default from world.json), port runs its own random peace→war burst cycle (world.json war_recurring: false to opt out).
+## If true (default from world data), port runs its own random peace→war burst cycle (`war_recurring: false` to opt out).
 var _port_war_recurring: Dictionary = {}  # port_id -> bool
 ## Days until next recurring war burst (only when recurring and not at war).
 var _port_war_peace_remaining: Dictionary = {}  # port_id -> int
@@ -560,16 +645,16 @@ var _port_war_pending_burst: Dictionary = {}  # port_id -> int days
 var _port_war_burst_initial: Dictionary = {}  # port_id -> int
 ## Last tick war draw from port stock (ingots + wire).
 var _last_war_industry_digest: Dictionary = {}  # port_id -> { "metal": int, "wire": int }
-## world.json `industrial_*_per_day` (peace-time workshops, shipyards, wood yards, looms).
+## world_full.json `industrial_*_per_day` (peace-time workshops, shipyards, wood yards, looms).
 var _port_industrial_metal_per_day: Dictionary = {}  # port_id -> int
 var _port_industrial_wire_per_day: Dictionary = {}  # port_id -> int
 var _port_industrial_timber_per_day: Dictionary = {}  # port_id -> int
 var _port_industrial_textiles_per_day: Dictionary = {}  # port_id -> int
-## world.json `trade_price_bias` per good: multiplier offset (final ≈ 1 + clamp(bias)).
+## world_full.json `trade_price_bias` per good: multiplier offset (final ≈ 1 + clamp(bias)).
 var _port_trade_price_bias: Dictionary = {}  # port_id -> Dictionary good_id -> float
-## world.json `market_demand_per_day` per good: explicit units/day for pricing (replaces auto estimate for listed goods).
+## world_full.json `market_demand_per_day` per good: explicit units/day for pricing (replaces auto estimate for listed goods).
 var _port_market_demand_override: Dictionary = {}  # port_id -> Dictionary good_id -> float
-## port_id -> Dictionary good_id -> int coins per unit import duty (applied when selling **to** the port). From world.json `tolls` per port.
+## port_id -> Dictionary good_id -> int coins per unit import duty (applied when selling **to** the port). From world_full.json `tolls` per port.
 var _port_good_tolls: Dictionary = {}
 ## port_id -> last calendar day (inclusive) player customs graft suppresses tolls there.
 var _player_toll_graft_until: Dictionary = {}
@@ -581,8 +666,12 @@ var _last_grain_spoilage: Dictionary = {}
 var _last_slave_digest: Dictionary = {}
 ## End-of-tick grain stock / population grain demand (same eat rate as UI "grain/day").
 var _last_grain_food_days: Dictionary = {}  # port_id -> float
-## 0–200; grain shortage + low runway add; full rations decay. At threshold triggers a riot tick.
-var _port_food_unrest: Dictionary = {}  # port_id -> int
+## 0–100 each; composite = worry + panic (0–200) for legacy `food_unrest` / riots / pricing hooks.
+## Worry: visible civic rationing. Panic: accumulates only after consecutive days without full food (see _FOOD_UNREST_STARVATION_STREAK_THRESHOLD).
+var _port_food_worry: Dictionary = {}  # port_id -> int
+var _port_food_panic: Dictionary = {}  # port_id -> int
+## Consecutive days the city failed to fully feed mouths (grain + preserved + forage < need). Citizens do not see granary stock; panic tracks this streak, not runway. Sync tools/sim_100_days.py.
+var _port_starvation_streak_days: Dictionary = {}  # port_id -> int
 ## Days left where riot threshold stays boosted after a war ends (see _WAR_PEACE_*).
 var _port_peace_riot_grace_days: Dictionary = {}  # port_id -> int
 ## Phase 4 pirate combat aggregates (session cumulative; reset on new GameState / load as 0).
@@ -612,12 +701,52 @@ var _port_war_rumor: Dictionary = {}
 var _port_rumor_good_delta: Dictionary = {}
 ## Plague days remaining: suppresses wealth attractor and can cost population. Sync sim.
 var _port_plague_days: Dictionary = {}
-## From world.json `autonomy_warmup_days`: invisible daily ticks on fresh campaigns (no save file).
+## From world_full.json `autonomy_warmup_days`: invisible daily ticks on fresh campaigns (no save file).
 var _world_autonomy_warmup_days: int = 24
-## When false, crop agro tick/yield/price/unrest hooks are no-ops (world.json `crop_agro_model`, default true).
+## When false, crop agro tick/yield/price/unrest hooks are no-ops (world_full.json `crop_agro_model`, default true).
 var _world_crop_agro_model: bool = true
-## Phase 0: NPC civic grain contracts (offers + routing bias + voyage score); fulfill/breach tick always runs. world.json `npc_city_grain_contracts_enabled`, default true.
+## Phase 0: NPC civic grain contracts (offers + routing bias + voyage score); fulfill/breach tick always runs. world_full.json `npc_city_grain_contracts_enabled`, default true.
 var _world_npc_city_grain_contracts_enabled: bool = true
+## Standing hub↔spoke grain lanes + chartered houses; `world_full.json` `adjacency_grain_contracts_enabled`, default true.
+var _world_adjacency_grain_contracts_enabled: bool = true
+## Root `default_player_port_id` (or legacy `default_player_port`) from world JSON; new games start docked here when valid.
+var _world_default_player_port_id: String = ""
+## Each entry: { "hub": String, "spoke": String, "houses": Array[int] } — rebuilt from world topology + roles.
+var _adjacency_grain_contracts: Array = []
+## _lane_key(hub,spoke) -> earmarked grain units for privileged wholesale tranche (refilled daily).
+var _port_adj_grain_earmark: Dictionary = {}
+## Cumulative privileged grain units bought this campaign (metrics / parity with twin).
+var npc_adj_grain_priv_buy_units: int = 0
+## Phase 0 institutional schema export: when false, `institutional_contracts` on NPCs stay empty (civic grain sim unchanged). `institutional_trade.contract_types` lists allowed type ids for data + admin (grain always mirrored when enabled).
+var _world_institutional_trade_enabled: bool = true
+var _world_institutional_contract_types: Array = []
+## Parsed `institutional_trade.phase3` (applied after ports load). See `_bootstrap_institutional_phase3_from_doc`.
+var _world_inst_p3_cfg: Dictionary = {}
+var _world_inst_p3_enabled: bool = false
+var _world_inst_p3_ally_toll_mul: float = 0.86
+var _world_inst_p3_enemy_toll_mul: float = 1.14
+var _world_inst_p3_ally_buy_mul: float = 0.985
+var _world_inst_p3_route_ally_bonus: float = 0.10
+var _world_inst_p3_route_hostile_penalty: float = 0.24
+var _world_inst_p3_escort_same_band_p: float = 0.075
+## Non-empty alliance band rows from `phase3.bands` (metrics/admin).
+var _world_inst_p3_band_count: int = 0
+## port_id -> int alliance band index (>=0) when listed under `phase3.bands`.
+var _port_inst_alliance_band: Dictionary = {}
+## Parsed `institutional_trade.phase4` (patronage / city stress). See `_bootstrap_institutional_phase4_from_doc`.
+var _world_inst_p4_cfg: Dictionary = {}
+var _world_inst_p4_enabled: bool = false
+var _world_inst_p4_stress_grain_days_ref: float = 32.0
+var _world_inst_p4_stress_unrest_floor: int = 50
+var _world_inst_p4_offer_p_mul_max: float = 1.52
+var _world_inst_p4_advance_scale_max: float = 1.16
+var _world_inst_p4_loyal_repute_floor: float = 0.50
+var _world_inst_p4_loyal_offer_p_mul: float = 1.11
+var _world_inst_p4_fulfill_issuer_wealth_per_qty: float = 0.55
+var _world_inst_p4_war_stress_add: float = 0.06
+## Parsed `institutional_trade.phase5` — charter board / alliance UI gate. See `_bootstrap_institutional_phase5_from_doc`.
+var _world_inst_p5_cfg: Dictionary = {}
+var _world_inst_p5_surface_enabled: bool = true
 ## When true, NPC merchant convoys/solo depart are skipped (twin/debug: information starvation vs same GT).
 var block_npc_merchant_voyages: bool = false
 ## port_id -> 0..1 soil moisture (abstract).
@@ -683,7 +812,7 @@ var _player_good_last_trade_day: Dictionary = {}
 ## Day the player last paid clerks to refresh route/piracy tables at the quay.
 var _player_route_intel_refresh_day: int = 0
 
-## Sea-chart grouping for City → Ledger (`world.json` chart_areas + per-port chart_area_id).
+## Sea-chart grouping for City → Ledger (`world_full.json` chart_areas + per-port chart_area_id).
 const _LEDGER_CHART_AREA_FALLBACK := "_unassigned"
 var _chart_area_labels: Dictionary = {} ## area_id -> display name
 var _chart_area_notes: Dictionary = {} ## area_id -> optional description
@@ -720,18 +849,30 @@ var _port_shipyard_classes: Dictionary = {}
 var _port_cultures: Dictionary = {}
 
 
+func _resolve_default_player_port_id_for_new_game() -> String:
+	var dpid: String = str(_world_default_player_port_id).strip_edges()
+	if not dpid.is_empty() and _port_names.has(dpid):
+		return dpid
+	if _port_names.is_empty():
+		return ""
+	var keys: Array = _port_names.keys()
+	keys.sort()
+	return str(keys[0])
+
+
 func _ready() -> void:
 	_rng.randomize()
-	_load_world("res://data/world.json")
+	_load_world(WORLD_DATA_PATH)
 	_load_goods("res://data/goods.json")
 	_prune_port_tolls_to_known_goods()
 	_load_ship_catalog("res://data/ships.json")
 	_finalize_port_stocks()
 	_bootstrap_npc_agents()
+	_bootstrap_adjacency_grain_contracts()
 	_init_port_wealth_baseline()
 	_init_port_food_unrest_zero()
-	if player_port_id.is_empty() and not _port_names.is_empty():
-		player_port_id = str(_port_names.keys()[0])
+	if player_port_id.is_empty() or not _port_names.has(player_port_id):
+		player_port_id = _resolve_default_player_port_id_for_new_game()
 	_apply_new_game_defaults()
 	call_deferred("_maybe_run_world_autonomy_warmup")
 
@@ -796,7 +937,7 @@ func get_chart_area_description(area_id: String) -> String:
 	return str(_chart_area_notes.get(str(area_id), ""))
 
 
-## Sea-chart anchor in [0,1]×[0,1] if world.json defines `map_u` / `map_v`; else (-1,-1).
+## Sea-chart anchor in [0,1]×[0,1] if world_full.json defines `map_u` / `map_v`; else (-1,-1).
 func get_port_map_uv(port_id: String) -> Vector2:
 	var ps := str(port_id)
 	if _port_map_uv.has(ps):
@@ -822,6 +963,91 @@ func get_population_grain_eat_effective(port_id: String) -> int:
 	if base <= 0 or not is_port_at_war(ps):
 		return base
 	return clampi(int(ceil(float(base) * _WAR_GRAIN_RATION_MULT)), base + 1, 120)
+
+
+## Quaestor / agoranomos planning headcount: never below institutional baseline even if census mouths have fallen (registers lag famine).
+func _port_official_grain_mouths_for_granary(port_id: String) -> int:
+	var ps := str(port_id)
+	if not _port_names.has(ps) or not _goods.has("grain"):
+		return 0
+	var baseline: int = maxi(1, int(_port_population_grain_baseline.get(ps, 1)))
+	var war_eat: int = get_population_grain_eat_effective(ps)
+	return clampi(maxi(war_eat, baseline), 0, 120)
+
+
+func _port_granary_reserve_daily_grain_units(port_id: String) -> int:
+	var mouths: int = _port_official_grain_mouths_for_granary(port_id)
+	if mouths <= 0:
+		return 0
+	return maxi(_RATION_BITE_MIN, int(round(float(mouths) * _RATION_BITE_FRAC)))
+
+
+func _calendar_days_grain_official_cover_ahead(doy: int) -> int:
+	var d: int = clampi(doy, 1, _CALENDAR_YEAR_LEN)
+	var raw: int
+	if _is_harvest_doy(d):
+		raw = maxi(1, _GRANARY_RING_HARVEST_GUARD_DAYS)
+	elif d < _HARVEST_START_DOY:
+		raw = maxi(_GRANARY_RING_PREHARVEST_MIN_DAYS, _HARVEST_START_DOY - d)
+	else:
+		raw = maxi(1, (_CALENDAR_YEAR_LEN - d) + _HARVEST_START_DOY)
+	return mini(raw, _GRANARY_RING_MAX_LIABILITY_DAYS)
+
+
+func _port_granary_min_reserve_grain_units(port_id: String) -> int:
+	if not _goods.has("grain"):
+		return 0
+	var ps := str(port_id)
+	if not _port_names.has(ps):
+		return 0
+	var daily: int = _port_granary_reserve_daily_grain_units(ps)
+	if daily <= 0:
+		return 0
+	var days: int = _calendar_days_grain_official_cover_ahead(get_calendar_day_of_year())
+	return mini(999999, daily * days + _GRANARY_RING_SLACK_UNITS)
+
+
+func _port_official_fish_rations_per_day(port_id: String) -> int:
+	var ps := str(port_id)
+	if not _port_names.has(ps) or not _goods.has("fish"):
+		return 0
+	return clampi(int(_port_population_fish_per_day.get(ps, 0)), 0, 40)
+
+
+func _port_smokehouse_min_reserve_fish_units(port_id: String) -> int:
+	if not _goods.has("fish"):
+		return 0
+	var rations: int = _port_official_fish_rations_per_day(port_id)
+	if rations <= 0:
+		return 0
+	var days: int = _calendar_days_grain_official_cover_ahead(get_calendar_day_of_year())
+	return mini(999999, rations * days + (_GRANARY_RING_SLACK_UNITS / 2))
+
+
+## Units the quay may sell from port stock (player + NPC wholesale); grain/fish are capped to surplus above civic ring-fence.
+func _port_quay_surplus_units_for_sale(port_id: String, good_id: String) -> int:
+	var gid := str(good_id)
+	var ps := str(port_id)
+	if not _port_names.has(ps) or not _goods.has(gid):
+		return 0
+	var st: int = _port_stock_qty(ps, gid)
+	if gid == "grain":
+		return maxi(0, st - _port_granary_min_reserve_grain_units(ps))
+	if gid == "fish":
+		return maxi(0, st - _port_smokehouse_min_reserve_fish_units(ps))
+	return st
+
+
+func get_port_quay_max_buy_qty_docked(good_id: String) -> int:
+	if is_at_sea():
+		return 0
+	var ps := str(player_port_id)
+	if not _port_names.has(ps):
+		return 0
+	var gid := str(good_id)
+	if not _goods.has(gid):
+		return 0
+	return maxi(0, _port_quay_surplus_units_for_sale(ps, gid))
 
 
 func is_at_sea() -> bool:
@@ -1143,20 +1369,6 @@ func _crop_phase2_grain_trade_bias_add(port_id: String) -> float:
 	return clampf(add, 0.0, _TRADE_PRICE_BIAS_CLAMP)
 
 
-func _crop_phase2_food_unrest_addon(port_id: String) -> int:
-	if not _world_crop_agro_model:
-		return 0
-	var st: float = _crop_grain_stress_gt_01_for_port(port_id)
-	var n: int = 0
-	if st >= _CROP_PHASE2_UNREST_STRESS_HIGH:
-		n = _CROP_PHASE2_UNREST_ADD_HIGH
-	elif st >= _CROP_PHASE2_UNREST_STRESS_MID:
-		n = _CROP_PHASE2_UNREST_ADD_MID
-	if _crop_phase2_stress_major_gate(port_id) and st >= _CROP_PHASE2_UNREST_MAJOR_STRESS_MIN:
-		n += _CROP_PHASE2_UNREST_ADD_MAJOR
-	return mini(_CROP_PHASE2_UNREST_DAILY_CAP, n)
-
-
 func _crop_phase2_npc_hoard_weight_01(port_id: String) -> float:
 	if not _world_crop_agro_model:
 		return 0.0
@@ -1443,7 +1655,7 @@ func player_can_order_new_fleet_ship() -> bool:
 	return player_port_has_fleet_build_materials()
 
 
-## Docked only. Queues a new hull at this port: labor coins now, port timber/textiles/metal, ~3 months until delivery.
+## Docked only. Pays labour + port timber/textiles/metal; if build days &gt; 0 queues delivery, else +1 hull immediately.
 func try_buy_fleet_ship() -> bool:
 	if is_at_sea():
 		return false
@@ -1474,9 +1686,17 @@ func try_buy_fleet_ship() -> bool:
 	_adjust_port_stock(ps, "timber", -timb)
 	_adjust_port_stock(ps, "textiles", -tex)
 	_adjust_port_stock(ps, "metal", -met)
-	player_fleet_shipyard_port_id = ps
-	player_fleet_shipyard_days_remaining = dayb
+	if dayb <= 0:
+		var ships0: int = clampi(player_fleet_ships, 1, _FLEET_MAX_SHIPS)
+		if ships0 < _FLEET_MAX_SHIPS:
+			player_fleet_ships = mini(_FLEET_MAX_SHIPS, ships0 + 1)
+		player_fleet_shipyard_port_id = ""
+		player_fleet_shipyard_days_remaining = 0
+	else:
+		player_fleet_shipyard_port_id = ps
+		player_fleet_shipyard_days_remaining = dayb
 	money_changed.emit()
+	cargo_changed.emit()
 	market_changed.emit()
 	return true
 
@@ -2002,7 +2222,11 @@ func _player_has_toll_graft(port_id: String) -> bool:
 func _player_toll_coins_for_trade(port_id: String, good_id: String, qty: int) -> int:
 	if qty <= 0 or _player_has_toll_graft(port_id):
 		return 0
-	return _toll_total_coins(port_id, good_id, qty)
+	var raw: int = _toll_total_coins(port_id, good_id, qty)
+	if raw <= 0:
+		return 0
+	var p3s: float = _inst_p3_toll_scale_before_random(player_port_id, str(port_id))
+	return maxi(0, int(floor(float(raw) * p3s)))
 
 
 func _npc_toll_graft_last_day(agent: Dictionary, port_id: String) -> int:
@@ -2100,6 +2324,21 @@ func _take_harbour_due_from_purse(purse: int, ships: int) -> int:
 	return mini(due, clampi(purse, 0, _MAX_PURSE_COINS))
 
 
+## Phase 1 economy conservation. Every coin an NPC pays into the civic flow
+## (officer pay, marine wages, shipyard repairs, trade fees) should end up in
+## the port's prosperity indicator — "officers and marines spend every last
+## penny in port" — instead of vanishing. Keeps the 8-coin → +1-wealth ratio
+## established by harbour dues so the model is consistent. Full coin
+## conservation with a per-port treasury is Phase 2; see economy-rules canvas.
+func _npc_civic_spend_to_port_wealth(port_id: String, coins: int) -> void:
+	if coins <= 0:
+		return
+	var ps: String = str(port_id)
+	if ps.is_empty() or not _port_names.has(ps):
+		return
+	_bump_port_wealth(ps, maxi(1, coins / _HARBOUR_WEALTH_PER_COINS_PAID))
+
+
 func _harbour_due_port_wealth_bump(port_id: String, take: int, traffic_berths: int) -> void:
 	if take <= 0:
 		return
@@ -2137,7 +2376,10 @@ func _npc_apply_harbour_dues_if_docked_after_trade() -> void:
 		_ensure_npc_ship_fields(ag)
 		var purse: int = clampi(int(ag.get("money", 0)), 0, _MAX_PURSE_COINS)
 		var ships: int = clampi(int(ag.get("fleet_ships", 1)), 1, _FLEET_MAX_SHIPS)
-		var take: int = _take_harbour_due_from_purse(purse, ships)
+		var raw_take: int = _take_harbour_due_from_purse(purse, ships)
+		var take: int = raw_take
+		if take > 0 and _npc_inst_p2_grain_party_port(ag, pid):
+			take = maxi(0, int(floor(float(raw_take) * _INST_P2_HARBOUR_DUE_PARTY_MUL)))
 		if take > 0:
 			ag["money"] = clampi(purse - take, 0, _MAX_PURSE_COINS)
 			var n_here: int = maxi(1, int(traffic_n.get(pid, 1)))
@@ -2387,7 +2629,16 @@ func get_port_city_supply_digest() -> String:
 		if not _is_harvest_doy(doy0)
 		else "Harvest window — fields are shipping grain and wine into city stores. "
 	)
-	return cal_head + harv_note + pop_line
+	var ring_s: String = ""
+	if _goods.has("grain"):
+		var gr: int = _port_granary_min_reserve_grain_units(pid)
+		if gr > 0:
+			ring_s += " Quaestors ring-fence ~%d grain (max of census ration under arms vs institutional baseline × rationed bite × days to harvest cadence); quay only sells surplus." % gr
+	if _goods.has("fish") and f_base > 0:
+		var fr: int = _port_smokehouse_min_reserve_fish_units(pid)
+		if fr > 0:
+			ring_s += " Smokehouse ring-fence ~%d fish on the same calendar band." % fr
+	return cal_head + harv_note + pop_line + ring_s
 
 
 ## Grain runway + unrest tier (for Tavern “moods” card). Empty if no grain ration.
@@ -3238,7 +3489,7 @@ func try_buy(good_id: String, qty: int) -> bool:
 	var buy_fee: int = _captain_trade_fee_on_buy(cost)
 	if player_money < cost + buy_fee:
 		return false
-	if _port_stock_qty(port_id, good_id) < qty:
+	if qty > _port_quay_surplus_units_for_sale(port_id, str(good_id)):
 		return false
 	if get_player_cargo_used() + qty > get_player_cargo_capacity():
 		return false
@@ -3343,7 +3594,7 @@ func player_try_customs_graft() -> bool:
 	return true
 
 
-## Each entry: id, name, port_qty, buy_unit (player pays), sell_unit (player receives), need_tier (optional)
+## Each entry: id, name, port_qty (physical tally), buy_cap (≤ port_qty; grain/fish = civic surplus), buy_unit (player pays), sell_unit (player receives), need_tier (optional)
 func list_goods_for_trade() -> Array:
 	var out: Array = []
 	if is_at_sea():
@@ -3352,11 +3603,16 @@ func list_goods_for_trade() -> Array:
 	for good_id in _goods.keys():
 		var gid := str(good_id)
 		var gd: Dictionary = _goods[gid]
+		var phys: int = _port_stock_qty(pid, gid)
+		var buy_cap: int = phys
+		if gid == "grain" or gid == "fish":
+			buy_cap = _port_quay_surplus_units_for_sale(pid, gid)
 		out.append(
 			{
 				"id": gid,
 				"name": str(gd.get("name", gid)),
-				"port_qty": _port_stock_qty(pid, gid),
+				"port_qty": phys,
+				"buy_cap": buy_cap,
 				"buy_unit": _compute_player_buy_unit(pid, gid),
 				"sell_unit": _compute_player_sell_unit(pid, gid),
 				"toll_import_per_unit": _port_toll_per_unit(pid, gid),
@@ -3598,6 +3854,7 @@ func list_player_market_table_rows() -> Array:
 				"good_id": gid,
 				"name": str(d.get("name", gid)),
 				"port_qty": int(d.get("port_qty", 0)),
+				"buy_cap": int(d.get("buy_cap", int(d.get("port_qty", 0)))),
 				"buy_unit": buyu,
 				"sell_unit": int(d.get("sell_unit", 0)),
 				"toll_per_unit": int(d.get("toll_import_per_unit", 0)),
@@ -3991,7 +4248,7 @@ func get_player_data_provenance(kind: String, key: String) -> String:
 			var rel: int = _player_quay_reliability_percent(ps)
 			var last_td: int = int(_player_good_last_trade_day.get(idk, 0))
 			var age: String = "never traded here" if last_td <= 0 else "%d days since your last hold trade" % maxi(0, current_day - last_td)
-			return (
+			var tail: String = (
 				"Prices are what the harbor clerks show on their tablets today — not the countryside's secret granary count. "
 				+ "Reliability (~%d%%) rises when local quaestors tolerate you; your own trades sharpen how you read the scales. "
 				% rel
@@ -3999,6 +4256,16 @@ func get_player_data_provenance(kind: String, key: String) -> String:
 				+ age
 				+ "."
 			)
+			if idk == "grain" and _goods.has("grain"):
+				var gres: int = _port_granary_min_reserve_grain_units(ps)
+				var gsu: int = _port_quay_surplus_units_for_sale(ps, "grain")
+				tail += " Grain: clerks withhold ~%d for civitas; buy buttons move at most %d surplus this tide." % [gres, gsu]
+			elif idk == "fish" and _goods.has("fish"):
+				var fres: int = _port_smokehouse_min_reserve_fish_units(ps)
+				var fsu: int = _port_quay_surplus_units_for_sale(ps, "fish")
+				if fres > 0:
+					tail += " Fish: smokehouse reserve ~%d; quay surplus up to %d." % [fres, fsu]
+			return tail
 		"influence":
 			return "Influence numbers blend registers you have seen, temple vow marks, and gossip age — they are not omniscient faction meters."
 		"ledger":
@@ -4215,7 +4482,9 @@ func save_campaign() -> bool:
 		"port_stocks": _serialize_port_stocks(),
 		"npc_agents": _serialize_npc_agents(),
 		"port_wealth": _serialize_port_wealth(),
-		"port_food_unrest": _serialize_port_food_unrest(),
+		"port_food_worry": _serialize_port_food_worry(),
+		"port_food_panic": _serialize_port_food_panic(),
+		"port_starvation_streak_days": _serialize_port_int_map(_port_starvation_streak_days),
 		"port_war_days_remaining": _serialize_port_war_days_remaining(),
 		"port_war_recurring": _serialize_port_war_recurring(),
 		"port_war_peace_remaining": _serialize_port_war_peace_remaining(),
@@ -4233,6 +4502,8 @@ func save_campaign() -> bool:
 		"port_rationing_active": _serialize_port_rationing_active(),
 		"port_rationing_days_active": _serialize_port_int_map(_port_rationing_days_active),
 		"port_preserved_food": _serialize_port_float_map(_port_preserved_food),
+		"port_adj_grain_earmark": _serialize_adj_grain_earmark(),
+		"npc_adj_grain_priv_buy_units": clampi(npc_adj_grain_priv_buy_units, 0, 99999999),
 		"player_ship_condition": clampi(player_ship_condition, _SHIP_CONDITION_MIN, _SHIP_CONDITION_MAX),
 		"player_ship_wine_counter": clampi(player_ship_wine_counter, 0, 9999),
 		"player_fleet_ships": clampi(player_fleet_ships, 1, _FLEET_MAX_SHIPS),
@@ -4309,7 +4580,7 @@ func load_campaign() -> bool:
 	else:
 		_player_toll_graft_until.clear()
 	if not _port_names.has(player_port_id) and not _port_names.is_empty():
-		player_port_id = str(_port_names.keys()[0])
+		player_port_id = _resolve_default_player_port_id_for_new_game()
 	if voyage_days_remaining > 0 and (voyage_dest_id.is_empty() or not _port_names.has(voyage_dest_id)):
 		voyage_days_remaining = 0
 		voyage_dest_id = ""
@@ -4377,6 +4648,8 @@ func load_campaign() -> bool:
 		_port_rumor_good_delta.clear()
 	_ensure_sim_agent_port_defaults()
 	_ensure_npc_counts_match_config()
+	_bootstrap_adjacency_grain_contracts()
+	_deserialize_adj_grain_earmark_from_save(d)
 	if ver >= 4:
 		var pw: Variant = d.get("port_wealth", null)
 		if typeof(pw) == TYPE_DICTIONARY:
@@ -4386,13 +4659,23 @@ func load_campaign() -> bool:
 	else:
 		_init_port_wealth_baseline()
 	if ver >= 6:
-		var fu: Variant = d.get("port_food_unrest", null)
-		if typeof(fu) == TYPE_DICTIONARY:
-			_deserialize_port_food_unrest(fu as Dictionary)
+		var fwy: Variant = d.get("port_food_worry", null)
+		var fpn: Variant = d.get("port_food_panic", null)
+		if typeof(fwy) == TYPE_DICTIONARY and typeof(fpn) == TYPE_DICTIONARY:
+			_deserialize_port_food_worry_panic(fwy as Dictionary, fpn as Dictionary)
 		else:
-			_init_port_food_unrest_zero()
+			var fu: Variant = d.get("port_food_unrest", null)
+			if typeof(fu) == TYPE_DICTIONARY:
+				_deserialize_port_food_unrest_legacy(fu as Dictionary)
+			else:
+				_init_port_food_unrest_zero()
 	else:
 		_init_port_food_unrest_zero()
+	_port_starvation_streak_days.clear()
+	if ver >= 49:
+		var ssd0: Variant = d.get("port_starvation_streak_days", null)
+		if typeof(ssd0) == TYPE_DICTIONARY:
+			_deserialize_port_int_map_into(_port_starvation_streak_days, ssd0 as Dictionary, 0, 999)
 	if ver >= 8:
 		var wr: Variant = d.get("port_war_days_remaining", null)
 		if typeof(wr) == TYPE_DICTIONARY:
@@ -5228,6 +5511,7 @@ func _load_world(path: String) -> void:
 	_port_population_grain_baseline.clear()
 	_port_population_grain_cap.clear()
 	_port_famine_streak_days.clear()
+	_port_starvation_streak_days.clear()
 	_port_consecutive_grain_full_ration_days.clear()
 	_port_consecutive_grain_zero_eat_days.clear()
 	_port_prosperity_streak_days.clear()
@@ -5285,6 +5569,7 @@ func _load_world(path: String) -> void:
 	_chart_area_labels.clear()
 	_chart_area_notes.clear()
 	_port_chart_area_id.clear()
+	_world_default_player_port_id = ""
 	var text := FileAccess.get_file_as_string(path)
 	if text.is_empty():
 		push_error("HarboursOfPower: missing or empty world file: %s" % path)
@@ -5303,6 +5588,54 @@ func _load_world(path: String) -> void:
 	_world_autonomy_warmup_days = clampi(int(doc.get("autonomy_warmup_days", 24)), 0, 180)
 	_world_crop_agro_model = bool(doc.get("crop_agro_model", true))
 	_world_npc_city_grain_contracts_enabled = bool(doc.get("npc_city_grain_contracts_enabled", true))
+	_world_adjacency_grain_contracts_enabled = bool(doc.get("adjacency_grain_contracts_enabled", true))
+	var dpp_raw: Variant = doc.get("default_player_port_id", doc.get("default_player_port", null))
+	if dpp_raw != null:
+		_world_default_player_port_id = str(dpp_raw).strip_edges()
+	_world_institutional_trade_enabled = true
+	_world_institutional_contract_types.clear()
+	_world_inst_p3_cfg.clear()
+	_world_inst_p4_cfg.clear()
+	_world_inst_p5_cfg.clear()
+	_port_inst_alliance_band.clear()
+	var it_raw: Variant = doc.get("institutional_trade", null)
+	if typeof(it_raw) == TYPE_DICTIONARY:
+		var itd: Dictionary = it_raw as Dictionary
+		_world_institutional_trade_enabled = bool(itd.get("enabled", true))
+		var ct_raw: Variant = itd.get("contract_types", null)
+		if typeof(ct_raw) == TYPE_ARRAY:
+			for el in ct_raw as Array:
+				var ts: String = str(el).strip_edges()
+				if ts.is_empty():
+					continue
+				if not _world_institutional_contract_types.has(ts):
+					_world_institutional_contract_types.append(ts)
+		var p3_raw: Variant = itd.get("phase3", null)
+		if typeof(p3_raw) == TYPE_DICTIONARY:
+			_world_inst_p3_cfg = (p3_raw as Dictionary).duplicate(true)
+		else:
+			_world_inst_p3_cfg.clear()
+		var p4_raw: Variant = itd.get("phase4", null)
+		if typeof(p4_raw) == TYPE_DICTIONARY:
+			_world_inst_p4_cfg = (p4_raw as Dictionary).duplicate(true)
+		else:
+			_world_inst_p4_cfg.clear()
+		var p5_raw: Variant = itd.get("phase5", null)
+		if typeof(p5_raw) == TYPE_DICTIONARY:
+			_world_inst_p5_cfg = (p5_raw as Dictionary).duplicate(true)
+		else:
+			_world_inst_p5_cfg.clear()
+	if _world_institutional_contract_types.is_empty():
+		_world_institutional_contract_types = [
+			_INST_CONTRACT_TYPE_GRAIN,
+			"temple_supply",
+			"military_provisioning",
+			"convoy_escort",
+			"harbor_priority",
+			"toll_privilege",
+			"exclusive_purchase",
+			"city_patronage",
+		]
 	_luxury_import_cfg = {
 		"enabled": true,
 		"spawn_roll": 0.10,
@@ -5410,7 +5743,7 @@ func _load_world(path: String) -> void:
 		var war_here: bool = bool(pd.get("at_war", false))
 		var war_len: int = clampi(int(pd.get("war_days", _WAR_DEFAULT_DAYS)), 1, 200)
 		_port_war_days_remaining[pid] = war_len if war_here else 0
-		## Default on: every port runs its own peace→war cycle unless war_recurring is false in world.json.
+		## Default on: every port runs its own peace→war cycle unless war_recurring is false in world_full.json.
 		var recurring: bool = bool(pd.get("war_recurring", true))
 		_port_war_recurring[pid] = recurring
 		if war_here:
@@ -5578,6 +5911,336 @@ func _load_world(path: String) -> void:
 		_bootstrap_recurring_war_timers()
 		_ensure_used_hull_listings_for_all_ports()
 		_ensure_sim_agent_port_defaults()
+	_bootstrap_institutional_phase3_from_doc()
+	_bootstrap_institutional_phase4_from_doc()
+	_bootstrap_institutional_phase5_from_doc()
+
+
+func _bootstrap_institutional_phase5_from_doc() -> void:
+	_world_inst_p5_surface_enabled = false
+	if not _world_institutional_trade_enabled:
+		return
+	if _world_inst_p5_cfg.is_empty():
+		_world_inst_p5_surface_enabled = true
+	else:
+		_world_inst_p5_surface_enabled = bool(_world_inst_p5_cfg.get("enabled", true))
+
+
+func _bootstrap_institutional_phase4_from_doc() -> void:
+	_world_inst_p4_enabled = false
+	_world_inst_p4_stress_grain_days_ref = 32.0
+	_world_inst_p4_stress_unrest_floor = 50
+	_world_inst_p4_offer_p_mul_max = 1.52
+	_world_inst_p4_advance_scale_max = 1.16
+	_world_inst_p4_loyal_repute_floor = 0.50
+	_world_inst_p4_loyal_offer_p_mul = 1.11
+	_world_inst_p4_fulfill_issuer_wealth_per_qty = 0.55
+	_world_inst_p4_war_stress_add = 0.06
+	if not _world_institutional_trade_enabled:
+		return
+	if _world_inst_p4_cfg.is_empty():
+		return
+	var cfg: Dictionary = _world_inst_p4_cfg
+	if not bool(cfg.get("enabled", true)):
+		return
+	if cfg.has("stress_grain_days_ref"):
+		_world_inst_p4_stress_grain_days_ref = clampf(float(cfg["stress_grain_days_ref"]), 10.0, 85.0)
+	if cfg.has("stress_unrest_floor"):
+		_world_inst_p4_stress_unrest_floor = clampi(int(cfg["stress_unrest_floor"]), 18, 130)
+	if cfg.has("issuer_offer_p_mul_max"):
+		_world_inst_p4_offer_p_mul_max = clampf(float(cfg["issuer_offer_p_mul_max"]), 1.02, 2.22)
+	if cfg.has("issuer_advance_scale_max"):
+		_world_inst_p4_advance_scale_max = clampf(float(cfg["issuer_advance_scale_max"]), 1.0, 1.36)
+	if cfg.has("loyal_house_repute_floor"):
+		_world_inst_p4_loyal_repute_floor = clampf(float(cfg["loyal_house_repute_floor"]), 0.35, 0.86)
+	if cfg.has("loyal_offer_p_mul"):
+		_world_inst_p4_loyal_offer_p_mul = clampf(float(cfg["loyal_offer_p_mul"]), 1.0, 1.36)
+	if cfg.has("fulfill_issuer_wealth_per_qty"):
+		_world_inst_p4_fulfill_issuer_wealth_per_qty = clampf(float(cfg["fulfill_issuer_wealth_per_qty"]), 0.0, 1.25)
+	if cfg.has("war_stress_add"):
+		_world_inst_p4_war_stress_add = clampf(float(cfg["war_stress_add"]), 0.0, 0.26)
+	_world_inst_p4_enabled = true
+
+
+func _inst_p4_active() -> bool:
+	return _world_institutional_trade_enabled and _world_inst_p4_enabled and _world_npc_city_grain_contracts_enabled
+
+
+func _inst_p4_issuer_patronage_stress_01(issuer_port: String) -> float:
+	if not _inst_p4_active():
+		return 0.0
+	var ps := str(issuer_port)
+	if not _port_names.has(ps) or not _goods.has("grain"):
+		return 0.0
+	var refg: float = maxf(10.0, _world_inst_p4_stress_grain_days_ref)
+	var gfd: float = get_grain_food_days_for_port(ps)
+	var g_st: float = clampf(1.0 - minf(gfd, refg) / refg, 0.0, 1.0)
+	var u: int = get_port_food_unrest(ps)
+	var fl: int = clampi(_world_inst_p4_stress_unrest_floor, 0, 199)
+	var u_st: float = 0.0
+	if u > fl:
+		u_st = clampf(float(u - fl) / float(maxi(1, 200 - fl)), 0.0, 1.0)
+	var st: float = maxf(g_st, u_st)
+	if is_port_at_war(ps):
+		st = clampf(st + _world_inst_p4_war_stress_add, 0.0, 1.0)
+	return st
+
+
+func _bootstrap_institutional_phase3_from_doc() -> void:
+	_world_inst_p3_enabled = false
+	_port_inst_alliance_band.clear()
+	_world_inst_p3_band_count = 0
+	_world_inst_p3_ally_toll_mul = 0.86
+	_world_inst_p3_enemy_toll_mul = 1.14
+	_world_inst_p3_ally_buy_mul = 0.985
+	_world_inst_p3_route_ally_bonus = 0.10
+	_world_inst_p3_route_hostile_penalty = 0.24
+	_world_inst_p3_escort_same_band_p = 0.075
+	if not _world_institutional_trade_enabled:
+		return
+	if _world_inst_p3_cfg.is_empty():
+		return
+	var cfg: Dictionary = _world_inst_p3_cfg
+	if not bool(cfg.get("enabled", true)):
+		return
+	if cfg.has("ally_toll_mul"):
+		_world_inst_p3_ally_toll_mul = clampf(
+			float(cfg["ally_toll_mul"]), _INST_P3_ALLY_TOLL_MUL_MIN, _INST_P3_ALLY_TOLL_MUL_MAX
+		)
+	if cfg.has("enemy_toll_mul"):
+		_world_inst_p3_enemy_toll_mul = clampf(
+			float(cfg["enemy_toll_mul"]), _INST_P3_ENEMY_TOLL_MUL_MIN, _INST_P3_ENEMY_TOLL_MUL_MAX
+		)
+	if cfg.has("ally_buy_mul"):
+		_world_inst_p3_ally_buy_mul = clampf(
+			float(cfg["ally_buy_mul"]), _INST_P3_ALLY_BUY_MUL_MIN, _INST_P3_ALLY_BUY_MUL_MAX
+		)
+	if cfg.has("route_ally_bonus"):
+		_world_inst_p3_route_ally_bonus = clampf(float(cfg["route_ally_bonus"]), 0.0, 0.35)
+	if cfg.has("route_hostile_penalty"):
+		_world_inst_p3_route_hostile_penalty = clampf(float(cfg["route_hostile_penalty"]), 0.0, 0.55)
+	if cfg.has("escort_same_band_p"):
+		_world_inst_p3_escort_same_band_p = clampf(float(cfg["escort_same_band_p"]), 0.0, 0.22)
+	var bands_raw: Variant = cfg.get("bands", null)
+	if typeof(bands_raw) != TYPE_ARRAY:
+		return
+	var bi: int = 0
+	for rowv in bands_raw as Array:
+		if typeof(rowv) != TYPE_ARRAY:
+			continue
+		var placed: int = 0
+		for el in rowv as Array:
+			var px: String = str(el).strip_edges()
+			if px.is_empty() or not _port_names.has(px):
+				continue
+			if _port_inst_alliance_band.has(px):
+				continue
+			_port_inst_alliance_band[px] = bi
+			placed += 1
+		if placed > 0:
+			bi += 1
+	if _port_inst_alliance_band.is_empty():
+		return
+	_world_inst_p3_band_count = bi
+	_world_inst_p3_enabled = true
+
+
+func _inst_p3_active() -> bool:
+	return _world_institutional_trade_enabled and _world_inst_p3_enabled and not _port_inst_alliance_band.is_empty()
+
+
+func _inst_p3_port_band(port_id: String) -> int:
+	var ps := str(port_id)
+	if not _port_names.has(ps):
+		return -1
+	if not _port_inst_alliance_band.has(ps):
+		return -1
+	return int(_port_inst_alliance_band[ps])
+
+
+func _inst_p3_toll_scale_before_random(home_port: String, trade_port: String) -> float:
+	if not _inst_p3_active():
+		return 1.0
+	var h := str(home_port)
+	var p := str(trade_port)
+	if not _port_names.has(h) or not _port_names.has(p):
+		return 1.0
+	var bh: int = _inst_p3_port_band(h)
+	var bp: int = _inst_p3_port_band(p)
+	if bh < 0 or bp < 0:
+		return 1.0
+	if bh == bp:
+		return _world_inst_p3_ally_toll_mul
+	if bh != bp and is_port_at_war(p):
+		return _world_inst_p3_enemy_toll_mul
+	return 1.0
+
+
+func _inst_p3_voyage_route_adjust(agent: Dictionary, dest: String) -> float:
+	if not _inst_p3_active():
+		return 0.0
+	var h := str(agent.get("home_port", ""))
+	var d := str(dest)
+	if not _port_names.has(h) or not _port_names.has(d):
+		return 0.0
+	var bh: int = _inst_p3_port_band(h)
+	var bd: int = _inst_p3_port_band(d)
+	if bh < 0 or bd < 0:
+		return 0.0
+	var adj: float = 0.0
+	if bh == bd:
+		adj += _world_inst_p3_route_ally_bonus
+	if bh != bd and is_port_at_war(d):
+		adj -= _world_inst_p3_route_hostile_penalty
+	return adj
+
+
+func _inst_p3_escort_same_band_bonus(escort: Dictionary, leader: Dictionary) -> float:
+	if not _inst_p3_active():
+		return 0.0
+	var be: int = _inst_p3_port_band(str(escort.get("home_port", "")))
+	var bl: int = _inst_p3_port_band(str(leader.get("home_port", "")))
+	if be < 0 or bl < 0:
+		return 0.0
+	if be == bl:
+		return _world_inst_p3_escort_same_band_p
+	return 0.0
+
+
+func institutional_phase5_player_surface_enabled() -> bool:
+	return _world_institutional_trade_enabled and _world_inst_p5_surface_enabled
+
+
+func list_player_institutional_charter_board_rows() -> Array:
+	var out: Array = []
+	if not institutional_phase5_player_surface_enabled():
+		return out
+	if not _world_npc_city_grain_contracts_enabled:
+		return out
+	for item in _npc_agents:
+		if typeof(item) != TYPE_DICTIONARY:
+			continue
+		var ag: Dictionary = item as Dictionary
+		if not _npc_city_grain_contract_active(ag):
+			continue
+		var cg: Dictionary = ag.get("city_grain_contract", {}) as Dictionary
+		var iss: String = str(cg.get("issuer", ""))
+		var dst: String = str(cg.get("dest", ""))
+		var due: int = clampi(int(cg.get("due", 0)), 0, 9999999)
+		var qty: int = clampi(int(cg.get("qty", 0)), 0, 999)
+		var gn: String = str(cg.get("good", "grain"))
+		var left: int = maxi(0, due - current_day)
+		out.append(
+			{
+				"issuer_port": iss,
+				"dest_port": dst,
+				"issuer_name": get_port_name(iss),
+				"dest_name": get_port_name(dst),
+				"good_id": gn,
+				"qty": qty,
+				"due_day": due,
+				"days_remaining": left,
+			}
+		)
+	return out
+
+
+func get_player_institutional_alliance_map_block() -> String:
+	if not institutional_phase5_player_surface_enabled():
+		return "The charter clerk’s shutters are drawn — institutional_trade.phase5.enabled is false."
+	var bits: PackedStringArray = PackedStringArray()
+	if not _inst_p3_active():
+		bits.append(
+			"Alliance map: no quay coalitions are chartered in this almanac (phase3 off or bands empty). "
+			+ "Tolls and escort hire use neutral geometry."
+		)
+	else:
+		bits.append(
+			"Alliance map — grain import toll scales with your berth’s band vs the counterparty quay "
+			+ "(same-band ally factor %.3f; cross-band into a port at war: %.3f). "
+			+ "Wholesale grain buys at a contract issuer stack a same-band buy factor %.3f on top of lane relief."
+			% [_world_inst_p3_ally_toll_mul, _world_inst_p3_enemy_toll_mul, _world_inst_p3_ally_buy_mul]
+		)
+		for bi in range(_world_inst_p3_band_count):
+			var pids: Array = _port_names.keys()
+			pids.sort()
+			var names: PackedStringArray = PackedStringArray()
+			for pxv in pids:
+				var pxs: String = str(pxv)
+				if int(_port_inst_alliance_band.get(pxs, -1)) != bi:
+					continue
+				names.append(get_port_name(pxs))
+			if names.is_empty():
+				continue
+			bits.append("Band %d — %s" % [bi + 1, ", ".join(names)])
+		var hp: String = str(player_port_id)
+		var hb: int = _inst_p3_port_band(hp)
+		if hb >= 0:
+			bits.append(
+				"Your current berth (%s) reads as alliance band %d for clerk ledgers and escort same-band rolls "
+				+ "(the exchange registers you to the quay where you are standing)."
+				% [get_port_name(hp), hb + 1]
+			)
+		else:
+			bits.append(
+				"Your current berth (%s) sits outside every chartered band — alliance carve-outs do not list you."
+				% get_port_name(hp)
+			)
+	return "\n\n".join(bits)
+
+
+func get_player_institutional_charter_law_block() -> String:
+	if not institutional_phase5_player_surface_enabled():
+		return ""
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append(
+		"Contract board — civic grain carriage (NPC merchants on the register today): "
+		+ "%d–%d bags; %d–%d nights from acceptance to due dawn; issuer pays an advance from civic chest; "
+		+ "carrier must be docked at the consignee with enough grain to discharge on or before the due dawn."
+		% [
+			_NPC_CITY_GRAIN_CONTRACT_QTY_MIN,
+			_NPC_CITY_GRAIN_CONTRACT_QTY_MAX,
+			_NPC_CITY_GRAIN_CONTRACT_DUE_MIN,
+			_NPC_CITY_GRAIN_CONTRACT_DUE_MAX,
+		]
+	)
+	if _world_institutional_trade_enabled:
+		lines.append(
+			"Exchange catalogue (institutional_contract_types): %s. "
+			+ "Active civic hauls mirror into institutional_contracts while institutional_trade.enabled."
+			% _institutional_trade_contract_types_admin_string()
+		)
+	else:
+		lines.append(
+			"Institutional export is suspended — civic grain still runs, but clerks do not stamp institutional rows."
+		)
+	if _inst_p4_active():
+		lines.append(
+			"Patronage (phase4) is in force: issuer food stress widens daily offer odds (up to ×%.2f) "
+			+ "and stretches advances (up to ×%.2f); loyal houses at repute ≥ %.2f gain ×%.2f on that draw; "
+			+ "fulfilled lanes tip issuer civic wealth per bag discharged."
+			% [
+				_world_inst_p4_offer_p_mul_max,
+				_world_inst_p4_advance_scale_max,
+				_world_inst_p4_loyal_repute_floor,
+				_world_inst_p4_loyal_offer_p_mul,
+			]
+		)
+	lines.append(
+		"You hold no civic grain ticket — when the magistrate offers parity, the same breach and fulfill rules apply."
+	)
+	return "\n\n".join(lines)
+
+
+func get_player_institutional_breach_law_block() -> String:
+	if not institutional_phase5_player_surface_enabled():
+		return ""
+	return (
+		"Breach & disputes — missing the due dawn without lawful discharge at the consignee lets the issuer distrain: "
+		+ "coin fine ceil(max(advance, 12) × 1.25) from the purse (capped at coins held), "
+		+ "about one quarter of the taken sum to issuer civic wealth, merchant repute −0.05, "
+		+ "issuer quay trust −0.14; the ticket clears and the quaestor keeps the file."
+	)
 
 
 func _load_goods(path: String) -> void:
@@ -5694,7 +6357,7 @@ func _player_fleet_build_ints() -> Dictionary:
 		"timber": maxi(1, int(round(float(_FLEET_NEW_SHIP_TIMBER) * float(b.get("timber_mult", 1.0))))),
 		"textiles": maxi(1, int(round(float(_FLEET_NEW_SHIP_TEXTILES) * float(b.get("textiles_mult", 1.0))))),
 		"metal": maxi(1, int(round(float(_FLEET_NEW_SHIP_METAL) * float(b.get("metal_mult", 1.0))))),
-		"days": maxi(1, int(round(float(_FLEET_NEW_SHIP_BUILD_DAYS) * float(b.get("days_mult", 1.0))))),
+		"days": maxi(0, int(round(float(_FLEET_NEW_SHIP_BUILD_DAYS) * float(b.get("days_mult", 1.0))))),
 	}
 
 
@@ -5706,7 +6369,7 @@ func _npc_fleet_build_ints(agent: Dictionary) -> Dictionary:
 		"timber": maxi(1, int(round(float(_FLEET_NEW_SHIP_TIMBER) * float(b.get("timber_mult", 1.0))))),
 		"textiles": maxi(1, int(round(float(_FLEET_NEW_SHIP_TEXTILES) * float(b.get("textiles_mult", 1.0))))),
 		"metal": maxi(1, int(round(float(_FLEET_NEW_SHIP_METAL) * float(b.get("metal_mult", 1.0))))),
-		"days": maxi(1, int(round(float(_FLEET_NEW_SHIP_BUILD_DAYS) * float(b.get("days_mult", 1.0))))),
+		"days": maxi(0, int(round(float(_FLEET_NEW_SHIP_BUILD_DAYS) * float(b.get("days_mult", 1.0))))),
 	}
 
 
@@ -6181,6 +6844,7 @@ func _player_escort_traits_dummy_for_roll() -> Dictionary:
 		_NPC_TRAIT_EXTRA: 0.52,
 		_NPC_TRAIT_AGREE: 0.52,
 		_NPC_TRAIT_NEURO: 0.52,
+		"home_port": player_port_id,
 	}
 
 
@@ -6206,7 +6870,7 @@ func _player_try_hire_as_convoy_escort(
 		return
 	if not _player_escort_candidate_hull():
 		return
-	if not _npc_escort_accept_job_roll(_player_escort_traits_dummy_for_roll(), pay_paid, op_max):
+	if not _npc_escort_accept_job_roll(_player_escort_traits_dummy_for_roll(), pay_paid, op_max, leader):
 		return
 	var lid: int = int(leader.get("id", 0))
 	if lid <= 0:
@@ -6299,7 +6963,9 @@ func _sync_player_escort_with_employer_after_npc_advance() -> void:
 	player_voyage_open_sea_01 = clampf(float(boss.get("voyage_open_sea_01", 0.0)), 0.0, 1.0)
 
 
-func _npc_escort_accept_job_roll(escort_candidate: Dictionary, pay_coins: int, route_open_01: float) -> bool:
+func _npc_escort_accept_job_roll(
+	escort_candidate: Dictionary, pay_coins: int, route_open_01: float, convoy_leader: Variant = null
+) -> bool:
 	var p: float = 0.18 + float(pay_coins) / 620.0
 	if _npc_escort_candidate_hull(escort_candidate):
 		p += 0.10
@@ -6308,7 +6974,9 @@ func _npc_escort_accept_job_roll(escort_candidate: Dictionary, pay_coins: int, r
 	var neu: float = _npc_trait_f(escort_candidate, _NPC_TRAIT_NEURO)
 	p += 0.12 * (exv - 0.5) + 0.10 * (agr - 0.5)
 	p -= 0.20 * route_open_01 * neu
-	p = clampf(p, 0.04, 0.82)
+	if convoy_leader != null and typeof(convoy_leader) == TYPE_DICTIONARY:
+		p += _inst_p3_escort_same_band_bonus(escort_candidate, convoy_leader as Dictionary)
+	p = clampf(p, 0.04, 0.86)
 	return _rng.randf() < p
 
 
@@ -6358,7 +7026,7 @@ func _npc_try_hire_escort_for_convoy(
 		cands[si] = cands[ji]
 		cands[ji] = td
 	for cand in cands:
-		if not _npc_escort_accept_job_roll(cand as Dictionary, pay_paid, op_max):
+		if not _npc_escort_accept_job_roll(cand as Dictionary, pay_paid, op_max, leader):
 			continue
 		var esc: Dictionary = cand as Dictionary
 		_ensure_npc_escort_reputation_fields(esc)
@@ -6443,6 +7111,8 @@ func _npc_finish_npc_voyage_arrival(ag: Dictionary, dest: String) -> void:
 	_apply_npc_escort_contract_on_voyage_arrival(ag)
 	_npc_convoy_reset_docked(ag)
 	_npc_try_fulfill_city_grain_contract_on_arrival(ag, dest)
+	if str(ag.get("voyage_role", _VOYAGE_ROLE_MERCHANT)) == _VOYAGE_ROLE_MERCHANT:
+		_npc_route_habit_bump(ag, dest, _NPC_ROUTE_HABIT_ARRIVAL_BUMP)
 
 
 func _npc_depart_solo_merchant(agent: Dictionary, here: String, dest: String) -> void:
@@ -6599,14 +7269,7 @@ func _npc_convoy_formation_and_depart_tick() -> void:
 			if _rng.randf() < _npc_trading_memory_pick_probability(agd):
 				dest = _npc_pick_trading_dest_any_port(agd, pid)
 			else:
-				var opts: Array = []
-				for pk in _port_names.keys():
-					var ps2: String = str(pk)
-					if ps2 != pid:
-						opts.append(ps2)
-				if opts.is_empty():
-					continue
-				dest = str(opts[_rng.randi_range(0, opts.size() - 1)])
+				dest = _npc_pick_random_voyage_dest_merchant(agd, pid)
 			if dest.is_empty() or not _port_names.has(dest):
 				continue
 			dest = _npc_depart_dest_contract_bias(agd, pid, dest)
@@ -7374,7 +8037,7 @@ func _apply_war_materiel_consumption() -> void:
 			_last_war_industry_digest[ps] = {"metal": take_m, "wire": take_w}
 
 
-## Daily peace-time draw: metal, wire, timber, textiles (world.json industrial_*_per_day).
+## Daily peace-time draw: metal, wire, timber, textiles (world_full.json industrial_*_per_day).
 func _apply_industrial_metal_sinks() -> void:
 	for pid in _port_names.keys():
 		var ps := str(pid)
@@ -7483,7 +8146,7 @@ func _estimated_farm_supply_per_day(port_id: String, good_id: String) -> float:
 				raw += float(fd.get("fish_per_day", 0))
 			_:
 				pass
-	return raw * farm_mult * pop_sc * slave_sc
+	return raw * farm_mult * pop_sc * slave_sc * _FARM_FOOD_PRODUCTION_MULT
 
 
 func _estimated_mine_supply_per_day(port_id: String, good_id: String) -> float:
@@ -7921,7 +8584,10 @@ func _compute_player_buy_unit(port_id: String, good_id: String, player_counterpa
 	var gd: Dictionary = meta as Dictionary
 	var base: int = maxi(1, int(gd.get("unit_buy_price", 1)))
 	var target: int = _stock_target_for_good(good_id)
-	var stock: int = _port_stock_qty(port_id, good_id)
+	var stock_full: int = _port_stock_qty(port_id, good_id)
+	var stock: int = stock_full
+	if good_id == "grain" or good_id == "fish":
+		stock = _port_quay_surplus_units_for_sale(port_id, str(good_id))
 	var t: float = float(maxi(1, target))
 	var skew: float = clamp((float(target) - float(stock)) / t, -1.0, 2.0)
 	var mult: float = 1.0 + skew * 0.58
@@ -8007,6 +8673,7 @@ func _serialize_npc_agents() -> Array:
 		_ensure_npc_convoy_fields(ag)
 		_ensure_npc_escort_reputation_fields(ag)
 		_sanitize_npc_peer_debts(ag)
+		_ensure_npc_merchant_contract_fields(ag)
 		out.append(ag)
 	return out
 
@@ -8211,6 +8878,11 @@ func _ensure_npc_merchant_contract_fields(ag: Dictionary) -> void:
 		ag["merchant_repute_01"] = clampf(0.48 + 0.22 * float(sid % 997) / 997.0, 0.0, 1.0)
 	else:
 		ag["merchant_repute_01"] = clampf(float(ag.get("merchant_repute_01", 0.52)), 0.0, 1.0)
+	if not ag.has("merchant_house_id"):
+		var sidh: int = clampi(int(ag.get("id", 0)), 0, 9999999)
+		ag["merchant_house_id"] = clampi(1 + sidh % 28, 1, 4096)
+	else:
+		ag["merchant_house_id"] = clampi(int(ag.get("merchant_house_id", 1)), 1, 4096)
 	var ct0: Variant = ag.get("npc_city_trust_01", null)
 	if typeof(ct0) != TYPE_DICTIONARY:
 		ag["npc_city_trust_01"] = {}
@@ -8234,6 +8906,7 @@ func _ensure_npc_merchant_contract_fields(ag: Dictionary) -> void:
 		var qty: int = clampi(int(cg.get("qty", 0)), 0, 999)
 		var due: int = clampi(int(cg.get("due", 0)), 0, 9999999)
 		var adv: int = clampi(int(cg.get("advance", 0)), 0, _MAX_PURSE_COINS)
+		var ici_keep: int = clampi(int(cg.get("institutional_contract_id", 0)), 0, 9999999)
 		if (
 			iss.is_empty()
 			or not _port_names.has(iss)
@@ -8245,7 +8918,7 @@ func _ensure_npc_merchant_contract_fields(ag: Dictionary) -> void:
 		):
 			ag["city_grain_contract"] = {}
 		else:
-			ag["city_grain_contract"] = {
+			var row_cg: Dictionary = {
 				"issuer": iss,
 				"dest": dst,
 				"good": "grain",
@@ -8253,6 +8926,17 @@ func _ensure_npc_merchant_contract_fields(ag: Dictionary) -> void:
 				"due": due,
 				"advance": adv,
 			}
+			if ici_keep > 0:
+				row_cg["institutional_contract_id"] = ici_keep
+				_npc_ensure_institutional_counterparty_fields(ag)
+				ag["institutional_next_contract_id"] = maxi(
+					clampi(int(ag.get("institutional_next_contract_id", 1)), 1, 9999999),
+					ici_keep + 1
+				)
+			ag["city_grain_contract"] = row_cg
+	_npc_sanitize_npc_route_habit_01(ag)
+	_npc_ensure_institutional_counterparty_fields(ag)
+	_npc_rebuild_institutional_contracts_from_state(ag)
 
 
 func _npc_prune_npc_city_trust_dict(ag: Dictionary) -> void:
@@ -8271,6 +8955,141 @@ func _npc_prune_npc_city_trust_dict(ag: Dictionary) -> void:
 			m.erase(ek)
 		i += 1
 	ag["npc_city_trust_01"] = m
+
+
+func _npc_sanitize_npc_route_habit_01(ag: Dictionary) -> void:
+	var rh0: Variant = ag.get("npc_route_habit_01", null)
+	if typeof(rh0) != TYPE_DICTIONARY:
+		ag["npc_route_habit_01"] = {}
+		return
+	var src: Dictionary = rh0 as Dictionary
+	var out: Dictionary = {}
+	for pk in src.keys():
+		var pxs: String = str(pk)
+		if not _port_names.has(pxs):
+			continue
+		out[pxs] = clampf(float(src[pk]), 0.0, 1.0)
+	ag["npc_route_habit_01"] = out
+	_npc_prune_route_habit_dict(ag)
+
+
+func _npc_prune_route_habit_dict(ag: Dictionary) -> void:
+	var m: Dictionary = ag.get("npc_route_habit_01", {}) as Dictionary
+	if m.size() <= _NPC_ROUTE_HABIT_PORT_MAX_KEYS:
+		return
+	var scored: Array[Dictionary] = []
+	for pk in m.keys():
+		scored.append({"k": str(pk), "v": clampf(float(m[pk]), 0.0, 1.0)})
+	scored.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a["v"]) < float(b["v"]))
+	var drop: int = m.size() - _NPC_ROUTE_HABIT_PORT_MAX_KEYS
+	var i: int = 0
+	while i < drop and not scored.is_empty():
+		var ek: String = str(scored[i].get("k", ""))
+		if not ek.is_empty():
+			m.erase(ek)
+		i += 1
+	ag["npc_route_habit_01"] = m
+
+
+func _npc_route_habit_get(ag: Dictionary, port_id: String) -> float:
+	var ps := str(port_id)
+	if not _port_names.has(ps):
+		return 0.0
+	var m: Dictionary = ag.get("npc_route_habit_01", {}) as Dictionary
+	if m.has(ps):
+		return clampf(float(m[ps]), 0.0, 1.0)
+	return 0.0
+
+
+func _npc_route_habit_bump(ag: Dictionary, port_id: String, delta: float) -> void:
+	if not _world_institutional_trade_enabled:
+		return
+	if str(ag.get("voyage_role", _VOYAGE_ROLE_MERCHANT)) != _VOYAGE_ROLE_MERCHANT:
+		return
+	var ps := str(port_id)
+	if not _port_names.has(ps):
+		return
+	var m: Dictionary = (ag.get("npc_route_habit_01", {}) as Dictionary).duplicate()
+	var cur: float = _npc_route_habit_get(ag, ps)
+	m[ps] = clampf(cur + delta, 0.0, 1.0)
+	ag["npc_route_habit_01"] = m
+	_npc_prune_route_habit_dict(ag)
+
+
+func _npc_tick_institutional_phase1_trust_route_decay() -> void:
+	if not _world_institutional_trade_enabled:
+		return
+	for item in _npc_agents:
+		if typeof(item) != TYPE_DICTIONARY:
+			continue
+		var ag: Dictionary = item as Dictionary
+		if str(ag.get("voyage_role", _VOYAGE_ROLE_MERCHANT)) != _VOYAGE_ROLE_MERCHANT:
+			continue
+		var rh: Dictionary = ag.get("npc_route_habit_01", {}) as Dictionary
+		if not rh.is_empty():
+			var rh2: Dictionary = {}
+			for pk in rh.keys():
+				var pxs: String = str(pk)
+				if not _port_names.has(pxs):
+					continue
+				var v0: float = clampf(float(rh[pk]), 0.0, 1.0)
+				var v1: float = lerpf(v0, 0.0, _NPC_ROUTE_HABIT_DECAY_LERP)
+				if v1 >= 0.018:
+					rh2[pxs] = v1
+			ag["npc_route_habit_01"] = rh2
+		var ct0: Variant = ag.get("npc_city_trust_01", null)
+		if typeof(ct0) == TYPE_DICTIONARY and not (ct0 as Dictionary).is_empty():
+			var ct: Dictionary = ct0 as Dictionary
+			var base: float = clampf(float(ag.get("merchant_repute_01", 0.52)), 0.0, 1.0)
+			var ct2: Dictionary = {}
+			for ck in ct.keys():
+				var cps: String = str(ck)
+				if not _port_names.has(cps):
+					continue
+				var tv: float = lerpf(clampf(float(ct[ck]), 0.0, 1.0), base, _NPC_CITY_TRUST_DECAY_LERP)
+				ct2[cps] = tv
+			ag["npc_city_trust_01"] = ct2
+			_npc_prune_npc_city_trust_dict(ag)
+
+
+func _npc_weighted_dest_sample_from_list(agent: Dictionary, here: String, opts: Array) -> String:
+	if opts.is_empty():
+		return ""
+	if not _world_institutional_trade_enabled:
+		return str(opts[_rng.randi_range(0, opts.size() - 1)])
+	var lo: Array = opts.duplicate()
+	var n: int = lo.size()
+	var sample: int = mini(_NPC_ROUTE_RANDOM_SAMPLE, n)
+	for i in range(sample):
+		var j: int = _rng.randi_range(i, n - 1)
+		var tmp: Variant = lo[i]
+		lo[i] = lo[j]
+		lo[j] = tmp
+	var total: float = 0.0
+	var ws: Array = []
+	for i2 in range(sample):
+		var d: String = str(lo[i2])
+		var w: float = maxf(_NPC_ROUTE_WEIGHT_MIN, _npc_voyage_dest_score(agent, here, d))
+		ws.append(w)
+		total += w
+	if total <= 0.0:
+		return str(lo[0])
+	var r: float = _rng.randf() * total
+	var acc: float = 0.0
+	for i3 in range(sample):
+		acc += float(ws[i3])
+		if r <= acc:
+			return str(lo[i3])
+	return str(lo[sample - 1])
+
+
+func _npc_pick_random_voyage_dest_merchant(agent: Dictionary, here: String) -> String:
+	var opts: Array = []
+	for pk in _port_names.keys():
+		var ps2: String = str(pk)
+		if ps2 != here:
+			opts.append(ps2)
+	return _npc_weighted_dest_sample_from_list(agent, here, opts)
 
 
 func _npc_city_trust_get(ag: Dictionary, port_id: String) -> float:
@@ -8294,6 +9113,84 @@ func _npc_city_trust_bump(ag: Dictionary, port_id: String, delta: float) -> void
 	_npc_prune_npc_city_trust_dict(ag)
 
 
+func _institutional_trade_contract_types_admin_string() -> String:
+	var bits: PackedStringArray = PackedStringArray()
+	for t in _world_institutional_contract_types:
+		var s: String = str(t).strip_edges()
+		if not s.is_empty():
+			bits.append(s)
+	return ", ".join(bits)
+
+
+func _npc_ensure_institutional_counterparty_fields(ag: Dictionary) -> void:
+	if not ag.has("institutional_contracts") or typeof(ag.get("institutional_contracts")) != TYPE_ARRAY:
+		ag["institutional_contracts"] = []
+	if not ag.has("institutional_next_contract_id"):
+		ag["institutional_next_contract_id"] = 1
+	else:
+		ag["institutional_next_contract_id"] = clampi(int(ag.get("institutional_next_contract_id", 1)), 1, 9999998)
+
+
+func _npc_allocate_institutional_contract_id(ag: Dictionary) -> int:
+	_npc_ensure_institutional_counterparty_fields(ag)
+	var nxt: int = clampi(int(ag.get("institutional_next_contract_id", 1)), 1, 9999998)
+	var out_id: int = nxt
+	nxt += 1
+	if nxt > 9999998:
+		nxt = 1
+	ag["institutional_next_contract_id"] = nxt
+	return out_id
+
+
+func _npc_rebuild_institutional_contracts_from_state(ag: Dictionary) -> void:
+	_npc_ensure_institutional_counterparty_fields(ag)
+	if not _world_institutional_trade_enabled:
+		ag["institutional_contracts"] = []
+		return
+	var out: Array = []
+	if _world_npc_city_grain_contracts_enabled and _npc_city_grain_contract_active(ag):
+		var cg: Dictionary = ag.get("city_grain_contract", {}) as Dictionary
+		var iss: String = str(cg.get("issuer", ""))
+		var dst: String = str(cg.get("dest", ""))
+		var qty: int = clampi(int(cg.get("qty", 0)), 0, 999)
+		var due: int = clampi(int(cg.get("due", 0)), 0, 9999999)
+		var adv: int = clampi(int(cg.get("advance", 0)), 0, _MAX_PURSE_COINS)
+		var aid: int = clampi(int(ag.get("id", 0)), 0, 9999999)
+		var ici: int = clampi(int(cg.get("institutional_contract_id", 0)), 0, 9999999)
+		if ici <= 0:
+			ici = _npc_allocate_institutional_contract_id(ag)
+			var cgw: Dictionary = (ag.get("city_grain_contract", {}) as Dictionary).duplicate()
+			cgw["institutional_contract_id"] = ici
+			ag["city_grain_contract"] = cgw
+		else:
+			var nxt_keep: int = clampi(int(ag.get("institutional_next_contract_id", 1)), 1, 9999999)
+			ag["institutional_next_contract_id"] = maxi(nxt_keep, ici + 1)
+		out.append(
+			{
+				"id": ici,
+				"type": _INST_CONTRACT_TYPE_GRAIN,
+				"state": _INST_CONTRACT_STATE_ACTIVE,
+				"expires_day": due,
+				"breach_day": 0,
+				"fulfilled_day": 0,
+				"parties": [
+					{"kind": _INST_PARTY_KIND_PORT, "role": _INST_PARTY_ROLE_ISSUER, "id": iss},
+					{"kind": _INST_PARTY_KIND_NPC_MERCHANT, "role": _INST_PARTY_ROLE_CARRIER, "id": aid},
+					{"kind": _INST_PARTY_KIND_PORT, "role": _INST_PARTY_ROLE_CONSIGNEE, "id": dst},
+				],
+				"terms": {
+					"good": "grain",
+					"qty": qty,
+					"advance_coins": adv,
+					"currency": "coins",
+				},
+			}
+		)
+	while out.size() > _INST_CONTRACTS_PER_AGENT_MAX:
+		out.remove_at(out.size() - 1)
+	ag["institutional_contracts"] = out
+
+
 func _npc_city_grain_contract_active(ag: Dictionary) -> bool:
 	var cg: Dictionary = ag.get("city_grain_contract", {}) as Dictionary
 	if cg.is_empty():
@@ -8303,8 +9200,40 @@ func _npc_city_grain_contract_active(ag: Dictionary) -> bool:
 	return _port_names.has(iss) and _port_names.has(dst) and iss != dst
 
 
+func _npc_inst_p2_grain_lane_active(ag: Dictionary) -> bool:
+	return _world_institutional_trade_enabled and _world_npc_city_grain_contracts_enabled and _npc_city_grain_contract_active(ag)
+
+
+func _npc_inst_p2_grain_party_port(ag: Dictionary, port_id: String) -> bool:
+	if not _npc_inst_p2_grain_lane_active(ag):
+		return false
+	var ps := str(port_id)
+	if not _port_names.has(ps):
+		return false
+	var cg: Dictionary = ag.get("city_grain_contract", {}) as Dictionary
+	var iss: String = str(cg.get("issuer", ""))
+	var dst: String = str(cg.get("dest", ""))
+	return ps == iss or ps == dst
+
+
+func _npc_inst_p2_should_discount_issuer_grain_buy(ag: Dictionary, port_id: String, good_id: String) -> bool:
+	if not _npc_inst_p2_grain_lane_active(ag):
+		return false
+	if str(good_id) != "grain" or not _goods.has("grain"):
+		return false
+	var cg: Dictionary = ag.get("city_grain_contract", {}) as Dictionary
+	if str(cg.get("issuer", "")) != str(port_id):
+		return false
+	var need: int = clampi(int(cg.get("qty", 0)), 1, 999)
+	if not ag.has("cargo") or typeof(ag.get("cargo")) != TYPE_DICTIONARY:
+		return true
+	var have: int = _npc_cargo_qty(ag["cargo"] as Dictionary, "grain")
+	return have < need
+
+
 func _npc_clear_city_grain_contract(ag: Dictionary) -> void:
 	ag["city_grain_contract"] = {}
+	_npc_rebuild_institutional_contracts_from_state(ag)
 
 
 func _npc_depart_dest_contract_bias(ag: Dictionary, here: String, dest: String) -> String:
@@ -8333,6 +9262,8 @@ func _npc_depart_dest_contract_bias(ag: Dictionary, here: String, dest: String) 
 	if slack <= est_d + 2:
 		p_stick += 0.12
 	p_stick = clampf(p_stick, 0.06, 0.91)
+	if _world_institutional_trade_enabled:
+		p_stick = clampf(p_stick + _INST_P2_DEPART_STICK_ADD, 0.06, 0.94)
 	if _rng.randf() < p_stick:
 		return cdest
 	return dest
@@ -8357,6 +9288,10 @@ func _npc_try_fulfill_city_grain_contract_on_arrival(ag: Dictionary, dest: Strin
 	var bonus: int = clampi(6 + need / 2, 4, 48)
 	ag["money"] = clampi(int(ag.get("money", 0)) + bonus, 0, _MAX_PURSE_COINS)
 	_bump_port_wealth(dest, maxi(1, bonus / 3))
+	if _inst_p4_active() and _port_names.has(iss):
+		var ib2: int = clampi(int(ceil(float(need) * _world_inst_p4_fulfill_issuer_wealth_per_qty)), 0, 120)
+		if ib2 > 0:
+			_bump_port_wealth(iss, ib2)
 	ag["merchant_repute_01"] = clampf(float(ag.get("merchant_repute_01", 0.5)) + 0.028, 0.0, 1.0)
 	_npc_city_trust_bump(ag, iss, 0.045)
 	_npc_city_trust_bump(ag, dest, 0.022)
@@ -8426,9 +9361,14 @@ func _npc_try_offer_city_grain_contract(agent: Dictionary, dock_pid: String) -> 
 	if not _port_names.has(ps):
 		return
 	var rep: float = clampf(float(agent.get("merchant_repute_01", 0.52)), 0.0, 1.0)
+	var st4: float = _inst_p4_issuer_patronage_stress_01(ps)
 	var p_offer: float = clampf(
 		_NPC_CITY_GRAIN_CONTRACT_OFFER_P * lerpf(0.78, 1.12, rep), 0.012, 0.068
 	)
+	if st4 > 0.001:
+		p_offer = clampf(p_offer * lerpf(1.0, _world_inst_p4_offer_p_mul_max, st4), 0.006, 0.098)
+	if _inst_p4_active() and rep >= _world_inst_p4_loyal_repute_floor:
+		p_offer = clampf(p_offer * _world_inst_p4_loyal_offer_p_mul, 0.006, 0.098)
 	if _rng.randf() > p_offer:
 		return
 	var opts: PackedStringArray = []
@@ -8438,11 +9378,14 @@ func _npc_try_offer_city_grain_contract(agent: Dictionary, dock_pid: String) -> 
 			opts.append(p2)
 	if opts.is_empty():
 		return
-	var dest: String = str(opts[_rng.randi_range(0, opts.size() - 1)])
+	var cand: Array = []
+	for ii in range(opts.size()):
+		cand.append(str(opts[ii]))
+	var dest: String = _npc_weighted_dest_sample_from_list(agent, ps, cand)
 	if not _port_names.has(dest):
 		return
 	var qty: int = _rng.randi_range(_NPC_CITY_GRAIN_CONTRACT_QTY_MIN, _NPC_CITY_GRAIN_CONTRACT_QTY_MAX)
-	if _port_stock_qty(ps, "grain") < qty:
+	if _port_quay_surplus_units_for_sale(ps, "grain") < qty:
 		return
 	var due: int = current_day + _rng.randi_range(_NPC_CITY_GRAIN_CONTRACT_DUE_MIN, _NPC_CITY_GRAIN_CONTRACT_DUE_MAX)
 	var tr_iss: float = _npc_city_trust_get(agent, ps)
@@ -8451,7 +9394,11 @@ func _npc_try_offer_city_grain_contract(agent: Dictionary, dock_pid: String) -> 
 	var p_accept: float = clampf(0.22 + 0.55 * rep + 0.18 * tr_iss + 0.12 * agree + 0.10 * consc - 0.08 * _npc_trait_f(agent, _NPC_TRAIT_NEURO), 0.08, 0.92)
 	if _rng.randf() > p_accept:
 		return
-	var advance: int = clampi(int(12.0 + float(qty) * 2.1 + 70.0 * rep + 40.0 * tr_iss), 10, 160)
+	var advance0: int = clampi(int(12.0 + float(qty) * 2.1 + 70.0 * rep + 40.0 * tr_iss), 10, 160)
+	var adv_sc: float = 1.0
+	if st4 > 0.001:
+		adv_sc = lerpf(1.0, _world_inst_p4_advance_scale_max, st4)
+	var advance: int = clampi(int(floor(float(advance0) * adv_sc)), 10, 190)
 	var pw: int = clampi(int(_port_wealth.get(ps, 100)), 0, 999999)
 	if pw < advance / 2:
 		return
@@ -8459,6 +9406,7 @@ func _npc_try_offer_city_grain_contract(agent: Dictionary, dock_pid: String) -> 
 	var trsy: int = clampi(int(floor(float(advance) * _NPC_CITY_CONTRACT_TREASURY_FRAC)), 0, _WORLD_TREASURY_MAX)
 	_world_treasury_coins = clampi(_world_treasury_coins + trsy, 0, _WORLD_TREASURY_MAX)
 	agent["money"] = clampi(int(agent.get("money", 0)) + advance, 0, _MAX_PURSE_COINS)
+	var icid: int = _npc_allocate_institutional_contract_id(agent)
 	agent["city_grain_contract"] = {
 		"issuer": ps,
 		"dest": dest,
@@ -8466,7 +9414,9 @@ func _npc_try_offer_city_grain_contract(agent: Dictionary, dock_pid: String) -> 
 		"qty": qty,
 		"due": due,
 		"advance": advance,
+		"institutional_contract_id": icid,
 	}
+	_npc_rebuild_institutional_contracts_from_state(agent)
 
 
 func _ensure_npc_risk_aversion(ag: Dictionary) -> void:
@@ -8728,8 +9678,12 @@ func _new_npc_agent(home_port: String, bankruptcy_replacement: bool = false, inh
 		"crop_stress_belief_01": 0.0,
 		"merchant_season_ticks": 0,
 		"merchant_repute_01": clampf(0.46 + 0.26 * float(_npc_next_agent_id % 991) / 991.0, 0.0, 1.0),
+		"merchant_house_id": clampi(1 + _npc_next_agent_id % 28, 1, 4096),
 		"npc_city_trust_01": {},
 		"city_grain_contract": {},
+		"institutional_contracts": [],
+		"institutional_next_contract_id": 1,
+		"npc_route_habit_01": {},
 	}
 	var bf1: Dictionary = _roll_npc_big_five()
 	for kb in bf1.keys():
@@ -8747,6 +9701,134 @@ func _bootstrap_npc_agents() -> void:
 		var n: int = clampi(int(_port_npc_trader_count.get(pid, 4)), 1, _PORT_NPC_TRADERS_LOAD_MAX)
 		for _i in n:
 			_npc_agents.append(_new_npc_agent(str(pid)))
+
+
+func _adj_pick_chartered_houses_gd(hub: String, spoke: String) -> Array:
+	var s: String = hub + "\u0000" + spoke
+	var h: int = 5381
+	for i in range(s.length()):
+		var ch: int = s.unicode_at(i)
+		h = ((h << 5) + h + ch) & 0x7FFFFFFF
+	var out: Array = []
+	for idx in range(3):
+		var v: int = 1 + ((h + idx * 9973) % 28)
+		var guard: int = 0
+		while out.has(v) and guard < 40:
+			v = 1 + (v % 28)
+			if v == 0:
+				v = 1
+			guard += 1
+		out.append(v)
+	return out
+
+
+func _bootstrap_adjacency_grain_contracts() -> void:
+	_adjacency_grain_contracts.clear()
+	_port_adj_grain_earmark.clear()
+	if not _world_adjacency_grain_contracts_enabled or not _goods.has("grain"):
+		return
+	var hub_roles: Dictionary = {"metropole": true, "great_city": true, "imperial_port": true}
+	var spoke_roles: Dictionary = {"breadbasket": true, "maritime_town": true, "regional_capital": true}
+	var seen: Dictionary = {}
+	for hub in _port_names.keys():
+		var hs: String = str(hub)
+		if not hub_roles.has(str(_port_roles.get(hs, ""))):
+			continue
+		var neigh_npc: Variant = _port_neighbors_npc.get(hs, [])
+		var neigh: Array = neigh_npc as Array if typeof(neigh_npc) == TYPE_ARRAY else []
+		if neigh.is_empty():
+			var neigh_fb: Variant = _port_neighbors.get(hs, [])
+			neigh = neigh_fb as Array if typeof(neigh_fb) == TYPE_ARRAY else []
+		for spoke in neigh:
+			var ss: String = str(spoke)
+			if ss == hs or not _port_names.has(ss):
+				continue
+			if not spoke_roles.has(str(_port_roles.get(ss, ""))):
+				continue
+			var uk: String = _lane_key(hs, ss)
+			if seen.has(uk):
+				continue
+			seen[uk] = true
+			_adjacency_grain_contracts.append(
+				{"hub": hs, "spoke": ss, "houses": _adj_pick_chartered_houses_gd(hs, ss)}
+			)
+			_port_adj_grain_earmark[uk] = 0
+
+
+func _adjacency_grain_earmark_daily_tick() -> void:
+	if not _world_adjacency_grain_contracts_enabled or not _goods.has("grain"):
+		return
+	for row in _adjacency_grain_contracts:
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var rd: Dictionary = row as Dictionary
+		var hub: String = str(rd.get("hub", ""))
+		var spoke: String = str(rd.get("spoke", ""))
+		if hub.is_empty() or spoke.is_empty() or not _port_names.has(hub) or not _port_names.has(spoke):
+			continue
+		var k: String = _lane_key(hub, spoke)
+		var eat_s: int = get_population_grain_eat_effective(spoke)
+		var stock: int = _port_stock_qty(spoke, "grain")
+		var floor_s: int = _port_granary_min_reserve_grain_units(spoke)
+		var surplus: int = maxi(0, stock - floor_s)
+		var commit: int = _ADJ_DAILY_COMMIT
+		var hub_eat: int = get_population_grain_eat_effective(hub)
+		if hub_eat > 0:
+			var hub_days: float = float(_port_stock_qty(hub, "grain")) / float(hub_eat)
+			if hub_days < 14.0:
+				commit = ceili(float(commit) * (1.0 + (14.0 - hub_days) * 0.06))
+		commit = maxi(_ADJ_DAILY_COMMIT_MIN, mini(commit, _ADJ_DAILY_COMMIT_MAX))
+		var cur: int = clampi(int(_port_adj_grain_earmark.get(k, 0)), 0, _ADJ_EARMARK_CAP * 4)
+		var add: int = mini(mini(commit, surplus), maxi(0, _ADJ_EARMARK_CAP - cur))
+		if add > 0:
+			_port_adj_grain_earmark[k] = cur + add
+
+
+func _adj_grain_privileged_hub(agent: Dictionary, spoke: String) -> String:
+	var hp: String = str(agent.get("home_port", ""))
+	var hid: int = clampi(int(agent.get("merchant_house_id", 0)), 0, 9999999)
+	for row in _adjacency_grain_contracts:
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var rd: Dictionary = row as Dictionary
+		if str(rd.get("spoke", "")) != spoke:
+			continue
+		var hub: String = str(rd.get("hub", ""))
+		if hp != hub:
+			continue
+		var houses: Variant = rd.get("houses", null)
+		if typeof(houses) != TYPE_ARRAY:
+			continue
+		for hv in houses as Array:
+			if clampi(int(hv), 0, 9999999) == hid:
+				return hub
+	return ""
+
+
+func _sum_adj_grain_earmark_units() -> int:
+	var t: int = 0
+	for k in _port_adj_grain_earmark.keys():
+		t = mini(999999999, t + clampi(int(_port_adj_grain_earmark[k]), 0, _ADJ_EARMARK_CAP * 4))
+	return t
+
+
+func _serialize_adj_grain_earmark() -> Dictionary:
+	var out: Dictionary = {}
+	for k in _port_adj_grain_earmark.keys():
+		out[str(k)] = clampi(int(_port_adj_grain_earmark[k]), 0, _ADJ_EARMARK_CAP * 4)
+	return out
+
+
+func _deserialize_adj_grain_earmark_from_save(d: Dictionary) -> void:
+	npc_adj_grain_priv_buy_units = clampi(int(d.get("npc_adj_grain_priv_buy_units", 0)), 0, 99999999)
+	var raw: Variant = d.get("port_adj_grain_earmark", null)
+	if typeof(raw) != TYPE_DICTIONARY:
+		return
+	var dm: Dictionary = raw as Dictionary
+	for k in dm.keys():
+		var ks: String = str(k)
+		if _port_adj_grain_earmark.has(ks):
+			_port_adj_grain_earmark[ks] = clampi(int(dm[k]), 0, _ADJ_EARMARK_CAP * 4)
 
 
 func _ensure_npc_counts_match_config() -> void:
@@ -8887,13 +9969,18 @@ func _npc_apply_officer_pay_if_docked_after_trade() -> void:
 			"fleet_ships": ships,
 			"officer_pay_scale": off_sc_o,
 		}
+		var money_before_oc: int = int(cap.get("money", 0))
 		_tick_captain_officer_pay(cap, false)
-		ag["money"] = clampi(int(cap.get("money", 0)), 0, _MAX_PURSE_COINS)
+		var money_after_oc: int = int(cap.get("money", 0))
+		var paid_civic: int = maxi(0, money_before_oc - money_after_oc)
+		ag["money"] = clampi(money_after_oc, 0, _MAX_PURSE_COINS)
 		ag["ship_condition"] = clampi(
 			int(cap.get("ship_condition", _SHIP_CONDITION_MAX)),
 			_SHIP_CONDITION_MIN,
 			_SHIP_CONDITION_MAX,
 		)
+		# Phase 1 conservation: officers + marines spend their pay in port.
+		_npc_civic_spend_to_port_wealth(pid, paid_civic)
 
 
 ## While purse cannot cover today's officer wage (due after docked trade), sell hold to the port at the current bid (no memory-edge gate; non-staples before grain/wine).
@@ -9008,7 +10095,7 @@ func _npc_maybe_voluntary_hull_fire_sale_if_docked(port_id: String, agent: Dicti
 	_npc_try_fire_sale_one_hull_if_desperate(port_id, agent)
 
 
-## Docked merchants may queue a new hull (labor + local timber/textiles/metal; ~3 months).
+## Docked merchants may order a new hull (labor + local timber/textiles/metal); immediate when build days = 0.
 func _npc_try_expand_fleet_if_docked(agent: Dictionary) -> void:
 	if int(agent.get("voyage_days_remaining", 0)) != 0:
 		return
@@ -9055,8 +10142,15 @@ func _npc_try_expand_fleet_if_docked(agent: Dictionary) -> void:
 	_adjust_port_stock(pid, "timber", -timb_n)
 	_adjust_port_stock(pid, "textiles", -tex_n)
 	_adjust_port_stock(pid, "metal", -met_n)
-	agent["fleet_shipyard_port_id"] = pid
-	agent["fleet_shipyard_days"] = day_n
+	if day_n <= 0:
+		var sh0: int = clampi(int(agent.get("fleet_ships", 1)), 1, _FLEET_MAX_SHIPS)
+		if sh0 < _FLEET_MAX_SHIPS:
+			agent["fleet_ships"] = mini(_FLEET_MAX_SHIPS, sh0 + 1)
+		agent["fleet_shipyard_port_id"] = ""
+		agent["fleet_shipyard_days"] = 0
+	else:
+		agent["fleet_shipyard_port_id"] = pid
+		agent["fleet_shipyard_days"] = day_n
 
 
 func _npc_pick_trading_dest_any_port(agent: Dictionary, here: String) -> String:
@@ -9087,6 +10181,7 @@ func _run_daily_population_and_npcs() -> void:
 		_port_harbour_due_coins_tick[str(pid)] = 0
 	_agent_information_decay_tick()
 	_npc_tick_scatter_memory_decay()
+	_npc_tick_institutional_phase1_trust_route_decay()
 	_ensure_sim_agent_port_defaults()
 	for pid in _port_names.keys():
 		var ps := str(pid)
@@ -9142,10 +10237,6 @@ func _run_daily_population_and_npcs() -> void:
 				if take > 0:
 					preserved_used = take
 					_port_preserved_food[pid_s] = avail_p - float(take)
-		if rationing:
-			var u_now: int = clampi(int(_port_food_unrest.get(pid_s, 0)), 0, 200)
-			_port_food_unrest[pid_s] = clampi(u_now + _RATION_UNREST_TICK, 0, 200)
-		if eat > 0 and food_days_pre >= _PRESERVED_FOOD_FILL_FOODDAYS_MIN:
 			var cur_p: float = float(_port_preserved_food.get(pid_s, 0.0))
 			var cap_p: float = float(_preserved_food_cap_for_port(pid_s))
 			if cur_p < cap_p:
@@ -9178,6 +10269,7 @@ func _run_daily_population_and_npcs() -> void:
 		}
 	_agent_industry_and_war_materiel_tick()
 	_replenish_wine_vineyards_after_bites()
+	_adjacency_grain_earmark_daily_tick()
 	for item in _npc_agents:
 		if typeof(item) != TYPE_DICTIONARY:
 			continue
@@ -9217,10 +10309,15 @@ func _run_daily_population_and_npcs() -> void:
 
 
 func _init_port_food_unrest_zero() -> void:
-	_port_food_unrest.clear()
+	_port_food_worry.clear()
+	_port_food_panic.clear()
+	_port_starvation_streak_days.clear()
 	_port_peace_riot_grace_days.clear()
 	for pid in _port_names.keys():
-		_port_food_unrest[str(pid)] = 0
+		var ps := str(pid)
+		_port_food_worry[ps] = 0
+		_port_food_panic[ps] = 0
+		_port_starvation_streak_days[ps] = 0
 
 
 func _serialize_port_war_days_remaining() -> Dictionary:
@@ -9381,8 +10478,11 @@ func _tick_war_countdown() -> void:
 			_port_war_burst_initial.erase(ps)
 			if bool(_port_war_recurring.get(ps, false)):
 				_port_war_peace_remaining[ps] = _rng.randi_range(_WAR_CYCLE_PEACE_MIN, _WAR_CYCLE_PEACE_MAX)
-			var u0: int = clampi(int(_port_food_unrest.get(ps, 0)), 0, 200)
-			_port_food_unrest[ps] = maxi(0, u0 - _WAR_PEACE_FOOD_UNREST_VENT)
+			var w0: int = clampi(int(_port_food_worry.get(ps, 0)), 0, 100)
+			var p0: int = clampi(int(_port_food_panic.get(ps, 0)), 0, 100)
+			var wp: Vector2i = _food_unrest_vent_panic_first(_WAR_PEACE_FOOD_UNREST_VENT, w0, p0)
+			_port_food_worry[ps] = wp.x
+			_port_food_panic[ps] = wp.y
 			_port_peace_riot_grace_days[ps] = _WAR_PEACE_RIOT_GRACE_DAYS
 	if ended:
 		market_changed.emit()
@@ -9421,24 +10521,60 @@ func _tick_war_recurring_peace() -> void:
 		market_changed.emit()
 
 
-func _serialize_port_food_unrest() -> Dictionary:
+func _serialize_port_food_worry() -> Dictionary:
 	var out: Dictionary = {}
-	for k in _port_food_unrest.keys():
-		out[str(k)] = clampi(int(_port_food_unrest[k]), 0, 200)
+	for k in _port_food_worry.keys():
+		out[str(k)] = clampi(int(_port_food_worry[k]), 0, 100)
 	return out
 
 
-func _deserialize_port_food_unrest(data: Dictionary) -> void:
-	_port_food_unrest.clear()
+func _serialize_port_food_panic() -> Dictionary:
+	var out: Dictionary = {}
+	for k in _port_food_panic.keys():
+		out[str(k)] = clampi(int(_port_food_panic[k]), 0, 100)
+	return out
+
+
+## Legacy saves: single 0–200 map → split into worry/panic (sum preserved).
+func _deserialize_port_food_unrest_legacy(data: Dictionary) -> void:
+	_port_food_worry.clear()
+	_port_food_panic.clear()
 	for pk in data.keys():
 		var pid := str(pk)
 		if not _port_names.has(pid):
 			continue
-		_port_food_unrest[pid] = clampi(int(data[pk]), 0, 200)
+		var u: int = clampi(int(data[pk]), 0, 200)
+		var w: int = clampi(int(roundi(float(u) * 0.45)), 0, 100)
+		var p: int = clampi(u - w, 0, 100)
+		_port_food_worry[pid] = w
+		_port_food_panic[pid] = p
 	for pid in _port_names.keys():
 		var ps := str(pid)
-		if not _port_food_unrest.has(ps):
-			_port_food_unrest[ps] = 0
+		if not _port_food_worry.has(ps):
+			_port_food_worry[ps] = 0
+		if not _port_food_panic.has(ps):
+			_port_food_panic[ps] = 0
+
+
+func _deserialize_port_food_worry_panic(wdata: Dictionary, pdata: Dictionary) -> void:
+	_port_food_worry.clear()
+	_port_food_panic.clear()
+	for pk in wdata.keys():
+		var pid := str(pk)
+		if not _port_names.has(pid):
+			continue
+		_port_food_worry[pid] = clampi(int(wdata[pk]), 0, 100)
+	for pk2 in pdata.keys():
+		var pid2 := str(pk2)
+		if not _port_names.has(pid2):
+			continue
+		_port_food_panic[pid2] = clampi(int(pdata[pk2]), 0, 100)
+	for pid3 in _port_names.keys():
+		var ps := str(pid3)
+		if not _port_food_worry.has(ps):
+			_port_food_worry[ps] = 0
+		if not _port_food_panic.has(ps):
+			_port_food_panic[ps] = 0
 
 
 func _serialize_port_population_grain() -> Dictionary:
@@ -9587,6 +10723,12 @@ func _ensure_port_demographics_post_load() -> void:
 		if not _port_preserved_food.has(ps):
 			var cap_p: float = float(_preserved_food_cap_for_port(ps))
 			_port_preserved_food[ps] = cap_p * _PRESERVED_FOOD_INITIAL_FRAC
+		if not _port_food_worry.has(ps):
+			_port_food_worry[ps] = 0
+		if not _port_food_panic.has(ps):
+			_port_food_panic[ps] = 0
+		if not _port_starvation_streak_days.has(ps):
+			_port_starvation_streak_days[ps] = 0
 		var capv: int = clampi(int(_port_population_grain_cap.get(ps, 120)), 1, 120)
 		if capv < p0:
 			_port_population_grain_cap[ps] = mini(120, p0 + _POP_GRAIN_CEILING_BOOST)
@@ -9605,11 +10747,58 @@ func get_grain_food_days_for_port(port_id: String) -> float:
 	return float(_port_stock_qty(ps, "grain")) / float(eat)
 
 
-func get_port_food_unrest(port_id: String) -> int:
+func get_port_food_worry(port_id: String) -> int:
 	var ps := str(port_id)
 	if not _port_names.has(ps):
 		return 0
-	return clampi(int(_port_food_unrest.get(ps, 0)), 0, 200)
+	return clampi(int(_port_food_worry.get(ps, 0)), 0, 100)
+
+
+func get_port_food_panic(port_id: String) -> int:
+	var ps := str(port_id)
+	if not _port_names.has(ps):
+		return 0
+	return clampi(int(_port_food_panic.get(ps, 0)), 0, 100)
+
+
+func get_port_food_unrest(port_id: String) -> int:
+	return clampi(get_port_food_worry(port_id) + get_port_food_panic(port_id), 0, 200)
+
+
+## Reduce composite by `vent`, draining panic first then worry.
+func _food_unrest_vent_panic_first(vent: int, worry: int, panic: int) -> Vector2i:
+	var v: int = maxi(0, vent)
+	var p2: int = clampi(panic, 0, 100)
+	var w2: int = clampi(worry, 0, 100)
+	var take_p: int = mini(v, p2)
+	p2 -= take_p
+	v -= take_p
+	w2 = maxi(0, w2 - v)
+	return Vector2i(w2, p2)
+
+
+## Daily decay budget: panic drops first, then worry.
+func _food_unrest_decay_panic_first(dec: int, worry: int, panic: int) -> Vector2i:
+	var d: int = maxi(0, dec)
+	var p2: int = clampi(panic, 0, 100)
+	var w2: int = clampi(worry, 0, 100)
+	var take_p: int = mini(d, p2)
+	p2 -= take_p
+	d -= take_p
+	w2 = maxi(0, w2 - d)
+	return Vector2i(w2, p2)
+
+
+## After composite-only adjustment (riot / vents), re-split 0–200 into two 0–100 bands (sum matches target).
+func _food_unrest_resplit_to_target(worry: int, panic: int, target_u: int) -> Vector2i:
+	var t: int = clampi(target_u, 0, 200)
+	var comp: int = clampi(worry + panic, 0, 200)
+	if comp <= 0:
+		var w0: int = clampi(int(roundi(float(t) * 0.45)), 0, 100)
+		return Vector2i(w0, clampi(t - w0, 0, 100))
+	var wn: int = clampi(int(floor(float(worry) * float(t) / float(comp))), 0, 100)
+	var pn: int = clampi(t - wn, 0, 100)
+	return Vector2i(wn, pn)
 
 
 func _food_unrest_tier_label(unrest: int) -> String:
@@ -9624,6 +10813,7 @@ func _food_unrest_tier_label(unrest: int) -> String:
 
 
 func _init_port_demographics_from_world() -> void:
+	_port_population_grain_baseline_initial.clear()
 	for pid in _port_names.keys():
 		var ps := str(pid)
 		var p0: int = clampi(int(_port_population_grain.get(ps, 0)), 0, 120)
@@ -9631,6 +10821,10 @@ func _init_port_demographics_from_world() -> void:
 			p0 = _POP_GRAIN_FLOOR
 			_port_population_grain[ps] = p0
 		_port_population_grain_baseline[ps] = maxi(1, p0)
+		# Record the founding cohort. The 2x cap on baseline drift compares
+		# against this number, NOT against the current (drifted) baseline, so a
+		# shrunk city recovering still uses its original institutional ceiling.
+		_port_population_grain_baseline_initial[ps] = maxi(1, p0)
 		_port_population_grain_cap[ps] = mini(120, maxi(p0 + _POP_GRAIN_CEILING_BOOST, int(ceil(float(p0) * 1.48))))
 		_port_famine_streak_days[ps] = 0
 		_port_consecutive_grain_full_ration_days[ps] = 0
@@ -9642,6 +10836,9 @@ func _init_port_demographics_from_world() -> void:
 		_port_baseline_momentum_dn[ps] = 0
 		var cap_pres: float = float(_preserved_food_cap_for_port(ps))
 		_port_preserved_food[ps] = cap_pres * _PRESERVED_FOOD_INITIAL_FRAC
+	# Re-apply institutional 2x cap once all initial baselines are seeded.
+	for pid2 in _port_names.keys():
+		_recompute_population_grain_cap_for_port(str(pid2))
 
 
 func _ensure_port_meal_streak_counters_post_load() -> void:
@@ -9673,6 +10870,84 @@ func _population_baseline_floor_for_port(port_id: String) -> int:
 	return _POP_GRAIN_FLOOR
 
 
+## Institutional 2x cap. Baseline can't drift above `initial × _POP_BASELINE_CAP_MULT`
+## without an external trigger (war victory, mint, imperial reassignment — future).
+func _population_baseline_cap_for_port(port_id: String) -> int:
+	var ps := str(port_id)
+	var init_b: int = maxi(1, int(_port_population_grain_baseline_initial.get(ps, 1)))
+	var floor_b: int = _population_baseline_floor_for_port(ps)
+	var cap: int = int(floor(float(init_b) * _POP_BASELINE_CAP_MULT))
+	return maxi(cap, floor_b + 2)
+
+
+## Migration-pull bonus per port. Default `_POP_MIGRATION_PULL`, with regional
+## dampeners (Egypt = 2), role bonuses (metropole / great_city / imperial_port),
+## and a hard floor at/above the 2x baseline cap.
+func _migration_pull_for_port(port_id: String) -> int:
+	var ps := str(port_id)
+	var cur: int = clampi(int(_port_population_grain.get(ps, 0)), 0, 120)
+	var cap: int = _population_baseline_cap_for_port(ps)
+	if cur >= cap:
+		return _POP_MIGRATION_PULL_AT_CAP
+	var area: String = str(_port_chart_area_id.get(ps, ""))
+	var pull: int = int(_POP_MIGRATION_PULL_BY_AREA[area]) if _POP_MIGRATION_PULL_BY_AREA.has(area) else _POP_MIGRATION_PULL
+	var role: String = str(_port_roles.get(ps, ""))
+	if role == "metropole":
+		pull += _POP_MIGRATION_PULL_METROPOLE
+	elif role == "great_city":
+		pull += _POP_MIGRATION_PULL_GREAT_CITY
+	elif role == "imperial_port":
+		pull += _POP_MIGRATION_PULL_IMPERIAL_PORT
+	return pull
+
+
+## Deterministic mix for per-port demographic jitter (must match Python twin salts).
+func _pop_demographic_mix_salt(port_id: String, salt: int) -> int:
+	return absi(_npc_str_mix(str(port_id), salt))
+
+
+func _prosperity_streak_days_needed_for_gain(port_id: String) -> int:
+	var j: int = _POP_PROSPERITY_STREAK_JITTER
+	var d: int = (
+		_POP_PROSPERITY_STREAK_TO_GAIN
+		+ (_pop_demographic_mix_salt(port_id, 6007) % j)
+		- (j / 2)
+	)
+	return clampi(d, 18, 48)
+
+
+func _prosperity_streak_reset_after_gain(port_id: String) -> int:
+	var j: int = _POP_PROSPERITY_RESET_JITTER
+	return clampi(
+		_POP_PROSPERITY_STREAK_RESET + (_pop_demographic_mix_salt(port_id, 6023) % j) - (j / 2),
+		6,
+		28,
+	)
+
+
+func _pop_prosperity_food_days_min_for_port(port_id: String) -> float:
+	var role: String = str(_port_roles.get(str(port_id), ""))
+	if role == "metropole":
+		return 2.05
+	if role == "great_city" or role == "imperial_port":
+		return 2.2
+	return _POP_PROSPERITY_FOOD_DAYS_MIN
+
+
+## Metropolitan inertia: imperial-scale cities recover their baseline 2x faster
+## when below their initial cohort.
+func _baseline_rise_days_for_port(port_id: String) -> int:
+	var ps := str(port_id)
+	var role: String = str(_port_roles.get(ps, ""))
+	if not _POP_BIG_CITY_ROLES.has(role):
+		return _POP_BASELINE_RISE_DAYS
+	var cur_base: int = maxi(1, int(_port_population_grain_baseline.get(ps, 1)))
+	var init_base: int = maxi(1, int(_port_population_grain_baseline_initial.get(ps, 1)))
+	if cur_base < init_base:
+		return _POP_BASELINE_RISE_DAYS_BIG_INERTIA
+	return _POP_BASELINE_RISE_DAYS
+
+
 func _recompute_population_grain_cap_for_port(port_id: String) -> void:
 	var ps := str(port_id)
 	if not _port_names.has(ps):
@@ -9680,21 +10955,29 @@ func _recompute_population_grain_cap_for_port(port_id: String) -> void:
 	var base: int = clampi(int(_port_population_grain_baseline.get(ps, 1)), 1, 120)
 	var popv: int = clampi(int(_port_population_grain.get(ps, 0)), 0, 120)
 	var cap_calc: int = mini(120, maxi(base + _POP_GRAIN_CEILING_BOOST, int(ceil(float(base) * 1.48))))
-	_port_population_grain_cap[ps] = mini(120, maxi(cap_calc, popv + 1))
+	# Apply the institutional 2x cap on top of the baseline-derived ceiling.
+	# Without this, prosperity-streak growth can push population to
+	# `baseline + 22` or `1.48 × baseline` even when baseline drift is pinned.
+	var inst_cap: int = _population_baseline_cap_for_port(ps)
+	cap_calc = mini(cap_calc, inst_cap)
+	# Never force shrinkage by lowering the cap below current population
+	# (famine handles that). If popv is already at/above the cap, lock to popv.
+	_port_population_grain_cap[ps] = mini(120, maxi(cap_calc, popv))
 
 
-## Siege / existential campaign: harsher famine cadence when this war’s burst is long enough (per-port threshold in world.json).
+## Siege / existential campaign: harsher famine cadence when this war’s burst is long enough (per-port threshold in world_full.json).
+## Jitter spreads −1 mouth timing across ports (flattens global mean-pop sawtooth).
 func _famine_streak_to_loss_for_port(port_id: String) -> int:
 	var ps := str(port_id)
+	var raw: int = _POP_FAMINE_STREAK_TO_LOSS
 	var th: int = clampi(int(_port_existential_war_burst_days.get(ps, _POP_EXISTENTIAL_WAR_BURST_OFF)), 1, _POP_EXISTENTIAL_WAR_BURST_OFF)
-	if th >= _POP_EXISTENTIAL_WAR_BURST_OFF:
-		return _POP_FAMINE_STREAK_TO_LOSS
-	if not is_port_at_war(ps):
-		return _POP_FAMINE_STREAK_TO_LOSS
-	var burst0: int = maxi(1, int(_port_war_burst_initial.get(ps, get_port_war_days_remaining(ps))))
-	if burst0 < th:
-		return _POP_FAMINE_STREAK_TO_LOSS
-	return maxi(8, int(ceil(float(_POP_FAMINE_STREAK_TO_LOSS) * 0.5)))
+	if th < _POP_EXISTENTIAL_WAR_BURST_OFF and is_port_at_war(ps):
+		var burst0: int = maxi(1, int(_port_war_burst_initial.get(ps, get_port_war_days_remaining(ps))))
+		if burst0 >= th:
+			raw = maxi(8, int(ceil(float(_POP_FAMINE_STREAK_TO_LOSS) * 0.5)))
+	var j: int = _POP_FAMINE_LOSS_JITTER
+	var jitter: int = (_pop_demographic_mix_salt(ps, 5011) % j) - (j / 2)
+	return clampi(raw + jitter, 8, 44)
 
 
 ## Summer foraging supplement (virtual mouths/day, never touches stock). Half-sine over
@@ -9729,7 +11012,7 @@ func _tick_population_demographics() -> void:
 		if eat0 < _POP_GRAIN_FLOOR:
 			continue
 		var fd: float = float(_last_grain_food_days.get(ps, 9999.0))
-		var u: int = clampi(int(_port_food_unrest.get(ps, 0)), 0, 200)
+		var u: int = get_port_food_unrest(ps)
 		var eat_need: int = get_population_grain_eat_effective(ps)
 		var dig: Variant = _last_pop_digest.get(ps, null)
 		var eaten_eff: int = 0
@@ -9782,7 +11065,13 @@ func _tick_population_demographics() -> void:
 			changed = true
 		eat0 = clampi(int(_port_population_grain.get(ps, 0)), 0, 120)
 		base_ln = maxi(1, int(_port_population_grain_baseline.get(ps, 1)))
-		if int(_port_baseline_momentum_up.get(ps, 0)) >= _POP_BASELINE_RISE_DAYS and base_ln < 120:
+		var base_cap_ps: int = _population_baseline_cap_for_port(ps)
+		var rise_days_ps: int = _baseline_rise_days_for_port(ps)
+		if (
+			int(_port_baseline_momentum_up.get(ps, 0)) >= rise_days_ps
+			and base_ln < 120
+			and base_ln < base_cap_ps
+		):
 			_port_population_grain_baseline[ps] = base_ln + 1
 			_port_baseline_momentum_up[ps] = 0
 			_recompute_population_grain_cap_for_port(ps)
@@ -9802,7 +11091,11 @@ func _tick_population_demographics() -> void:
 		var commerce_poor: bool = (
 			pulse0 < _COMMERCE_POOR_PULSE and float(wv) < float(maxi(1, att)) * 0.95
 		)
-		var wealthy: bool = float(wv) > float(maxi(1, att)) * 1.04 and fd >= 2.4 and u < 65
+		var wealthy: bool = (
+			float(wv) > float(maxi(1, att)) * _POP_PROSPERITY_WEALTH_FACTOR
+			and fd >= _pop_prosperity_food_days_min_for_port(ps)
+			and u < _POP_PROSPERITY_UNREST_MAX
+		)
 		var poor: bool = (
 			float(wv) < float(maxi(1, att)) * 0.92
 			or fd < 1.5
@@ -9815,7 +11108,8 @@ func _tick_population_demographics() -> void:
 			var baseline_eat: int = maxi(1, int(_port_population_grain_baseline.get(ps, 1)))
 			if eat0 < baseline_eat:
 				var gap_frac: float = float(baseline_eat - eat0) / float(baseline_eat)
-				inc += int(floor(gap_frac * float(_POP_MIGRATION_PULL)))
+				var pull_ps: int = _migration_pull_for_port(ps)
+				inc += int(floor(gap_frac * float(pull_ps)))
 			psr = mini(999, psr + inc)
 		elif poor:
 			psr = maxi(0, psr - _POP_PROSPERITY_POOR_DECAY)
@@ -9823,9 +11117,9 @@ func _tick_population_demographics() -> void:
 			psr = maxi(0, psr - 1)
 		_port_prosperity_streak_days[ps] = psr
 		var cap: int = clampi(int(_port_population_grain_cap.get(ps, eat0 + 20)), eat0, 120)
-		if psr >= _POP_PROSPERITY_STREAK_TO_GAIN and eat0 < cap:
+		if psr >= _prosperity_streak_days_needed_for_gain(ps) and eat0 < cap:
 			_port_population_grain[ps] = eat0 + 1
-			_port_prosperity_streak_days[ps] = _POP_PROSPERITY_STREAK_RESET
+			_port_prosperity_streak_days[ps] = _prosperity_streak_reset_after_gain(ps)
 			if _rng.randf() < 0.35:
 				var wb: int = clampi(int(_port_population_wine_base.get(ps, 1)), 1, 40)
 				if wb < 40:
@@ -9881,56 +11175,73 @@ func _finalize_daily_grain_food_days_and_unrest() -> void:
 		var eat: int = get_population_grain_eat_effective(ps)
 		if eat <= 0:
 			_last_grain_food_days[ps] = 9999.0
+			_port_starvation_streak_days[ps] = 0
 			continue
 		var gstock: int = _port_stock_qty(ps, "grain")
 		var days_r: float = float(gstock) / float(eat)
 		_last_grain_food_days[ps] = days_r
-		var base_eat: int = clampi(int(_port_population_grain.get(ps, 0)), 0, 120)
-		var days_panic: float = days_r
-		if is_port_at_war(ps) and base_eat > 0:
-			days_panic = float(gstock) / float(base_eat)
-		var u: int = clampi(int(_port_food_unrest.get(ps, 0)), 0, 200)
-		var dig: Variant = _last_pop_digest.get(ps, null)
-		var eaten_g: int = 0
-		if typeof(dig) == TYPE_DICTIONARY:
-			eaten_g = int((dig as Dictionary).get("grain", 0))
-		if eaten_g >= eat:
-			var tight_runway: bool = minf(days_panic, days_r) < _FOOD_UNREST_TIGHT_RUNWAY_DAYS
-			var dec: int = _FOOD_UNREST_DECAY_WHEN_TIGHT if tight_runway else _FOOD_UNREST_DECAY
-			u = maxi(0, u - dec)
-		elif is_port_at_war(ps) and base_eat > 0 and eaten_g >= base_eat:
-			var tight2: bool = minf(days_panic, days_r) < _FOOD_UNREST_TIGHT_RUNWAY_DAYS
-			var dec2: int = _FOOD_UNREST_DECAY_WHEN_TIGHT if tight2 else _FOOD_UNREST_DECAY
-			u = maxi(0, u - dec2)
-			var gap: int = eat - eaten_g
-			if gap > 0:
-				u += gap * _FOOD_UNREST_WAR_RATION_GAP_PER
+		var worry: int = clampi(int(_port_food_worry.get(ps, 0)), 0, 100)
+		var panic: int = clampi(int(_port_food_panic.get(ps, 0)), 0, 100)
+		var dig: Dictionary = {}
+		var dig_raw: Variant = _last_pop_digest.get(ps, null)
+		if typeof(dig_raw) == TYPE_DICTIONARY:
+			dig = dig_raw as Dictionary
+		var eaten_g: int = int(dig.get("grain", 0))
+		var preserved: int = int(dig.get("preserved", 0))
+		var forage: int = int(dig.get("forage", 0))
+		var rationing: bool = int(dig.get("rationing", 0)) != 0
+		var eaten_eff: int = eaten_g + preserved + forage
+		var fed_ok: bool = eaten_eff >= eat
+		var shortfall: int = maxi(0, eat - eaten_eff)
+		var streak_prev: int = clampi(int(_port_starvation_streak_days.get(ps, 0)), 0, 999)
+		var streak: int = 0
+		if fed_ok:
+			streak = 0
 		else:
-			u += _FOOD_UNREST_SHORTAGE + (eat - eaten_g) * _FOOD_UNREST_PER_MISS
-		var pm: float = _war_panic_mult_for_port(ps)
-		if days_panic < 1.0:
-			u += int(round(float(_FOOD_UNREST_PANIC_LT1DAY) * (pm if is_port_at_war(ps) else 1.0)))
-		if days_panic < 0.5:
-			u += int(round(float(_FOOD_UNREST_CRITICAL_DAYS) * (pm if is_port_at_war(ps) else 1.0)))
-		if minf(days_panic, days_r) < _FOOD_UNREST_TIGHT_RUNWAY_DAYS:
-			u += _FOOD_UNREST_TIGHT_RUNWAY_DRIP
-		if _world_crop_agro_model:
-			u += _crop_phase2_food_unrest_addon(ps)
-		u = clampi(u, 0, 200)
+			streak = mini(999, streak_prev + 1)
+		_port_starvation_streak_days[ps] = streak
+		if fed_ok:
+			var plentiful: bool = days_r >= _FOOD_UNREST_PLENTIFUL_FOOD_DAYS
+			var dec: int = _FOOD_UNREST_DECAY_WHEN_PLENTIFUL if plentiful else _FOOD_UNREST_DECAY
+			var wp_ok: Vector2i = _food_unrest_decay_panic_first(dec, worry, panic)
+			worry = wp_ok.x
+			panic = wp_ok.y
+		elif streak >= _FOOD_UNREST_STARVATION_STREAK_THRESHOLD:
+			var pm: float = _war_panic_mult_for_port(ps)
+			var gm: float = pm if is_port_at_war(ps) else 1.0
+			var add_p: int = int(
+				round(float(_FOOD_UNREST_SHORTAGE + shortfall * _FOOD_UNREST_PER_MISS) * gm)
+			)
+			panic = clampi(panic + add_p, 0, 100)
+		else:
+			var wp_lean: Vector2i = _food_unrest_decay_panic_first(_FOOD_UNREST_DECAY_WHEN_TIGHT, worry, panic)
+			worry = wp_lean.x
+			panic = wp_lean.y
+		if rationing:
+			worry = clampi(worry + _FOOD_UNREST_WORRY_RATIONING_DAILY, 0, 100)
+		var comp: int = clampi(worry + panic, 0, 200)
 		var riot_thr: int = _food_riot_threshold_for_port(ps)
-		# Grain riot: missed ration today AND worst closing runway still tiny (post-trade/spoil; war uses civilian draw too).
-		var runway_worst: float = minf(days_panic, days_r)
-		var famine_riot_eligible: bool = eaten_g < eat and runway_worst < _FOOD_RIOT_ELIGIBLE_RUNWAY_MAX
-		if u >= riot_thr:
+		var famine_riot_eligible: bool = (not fed_ok) and streak >= _FOOD_UNREST_STARVATION_STREAK_THRESHOLD
+		if comp >= riot_thr:
 			if famine_riot_eligible:
-				var p_riot: float = minf(1.0, _FOOD_RIOT_ROLL_BASE + float(u - riot_thr) / _FOOD_RIOT_ROLL_PER_OVER)
+				var p_riot: float = minf(1.0, _FOOD_RIOT_ROLL_BASE + float(comp - riot_thr) / _FOOD_RIOT_ROLL_PER_OVER)
 				if _rng.randf() < p_riot:
-					u = _apply_one_food_riot(ps, eat, u, riot_lines)
+					var new_u: int = _apply_one_food_riot(ps, eat, comp, riot_lines)
+					var wp_riot: Vector2i = _food_unrest_resplit_to_target(worry, panic, new_u)
+					worry = wp_riot.x
+					panic = wp_riot.y
 				else:
-					u = clampi(u - _FOOD_RIOT_NEAR_MISS_VENT, 0, 200)
+					var new_c: int = clampi(comp - _FOOD_RIOT_NEAR_MISS_VENT, 0, 200)
+					var wp_miss: Vector2i = _food_unrest_resplit_to_target(worry, panic, new_c)
+					worry = wp_miss.x
+					panic = wp_miss.y
 			else:
-				u = clampi(u - _FOOD_RIOT_NO_FAMINE_VENT, 0, 200)
-		_port_food_unrest[ps] = u
+				var new_c2: int = clampi(comp - _FOOD_RIOT_NO_FAMINE_VENT, 0, 200)
+				var wp_nf: Vector2i = _food_unrest_resplit_to_target(worry, panic, new_c2)
+				worry = wp_nf.x
+				panic = wp_nf.y
+		_port_food_worry[ps] = worry
+		_port_food_panic[ps] = panic
 	if not riot_lines.is_empty():
 		_last_food_riot_summary = "; ".join(riot_lines)
 		food_riot_report.emit(_last_food_riot_summary)
@@ -9991,11 +11302,18 @@ func _tick_all_npc_captain_ship_costs() -> void:
 			"officer_pay_scale": off_sc,
 			"repair_coin_mult": float(srow.get("repair_coin_mult", 1.0)),
 		}
+		var money_before_sh: int = int(cap.get("money", 0))
 		_tick_captain_shared(cap, was_at_sea, docked_for_repair, false)
-		ag["money"] = clampi(int(cap.get("money", 0)), 0, _MAX_PURSE_COINS)
+		var money_after_sh: int = int(cap.get("money", 0))
+		var paid_repair: int = maxi(0, money_before_sh - money_after_sh)
+		ag["money"] = clampi(money_after_sh, 0, _MAX_PURSE_COINS)
 		ag["ship_condition"] = clampi(int(cap.get("ship_condition", _SHIP_CONDITION_MAX)), _SHIP_CONDITION_MIN, _SHIP_CONDITION_MAX)
 		ag["ship_wine_counter"] = clampi(int(cap.get("ship_wine_counter", 0)), 0, 9999)
 		ag["fleet_ships"] = clampi(int(cap.get("fleet_ships", ships)), 1, _FLEET_MAX_SHIPS)
+		# Phase 1 conservation: shipyard pay flows into the host port's
+		# prosperity (shipwrights and chandlers spend in town).
+		if paid_repair > 0 and docked_for_repair:
+			_npc_civic_spend_to_port_wealth(str(ag.get("docked_port", "")), paid_repair)
 
 
 func _npc_cargo_total_units(agent: Dictionary) -> int:
@@ -10258,6 +11576,13 @@ func _npc_effective_buy_unit(agent: Dictionary, port_id: String, good_id: String
 		0.88,
 	)
 	var agree_b: float = _npc_big5_agree_buy_mult(agent)
+	if _npc_inst_p2_should_discount_issuer_grain_buy(agent, port_id, good_id):
+		buy_mult = maxf(0.52, buy_mult * _INST_P2_ISSUER_GRAIN_BUY_MULT)
+	if _inst_p3_active():
+		var bh3: int = _inst_p3_port_band(str(agent.get("home_port", "")))
+		var bp3: int = _inst_p3_port_band(str(port_id))
+		if bh3 >= 0 and bh3 == bp3:
+			buy_mult = maxf(0.52, buy_mult * _world_inst_p3_ally_buy_mul)
 	return maxi(1, int(floor(float(base_unit) * reg * buy_mult * agree_b / buy_m)))
 
 
@@ -10549,8 +11874,11 @@ func _npc_try_peer_loans_after_dock_trade() -> void:
 				var d_consc: float = _npc_trait_f(d, _NPC_TRAIT_CONSC)
 				if _rng.randf() > lerpf(0.1, 0.62, d_consc):
 					continue
+				var pmax0: int = int(round(float(_NPC_PEER_LOAN_MAX_PRINCIPAL) * lerpf(0.9, 1.1, rep_d)))
+				if _npc_inst_p2_grain_lane_active(d):
+					pmax0 = int(round(float(pmax0) * _INST_P2_PEER_LOAN_MAX_PRINCIPAL_MUL))
 				var pmax: int = mini(
-					int(round(float(_NPC_PEER_LOAN_MAX_PRINCIPAL) * lerpf(0.9, 1.1, rep_d))),
+					pmax0,
 					cap
 				)
 				var pmin: int = mini(_NPC_PEER_LOAN_MIN_PRINCIPAL, pmax)
@@ -10620,6 +11948,19 @@ func _npc_voyage_dest_score(agent: Dictionary, here: String, dest: String) -> fl
 			if slack_c <= 7:
 				cbon += 0.38
 			sc += cbon
+	if _world_institutional_trade_enabled and _world_npc_city_grain_contracts_enabled and _npc_city_grain_contract_active(agent):
+		var cgi: Dictionary = agent.get("city_grain_contract", {}) as Dictionary
+		var iss_i: String = str(cgi.get("issuer", ""))
+		var need_i: int = clampi(int(cgi.get("qty", 0)), 1, 999)
+		if iss_i == dest and _goods.has("grain"):
+			var have_i: int = _npc_cargo_qty(cargo, "grain")
+			if have_i < need_i:
+				sc += _INST_P2_ISSUER_LOAD_SCORE_BONUS
+	sc += _inst_p3_voyage_route_adjust(agent, dest)
+	if _world_institutional_trade_enabled:
+		var hab: float = _npc_route_habit_get(agent, dest)
+		var trxy: float = _npc_city_trust_get(agent, dest) - 0.5
+		sc += _NPC_ROUTE_HABIT_SCORE_MUL * hab + _NPC_ROUTE_TRUST_SCORE_MUL * trxy
 	sc = maxf(0.02, sc) - _npc_peer_creditor_home_penalty(agent, dest)
 	return maxf(0.02, sc)
 
@@ -10648,27 +11989,48 @@ func _npc_buy_from_port(agent: Dictionary, port_id: String, good_id: String, qty
 	if unit >= 999000:
 		return
 	var coins: int = clampi(int(agent.get("money", 0)), 0, _MAX_PURSE_COINS)
-	var max_by_money: int = coins / unit
-	var have: int = _port_stock_qty(port_id, good_id)
+	var avail_priv: int = 0
+	var k_adj: String = ""
+	var unit_priv: int = unit
+	if str(good_id) == "grain" and _world_adjacency_grain_contracts_enabled:
+		var hub_m: String = _adj_grain_privileged_hub(agent, str(port_id))
+		if not hub_m.is_empty():
+			k_adj = _lane_key(hub_m, str(port_id))
+			avail_priv = clampi(int(_port_adj_grain_earmark.get(k_adj, 0)), 0, _ADJ_EARMARK_CAP * 4)
+			if avail_priv > 0:
+				unit_priv = maxi(1, int(floor(float(unit) * _ADJ_PRIV_UNIT_MULT)))
+	var min_unit: int = mini(unit, unit_priv)
+	var max_by_money: int = coins / maxi(1, min_unit)
+	var have: int = mini(_port_stock_qty(port_id, good_id), _port_quay_surplus_units_for_sale(port_id, str(good_id)))
 	var cap_free: int = _npc_cargo_free_space(agent)
 	var q: int = mini(mini(mini(qty, have), max_by_money), cap_free)
 	if q <= 0:
 		return
 	while q > 0:
-		var cost_test: int = unit * q
+		var pu: int = mini(q, avail_priv)
+		var cost_test: int = unit_priv * pu + unit * (q - pu)
 		var fee_test: int = _captain_trade_fee_on_buy(cost_test)
 		if coins - cost_test - fee_test >= _NPC_PURSE_RESERVE:
 			break
 		q -= 1
 	if q <= 0:
 		return
-	var cost: int = unit * q
+	var pu_final: int = mini(q, avail_priv)
+	var cost: int = unit_priv * pu_final + unit * (q - pu_final)
 	var buy_fee: int = _captain_trade_fee_on_buy(cost)
 	agent["money"] = coins - cost - buy_fee
 	_bump_port_wealth(port_id, maxi(1, cost / 14))
+	# Phase 1 conservation: buy-side customs/quay fee accrues to the host port
+	# (previously vanished from world coin mass).
+	if buy_fee > 0:
+		_npc_civic_spend_to_port_wealth(port_id, buy_fee)
 	_adjust_port_stock(port_id, good_id, -q)
 	_npc_adjust_cargo(cargo, good_id, q)
 	_bump_npc_commerce_buy(port_id, q, cost)
+	if pu_final > 0 and not k_adj.is_empty():
+		var prev_e: int = clampi(int(_port_adj_grain_earmark.get(k_adj, 0)), 0, _ADJ_EARMARK_CAP * 4)
+		_port_adj_grain_earmark[k_adj] = maxi(0, prev_e - pu_final)
+		npc_adj_grain_priv_buy_units = mini(99999999, npc_adj_grain_priv_buy_units + pu_final)
 
 
 func _npc_sell_to_port(agent: Dictionary, port_id: String, good_id: String, qty: int) -> void:
@@ -10687,6 +12049,12 @@ func _npc_sell_to_port(agent: Dictionary, port_id: String, good_id: String, qty:
 	var revenue: int = unit * q
 	var sell_fee: int = _captain_trade_fee_on_sell(revenue)
 	var toll_base: int = _port_toll_per_unit(port_id, good_id) * q
+	if toll_base > 0 and _npc_inst_p2_grain_lane_active(agent) and str(good_id) == "grain":
+		if _npc_inst_p2_grain_party_port(agent, port_id):
+			toll_base = maxi(0, int(floor(float(toll_base) * _INST_P2_TOLL_GRAIN_PARTY_MUL)))
+	var p3_toll: float = _inst_p3_toll_scale_before_random(str(agent.get("home_port", "")), str(port_id))
+	if p3_toll < 0.999 or p3_toll > 1.001:
+		toll_base = maxi(0, int(floor(float(toll_base) * p3_toll)))
 	var toll_paid: int = 0
 	if toll_base > 0 and not _npc_has_toll_graft(agent, port_id):
 		toll_paid = _npc_roll_toll_coins_paid(agent, port_id, toll_base)
@@ -10696,6 +12064,9 @@ func _npc_sell_to_port(agent: Dictionary, port_id: String, good_id: String, qty:
 	if toll_paid > 0:
 		_bump_port_for_toll_receipt(port_id, toll_paid)
 	_bump_port_wealth(port_id, maxi(1, revenue / 12))
+	# Phase 1 conservation: sell-side customs/quay fee accrues to the host port.
+	if sell_fee > 0:
+		_npc_civic_spend_to_port_wealth(port_id, sell_fee)
 	_npc_adjust_cargo(cargo, good_id, -q)
 	_adjust_port_stock(port_id, good_id, q)
 	_bump_npc_commerce_sell(port_id, q, revenue)
@@ -11220,7 +12591,7 @@ func _apply_farm_production() -> void:
 				0,
 				int(
 					floor(
-						float(gadd) * crop_sc * farm_mult * pop_sc * slave_sc * basket_m * _FARM_GRAIN_MASS_MULT * yld_m
+						float(gadd) * crop_sc * farm_mult * pop_sc * slave_sc * basket_m * _FARM_GRAIN_MASS_MULT * yld_m * _FARM_FOOD_PRODUCTION_MULT
 					)
 				),
 			)
@@ -11239,12 +12610,16 @@ func _apply_farm_production() -> void:
 			var extra: int = _farm_wine_help_extra(pid, used)
 			wine_help_used[pid] = used + extra
 			if w_ship + extra > 0:
-				_adjust_port_stock(pid, "wine", w_ship + extra)
+				var wine_total: int = maxi(
+					0,
+					int(floor(float(w_ship + extra) * _FARM_FOOD_PRODUCTION_MULT)),
+				)
+				_adjust_port_stock(pid, "wine", wine_total)
 		var fadd: int = int(fd.get("fish_per_day", 0))
 		if fadd > 0 and _goods.has("fish"):
 			var f_ship: int = maxi(
 				0,
-				int(floor(float(fadd) * fish_mul * farm_mult * pop_sc * slave_sc)),
+				int(floor(float(fadd) * fish_mul * farm_mult * pop_sc * slave_sc * _FARM_FOOD_PRODUCTION_MULT)),
 			)
 			if f_ship > 0:
 				_adjust_port_stock(pid, "fish", f_ship)
@@ -11542,10 +12917,13 @@ func get_simulation_metrics() -> Dictionary:
 			"grain_spoiled": int(_last_grain_spoilage.get(ps, 0)),
 			"grain_food_days": gdays,
 			"food_unrest": get_port_food_unrest(ps),
+			"food_worry": get_port_food_worry(ps),
+			"food_panic": get_port_food_panic(ps),
 			"food_unrest_mood": _food_unrest_tier_label(get_port_food_unrest(ps)),
 			"population_grain": int(_port_population_grain.get(ps, 0)),
 			"population_grain_cap": int(_port_population_grain_cap.get(ps, 0)),
 			"famine_streak_days": int(_port_famine_streak_days.get(ps, 0)),
+			"starvation_streak_days": clampi(int(_port_starvation_streak_days.get(ps, 0)), 0, 999),
 			"prosperity_streak_days": int(_port_prosperity_streak_days.get(ps, 0)),
 			"population_output_scale": _population_output_scale_for_port(ps),
 			"at_war": is_port_at_war(ps),
@@ -11580,6 +12958,11 @@ func get_simulation_metrics() -> Dictionary:
 		}
 	var npc_money: int = 0
 	var npc_at_sea: int = 0
+	var npc_institutional_rows: int = 0
+	var npc_route_habit_mass: float = 0.0
+	var npc_route_habit_slots: int = 0
+	var npc_inst_lane_contracts_active: int = 0
+	var npc_p4_house_ids: Dictionary = {}
 	for item in _npc_agents:
 		if typeof(item) != TYPE_DICTIONARY:
 			continue
@@ -11587,6 +12970,20 @@ func get_simulation_metrics() -> Dictionary:
 		npc_money += clampi(int(ag.get("money", 0)), 0, _MAX_PURSE_COINS)
 		if int(ag.get("voyage_days_remaining", 0)) > 0:
 			npc_at_sea += 1
+		var icm: Variant = ag.get("institutional_contracts", null)
+		if typeof(icm) == TYPE_ARRAY:
+			npc_institutional_rows += (icm as Array).size()
+		if str(ag.get("voyage_role", _VOYAGE_ROLE_MERCHANT)) == _VOYAGE_ROLE_MERCHANT:
+			var rhm: Variant = ag.get("npc_route_habit_01", null)
+			if typeof(rhm) == TYPE_DICTIONARY:
+				for rv in (rhm as Dictionary).values():
+					npc_route_habit_mass += clampf(float(rv), 0.0, 1.0)
+					npc_route_habit_slots += 1
+			if _npc_inst_p2_grain_lane_active(ag):
+				npc_inst_lane_contracts_active += 1
+			var hid4: int = clampi(int(ag.get("merchant_house_id", 0)), 0, 999999)
+			if hid4 > 0:
+				npc_p4_house_ids[hid4] = true
 	return {
 		"day": current_day,
 		"calendar_doy": get_calendar_day_of_year(),
@@ -11605,6 +13002,19 @@ func get_simulation_metrics() -> Dictionary:
 		"npc_agent_count": _npc_agents.size(),
 		"npc_at_sea": npc_at_sea,
 		"npc_total_money": npc_money,
+		"npc_institutional_contract_rows": npc_institutional_rows,
+		"npc_route_habit_mass": npc_route_habit_mass,
+		"npc_route_habit_slots": npc_route_habit_slots,
+		"npc_institutional_lane_contracts_active": npc_inst_lane_contracts_active,
+		"npc_institutional_phase3_bands": _world_inst_p3_band_count,
+		"npc_institutional_phase3_ports_tagged": _port_inst_alliance_band.size(),
+		"npc_institutional_phase4_enabled": _world_inst_p4_enabled,
+		"npc_institutional_phase4_merchant_houses": npc_p4_house_ids.size(),
+		"npc_institutional_phase5_surface_enabled": _world_inst_p5_surface_enabled,
+		"adjacency_grain_contracts_enabled": _world_adjacency_grain_contracts_enabled,
+		"npc_adjacency_grain_contract_rows": _adjacency_grain_contracts.size(),
+		"npc_adjacency_grain_earmark_units": _sum_adj_grain_earmark_units(),
+		"npc_adjacency_grain_privileged_buy_units": clampi(npc_adj_grain_priv_buy_units, 0, 99999999),
 		"pirate_encounter_attempts": _pirate_metrics_attempts,
 		"pirate_raids_success": _pirate_metrics_raids,
 		"pirate_escort_flees": _pirate_metrics_flees,
@@ -11660,6 +13070,169 @@ func get_admin_world_dump() -> String:
 	if not _last_food_riot_summary.is_empty():
 		lines.append("Last tick grain riot(s): %s" % _last_food_riot_summary)
 	lines.append("")
+	lines.append("— Institutional trade (Phase 0 schema) —")
+	lines.append(
+		"  world_full.json institutional_trade: enabled=%s  contract_types=%s"
+		% [str(_world_institutional_trade_enabled), _institutional_trade_contract_types_admin_string()]
+	)
+	var ic_rows: int = 0
+	var ic_detail: PackedStringArray = PackedStringArray()
+	for item_ic in _npc_agents:
+		if typeof(item_ic) != TYPE_DICTIONARY:
+			continue
+		var agic: Dictionary = item_ic as Dictionary
+		var ic_raw: Variant = agic.get("institutional_contracts", null)
+		if typeof(ic_raw) != TYPE_ARRAY:
+			continue
+		var ic_arr: Array = ic_raw as Array
+		if ic_arr.is_empty():
+			continue
+		ic_rows += ic_arr.size()
+		var aid_ic: int = int(agic.get("id", -1))
+		for rowv in ic_arr:
+			if typeof(rowv) != TYPE_DICTIONARY:
+				continue
+			var rd: Dictionary = rowv as Dictionary
+			var parties_s: String = ""
+			var par: Variant = rd.get("parties", null)
+			if typeof(par) == TYPE_ARRAY:
+				var bits_p: PackedStringArray = PackedStringArray()
+				for pv in par as Array:
+					if typeof(pv) != TYPE_DICTIONARY:
+						continue
+					var pd: Dictionary = pv as Dictionary
+					bits_p.append(
+						"%s:%s=%s"
+						% [str(pd.get("kind", "?")), str(pd.get("role", "?")), str(pd.get("id", ""))]
+					)
+				parties_s = ",".join(bits_p)
+			ic_detail.append(
+				(
+					"  npc id %d  contract id %s  type=%s  state=%s  expires_day=%s  parties[%s]  terms=%s"
+					% [
+						aid_ic,
+						str(rd.get("id", "?")),
+						str(rd.get("type", "")),
+						str(rd.get("state", "")),
+						str(rd.get("expires_day", "")),
+						parties_s,
+						str(rd.get("terms", {})),
+					]
+				)
+			)
+	lines.append("  active_npc_contract_rows=%d (canonical mirror of civic grain when both on)" % ic_rows)
+	var lim_ic: int = mini(72, ic_detail.size())
+	for ii in range(lim_ic):
+		lines.append(ic_detail[ii])
+	if ic_detail.size() > lim_ic:
+		lines.append("  … +%d more row(s)" % (ic_detail.size() - lim_ic))
+	var p1_hab_mass: float = 0.0
+	var p1_hab_ports: int = 0
+	for item_p1 in _npc_agents:
+		if typeof(item_p1) != TYPE_DICTIONARY:
+			continue
+		var agp1: Dictionary = item_p1 as Dictionary
+		if str(agp1.get("voyage_role", _VOYAGE_ROLE_MERCHANT)) != _VOYAGE_ROLE_MERCHANT:
+			continue
+		var rhp1: Variant = agp1.get("npc_route_habit_01", null)
+		if typeof(rhp1) != TYPE_DICTIONARY:
+			continue
+		for v1 in (rhp1 as Dictionary).values():
+			p1_hab_mass += clampf(float(v1), 0.0, 1.0)
+			p1_hab_ports += 1
+	lines.append(
+		(
+			"  Phase 1 (inertia): institutional_trade.enabled gates schema+inertia; route_habit ports=%d Σ=%.2f; "
+			+ "daily lerp trust→repute=%.4f habit→0=%.4f; voyage score + weighted random depart (sample %d)."
+		)
+		% [
+			p1_hab_ports,
+			p1_hab_mass,
+			_NPC_CITY_TRUST_DECAY_LERP,
+			_NPC_ROUTE_HABIT_DECAY_LERP,
+			_NPC_ROUTE_RANDOM_SAMPLE,
+		]
+	)
+	var p2_lane_n: int = 0
+	for item_p2 in _npc_agents:
+		if typeof(item_p2) != TYPE_DICTIONARY:
+			continue
+		if _npc_inst_p2_grain_lane_active(item_p2 as Dictionary):
+			p2_lane_n += 1
+	lines.append(
+		(
+			"  Phase 2 (spot vs contract lane): when institutional+civic grain on, issuer/consignee harbour due ×%.2f; "
+			+ "issuer grain buy ×%.3f while short; grain import toll ×%.2f at party ports; voyage score +%.2f to issuer if short; "
+			+ "depart stick +%.2f (cap 0.94); peer loan cap ×%.2f. Active lane merchants (now): %d."
+		)
+		% [
+			_INST_P2_HARBOUR_DUE_PARTY_MUL,
+			_INST_P2_ISSUER_GRAIN_BUY_MULT,
+			_INST_P2_TOLL_GRAIN_PARTY_MUL,
+			_INST_P2_ISSUER_LOAD_SCORE_BONUS,
+			_INST_P2_DEPART_STICK_ADD,
+			_INST_P2_PEER_LOAN_MAX_PRINCIPAL_MUL,
+			p2_lane_n,
+		]
+	)
+	var p3_on: String = str(_inst_p3_active())
+	var p3_ports: int = _port_inst_alliance_band.size()
+	lines.append(
+		(
+			"  Phase 3 (alliances→economics): active=%s  bands=%d  ports_tagged=%d; same-band import toll ×%.3f; "
+			+ "cross-band into at-war port ×%.3f; ally wholesale buy ×%.3f; voyage +%.2f same-band / −%.2f hostile dest; "
+			+ "escort accept +p %.3f same home band as convoy leader."
+		)
+		% [
+			p3_on,
+			_world_inst_p3_band_count,
+			p3_ports,
+			_world_inst_p3_ally_toll_mul,
+			_world_inst_p3_enemy_toll_mul,
+			_world_inst_p3_ally_buy_mul,
+			_world_inst_p3_route_ally_bonus,
+			_world_inst_p3_route_hostile_penalty,
+			_world_inst_p3_escort_same_band_p,
+		]
+	)
+	var p4_on: String = str(_inst_p4_active())
+	var p4_house_n: int = 0
+	var p4_seen: Dictionary = {}
+	for itp4 in _npc_agents:
+		if typeof(itp4) != TYPE_DICTIONARY:
+			continue
+		var agp4: Dictionary = itp4 as Dictionary
+		if str(agp4.get("voyage_role", _VOYAGE_ROLE_MERCHANT)) != _VOYAGE_ROLE_MERCHANT:
+			continue
+		var hidp: int = clampi(int(agp4.get("merchant_house_id", 0)), 0, 999999)
+		if hidp <= 0:
+			continue
+		if p4_seen.has(hidp):
+			continue
+		p4_seen[hidp] = true
+		p4_house_n += 1
+	lines.append(
+		(
+			"  Phase 4 (patronage→contracts): active=%s; issuer stress scales grain offer p toward ×%.2f and advance toward ×%.2f; "
+			+ "loyal repute ≥%.2f multiplies offer p ×%.2f; fulfilled haul bumps issuer wealth up to ~%.2f coins/unit; "
+			+ "war adds +%.2f stress cap; merchant trading houses (distinct ids, now): %d."
+		)
+		% [
+			p4_on,
+			_world_inst_p4_offer_p_mul_max,
+			_world_inst_p4_advance_scale_max,
+			_world_inst_p4_loyal_repute_floor,
+			_world_inst_p4_loyal_offer_p_mul,
+			_world_inst_p4_fulfill_issuer_wealth_per_qty,
+			_world_inst_p4_war_stress_add,
+			p4_house_n,
+		]
+	)
+	lines.append(
+		"  Phase 5 (player surface / clerk): charter UI enabled=%s (world_full.json institutional_trade.phase5.enabled; requires institutional_trade.enabled)."
+		% str(institutional_phase5_player_surface_enabled())
+	)
+	lines.append("")
 	lines.append("— Farmland (daily → port stock) —")
 	if _farms.is_empty():
 		lines.append("(none)")
@@ -11698,7 +13271,7 @@ func get_admin_world_dump() -> String:
 	lines.append("")
 	lines.append(
 		(
-			"Wealth note: each day prosperity lerps toward a stock-derived attractor (grain, wine, salt, olive oil, pottery, fish, timber, textiles, metal, wire, spice, slaves weighted). initial_wealth in world data above that curve decays until it aligns. Player dock trades: stock-skewed bid/ask; need_tier uses smooth reservation curves (grain/wine: steeper for the player counterparty than NPC wholesale). Luxury tier adds wealth+mean-lane far-trade markup. Wine also gets cover-day supply/demand price pressure and same-day vineyard help (+0–3/port) when stocks are empty/tight. Metal=scaled food stress; optional per-port industrial_*_per_day (world.json) drains metal, wire, timber, textiles for workshops & shipyards before war materiel. Population eats fish from port stock when population_fish_per_day is set; farms may ship fish_per_day. Slave labor: port `slaves` stock vs farm+mine labor demand scales daily farm/mine output; attrition removes slaves; when a campaign ends (hostilities tick to 0) captives add to the port slave market. Each port defaults to its own random war cycle (peace %d–%d d, then hostilities %d–%d d; world.json war_recurring: false opts out). Optional at_war + war_days starts a port mid-campaign. While at war: farm grain/wine to port is reduced, grain ration up, metal-tier prices up, extra ingots + wire drawn (wire = rigging; large piles skim faster). Coin sinks: dock trade friction on each buy/sell (coins destroyed). Daily harbour dues when berthed (fleet + capped purse levy) leave the captain and raise port prosperity; busier quays (more berthed merchants that day) increase the port wealth bump per coin. NPCs trade vs port at wholesale buy/sell multipliers with a modest purse reserve so trade can net coins. NPC wine restock slightly earlier vs stock ratio. Grain granary rot/vermin (capped). Population headcount drifts with sustained famine vs sustained prosperity; farm/mine daily output scales with population vs founding cohort from world.json."
+			"Wealth note: each day prosperity lerps toward a stock-derived attractor (grain, wine, salt, olive oil, pottery, fish, timber, textiles, metal, wire, spice, slaves weighted). initial_wealth in world data above that curve decays until it aligns. Player dock trades: stock-skewed bid/ask; need_tier uses smooth reservation curves (grain/wine: steeper for the player counterparty than NPC wholesale). Luxury tier adds wealth+mean-lane far-trade markup. Wine also gets cover-day supply/demand price pressure and same-day vineyard help (+0–3/port) when stocks are empty/tight. Metal=scaled food stress; optional per-port industrial_*_per_day (world_full.json) drains metal, wire, timber, textiles for workshops & shipyards before war materiel. Population eats fish from port stock when population_fish_per_day is set; farms may ship fish_per_day. Slave labor: port `slaves` stock vs farm+mine labor demand scales daily farm/mine output; attrition removes slaves; when a campaign ends (hostilities tick to 0) captives add to the port slave market. Each port defaults to its own random war cycle (peace %d–%d d, then hostilities %d–%d d; world_full.json war_recurring: false opts out). Optional at_war + war_days starts a port mid-campaign. While at war: farm grain/wine to port is reduced, grain ration up, metal-tier prices up, extra ingots + wire drawn (wire = rigging; large piles skim faster). Coin sinks: dock trade friction on each buy/sell (coins destroyed). Daily harbour dues when berthed (fleet + capped purse levy) leave the captain and raise port prosperity; busier quays (more berthed merchants that day) increase the port wealth bump per coin. NPCs trade vs port at wholesale buy/sell multipliers with a modest purse reserve so trade can net coins. NPC wine restock slightly earlier vs stock ratio. Grain granary rot/vermin (capped). Population headcount drifts with sustained famine vs sustained prosperity; farm/mine daily output scales with population vs founding cohort from world_full.json."
 			% [_WAR_CYCLE_PEACE_MIN, _WAR_CYCLE_PEACE_MAX, _WAR_RECURRING_BURST_MIN, _WAR_RECURRING_BURST_MAX]
 		)
 	)
@@ -11820,7 +13393,7 @@ func get_admin_world_dump() -> String:
 		var ind_x_cfg: int = int(_port_industrial_textiles_per_day.get(pid_s, 0))
 		if ind_m_cfg > 0 or ind_w_cfg > 0 or ind_t_cfg > 0 or ind_x_cfg > 0:
 			lines.append(
-				"Industrial demand (world.json): %d metal, %d wire, %d timber, %d textiles / day (draw capped by stock)."
+				"Industrial demand (world_full.json): %d metal, %d wire, %d timber, %d textiles / day (draw capped by stock)."
 				% [ind_m_cfg, ind_w_cfg, ind_t_cfg, ind_x_cfg]
 			)
 			var isd: Variant = _last_industrial_sink_digest.get(pid_s, null)

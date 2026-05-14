@@ -9,7 +9,7 @@ Living roadmap for simulation depth, UI, and data. **Update this file** when a m
 | City locations UI | Docked play split across Tavern … Beacon; intel blocks + escort-offer checkbox in Tavern (`ui/main.gd`, `game_state.gd` helpers). |
 | Display / layout | Larger window, stretch, TradeScroll ratio (`project.godot`, scenes). |
 | Calendar & seasons | 360-day year, harvest window, off-season crop drip, seasonal storms at sea, summer war deferral, fish/wine tuning, `SAVE_VERSION` / save fields (`game_state.gd`, `sim_100_days.py`, canvas). |
-| Breadbasket ports | Role `breadbasket`, wealth bonus, ×1.15 farm grain & wine into port (`data/world.json`, twin, canvas). |
+| Breadbasket ports | Role `breadbasket`, wealth bonus, ×1.15 farm grain & wine into port (`data/world_full.json`, twin, canvas). |
 | At-sea voyage readout | `get_player_voyage_intel_block()` + `_player_daily_storm_probability()`; city panel title "Under way" (`game_state.gd`, `ui/main.gd`). |
 | Convoy scatter slice 1 | Tavern rumour + admin summary for global `scattered_ids` tail counts. |
 | Convoy scatter slice 2 | Daily decay: random id removed from `scattered_ids` (p≈7%); docked `contact_candidate_bias` ×0.93/d toward 0; admin per-NPC `scatter[…]` + `c_bias=`; tavern explains bias when scatter gossip shows (`game_state.gd`, `sim_100_days.py`). |
@@ -28,7 +28,7 @@ Living roadmap for simulation depth, UI, and data. **Update this file** when a m
 ## Economy & twin
 
 - Keep `tools/sim_100_days.py` aligned with `game_state.gd` for any tick-order or constant change.
-- After behaviour changes: run `python3 tools/sim_100_days.py 10000 --no-graphs` and refresh `harbours-economy-rules.canvas.tsx` when rules change.
+- After behaviour changes: run `python3 tools/sim_100_days.py 5000 --world data/world_full.json --no-graphs` (full Mediterranean twin; see `.cursor/rules/post-change-sim-5k.mdc`) and refresh `harbours-economy-rules.canvas.tsx` when rules change.
 
 ## Backlog (ordered roughly by dependency / player value)
 
