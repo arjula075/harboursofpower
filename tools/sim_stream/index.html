@@ -106,7 +106,7 @@
     <section class="panel">
       <div class="panel-h">
         <h2>Global average food unrest</h2>
-        <span class="hint">mean <code>food_unrest</code> (0–200) across ports &middot; dashed guides: uneasy 40 · tense 90 · critical 130</span>
+        <span class="hint">mean <code>food_unrest</code> (0–200) across ports &middot; dashed guides: uneasy 40 · tense 90 · critical 130 &middot; <span style="color:#dc2626">red spikes</span> = food riots in that sample (diff of cumulative total)</span>
       </div>
       <svg id="sparkUnrest" class="spark" viewBox="0 0 800 140" preserveAspectRatio="none" width="100%" height="140"></svg>
     </section>
@@ -114,7 +114,7 @@
     <section class="panel">
       <div class="panel-h">
         <h2>Ports</h2>
-        <span class="hint">click a column header to sort &middot; <span class="mood-critical">critical</span> &gt; <span class="mood-tense">tense</span> &gt; <span class="mood-uneasy">uneasy</span> &gt; <span class="mood-calm">calm</span> &middot; red bar = at war &middot; purple bar = plague</span>
+        <span class="hint">click a column header to sort &middot; <span class="mood-critical">critical</span> &gt; <span class="mood-tense">tense</span> &gt; <span class="mood-uneasy">uneasy</span> &gt; <span class="mood-calm">calm</span> &middot; red bar = at war &middot; purple bar = plague &middot; hover <strong>pulse</strong> / <strong>riots Σ</strong> for definitions</span>
       </div>
       <div style="overflow:auto; max-height: 70vh;">
         <table id="ports"></table>
@@ -139,10 +139,13 @@
     { key: "food_unrest",         label: "unrest",      type: "num",   def: "desc", isMood: true },
     { key: "food_worry",          label: "worry",       type: "num",   def: "desc" },
     { key: "food_panic",          label: "panic",       type: "num",   def: "desc" },
+    { key: "food_riot_events",    label: "riots Σ",     type: "num",   def: "desc",
+      hint: "Cumulative grain food riots in this port. Twin: count since sim_stream.py / sim_100_days.py started. Game: persists in your campaign save." },
     { key: "population_grain",    label: "pop",         type: "num",   def: "desc" },
     { key: "population_grain_cap",label: "pop cap",     type: "num",   def: "desc" },
     { key: "famine_streak_days",  label: "famine",      type: "num",   def: "desc" },
-    { key: "commerce_pulse",      label: "pulse",       type: "num",   def: "desc", fmt: v => v.toFixed(2) },
+    { key: "commerce_pulse",      label: "pulse",       type: "num",   def: "desc", fmt: v => v.toFixed(2),
+      hint: "Commerce pulse 0–1: smoothed (EMA) blend of docked NPCs, harbour dues, and NPC wholesale units/coins at this port. Feeds wealth attractor bias, rumour pricing, and merchant spawn odds (see sim_tick_agents.gd / twin)." },
     { key: "stock_metal",         label: "metal",       type: "num",   def: "desc" },
     { key: "stock_wire",          label: "wire",        type: "num",   def: "desc" },
     { key: "war_days_left",       label: "war d",       type: "num",   def: "desc" },
@@ -151,6 +154,8 @@
 
   /** Mean food_unrest below this counts as dashboard "calm" (green), same as port mood. */
   const CALM_UNREST_MAX = 40;
+  /** Mean food_unrest at or above this counts as dashboard "critical" (red), same as port mood. */
+  const CRITICAL_UNREST_MIN = 130;
 
   const state = {
     src: "latest.json",
@@ -163,6 +168,7 @@
     rendered: false,
     trendLoaded: false,
     prevCalmSpellAvg: null,
+    prevCriticalSpellAvg: null,
   };
 
   function $(id) { return document.getElementById(id); }
@@ -251,6 +257,7 @@
         state.history = state.history.slice(-state.historyMax);
       }
       state.prevCalmSpellAvg = null;
+      state.prevCriticalSpellAvg = null;
     } catch (e) {
       // soft-fail
     }
@@ -383,6 +390,27 @@
         value: calmVal,
         sub: calmSub,
       });
+      const crits = criticalSpellStats(state.history);
+      let critVal = "—";
+      let critSub = `mean spell length (ticks ≈ days) while mean unrest ≥ ${CRITICAL_UNREST_MIN} (critical)`;
+      if (crits.avgLength != null) {
+        const ticksStrC = `${spellFmt(crits.avgLength)} ticks`;
+        critVal =
+          (crits.inCriticalNow ? `<span class="mood-critical">${ticksStrC}</span>` : ticksStrC) +
+          deltaSpan(delta(crits.avgLength, state.prevCriticalSpellAvg), spellFmt);
+        critSub =
+          `${crits.completed} completed spell(s) · open run ${crits.currentLength} tick(s)` +
+          (crits.inCriticalNow ? "" : " · world not critical");
+      } else if (state.history.length >= 2) {
+        critSub =
+          `no completed critical spell yet (mean must stay ≥ ${CRITICAL_UNREST_MIN}) · open run ${crits.currentLength} tick(s)`;
+      }
+      state.prevCriticalSpellAvg = crits.avgLength;
+      items.push({
+        label: "Avg critical period",
+        value: critVal,
+        sub: critSub,
+      });
     }
     const ps = snap.pop_summary || {};
     const pps = prev?.pop_summary || null;
@@ -492,6 +520,38 @@
     const sum = lengths.reduce((a, b) => a + b, 0);
     const avgLength = lengths.length ? sum / lengths.length : null;
     return { avgLength, completed: lengths.length, currentLength, inCalmNow: inCalm };
+  }
+
+  /**
+   * Contiguous "critical" spells when global mean unrest is at/above the critical mood line.
+   * Same forward-fill and length rules as calmSpellStats; only the threshold and polarity differ.
+   */
+  function criticalSpellStats(history) {
+    const raw = (history || []).map(p =>
+      (p.food_unrest_mean != null && !Number.isNaN(+p.food_unrest_mean)) ? +p.food_unrest_mean : null
+    );
+    const filled = filledPopMeans(raw);
+    if (!filled || !filled.length) {
+      return { avgLength: null, completed: 0, currentLength: 0, inCriticalNow: false };
+    }
+    const lengths = [];
+    let run = 0;
+    let inCrit = false;
+    for (let i = 0; i < filled.length; i++) {
+      const critical = filled[i] >= CRITICAL_UNREST_MIN;
+      if (critical) {
+        run++;
+        inCrit = true;
+      } else {
+        if (inCrit && run > 0) lengths.push(run);
+        run = 0;
+        inCrit = false;
+      }
+    }
+    const currentLength = inCrit ? run : 0;
+    const sum = lengths.reduce((a, b) => a + b, 0);
+    const avgLength = lengths.length ? sum / lengths.length : null;
+    return { avgLength, completed: lengths.length, currentLength, inCriticalNow: inCrit };
   }
 
   function renderSpark() {
@@ -605,6 +665,28 @@
     const finite = raw.filter(v => v != null);
     const minU = finite.length ? Math.min(...finite) : 0;
     const maxU = finite.length ? Math.max(...finite) : 0;
+    const riotDeltas = h0.map((p, i) => {
+      if (i <= 0) return 0;
+      const c = p.riots;
+      const pr = h0[i - 1].riots;
+      if (c == null || pr == null || Number.isNaN(+c) || Number.isNaN(+pr)) return 0;
+      return Math.max(0, (+c) - (+pr));
+    });
+    const maxRiotTick = Math.max(0, ...riotDeltas);
+    const maxRiotScale = Math.max(1, maxRiotTick);
+    const baseY = h - pad;
+    const maxStem = 26;
+    const riotMarks = riotDeltas
+      .map((d, i) => {
+        if (!d) return "";
+        const x = xScale(i);
+        const stemH = (d / maxRiotScale) * maxStem;
+        const y1 = baseY - stemH;
+        return `<line x1="${x}" y1="${baseY}" x2="${x}" y2="${y1}" stroke="#dc2626" stroke-width="2" stroke-linecap="round" opacity="0.9" />`;
+      })
+      .join("");
+    const riotLegend =
+      maxRiotTick > 0 ? `  ·  <tspan fill="#dc2626">riots/sample max ${maxRiotTick}</tspan>` : "";
     const last = h0[h0.length - 1];
     const guides = [40, 90, 130].map(th => {
       const y = yScale(th);
@@ -612,8 +694,9 @@
     }).join("");
     svg.innerHTML = `
       ${guides}
+      ${riotMarks}
       <polyline fill="none" stroke="#f59e0b" stroke-width="1.6" points="${poly}" />
-      <text x="${w - pad}" y="14" text-anchor="end" fill="#94a3b8" font-size="11">mean unrest ${minU.toFixed(1)}–${maxU.toFixed(1)} (axis 0–${U_MAX})</text>
+      <text x="${w - pad}" y="14" text-anchor="end" fill="#94a3b8" font-size="11">mean unrest ${minU.toFixed(1)}–${maxU.toFixed(1)} (axis 0–${U_MAX})${riotLegend}</text>
       <text x="${w - pad}" y="${h - pad - 2}" text-anchor="end" fill="#94a3b8" font-size="11">latest tick ${last.tick} · d${last.day}</text>
     `;
   }
@@ -636,7 +719,10 @@
     });
     const headHtml = COLUMNS.map(c => {
       const sortAttr = state.sort.key === c.key ? state.sort.dir : "";
-      return `<th data-key="${c.key}" data-sort="${sortAttr}">${c.label}</th>`;
+      const hintAttr = c.hint
+        ? ` title="${String(c.hint).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;")}"`
+        : "";
+      return `<th data-key="${c.key}" data-sort="${sortAttr}"${hintAttr}>${c.label}</th>`;
     }).join("");
     const bodyHtml = rows.map(r => {
       const pp = prev[r.id] || {};

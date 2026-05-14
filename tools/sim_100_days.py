@@ -232,6 +232,7 @@ _POP_MIGRATION_PULL = 4
 _POP_OUTPUT_SCALE_MIN = 0.72
 _POP_OUTPUT_SCALE_MAX = 1.28
 ## Civic grain rationing (resilience helper A). Keep in sync with game_state.gd.
+## Stress vs biology in `_finalize_daily_grain_food_days_and_unrest`: `fed_stress` vs `bio_fed` — see game_state.gd comment on `_RATION_*`.
 _RATION_TRIGGER_FOOD_DAYS = 10.0
 _RATION_END_FOOD_DAYS = 22.0
 _RATION_BITE_FRAC = 0.62
@@ -755,6 +756,7 @@ class Sim:
         self.last_industrial_sink_digest: dict[str, dict[str, int]] = {}
         self.last_slave_digest: dict[str, dict] = {}
         self.last_food_riot_by_port: dict[str, int] = {}
+        self.port_food_riot_events: dict[str, int] = {}
         self.port_peace_riot_grace_days: dict[str, int] = {}
         self.player_port_id: str = ""
         self.player_money: int = 300
@@ -1142,6 +1144,8 @@ class Sim:
         self.player_offers_convoy_escort = True
         self._ensure_player_voyage_role_and_contract_py()
         self.port_peace_riot_grace_days.clear()
+        self.riot_events = 0
+        self.port_food_riot_events.clear()
         self.bankruptcy_events = 0
         self.convoy_formations = 0
         self.escort_coins_paid = 0
@@ -7803,6 +7807,7 @@ class Sim:
                 "preserved": preserved_used,
                 "forage": forage_today,
                 "rationing": 1 if rationing else 0,
+                "eat_today": eat_today,
             }
         self._agent_industry_and_war_materiel_tick()
         self._replenish_wine_vineyards_after_bites()
@@ -7929,6 +7934,8 @@ class Sim:
         line += f" seized; prosperity −{smash}."
         riot_lines.append(line)
         self.riot_events += 1
+        psr = str(port_id)
+        self.port_food_riot_events[psr] = int(self.port_food_riot_events.get(psr, 0)) + 1
         self.last_food_riot_by_port[str(port_id)] = 1
         return clampi(int(round(float(unrest) * _FOOD_RIOT_UNREST_SCALE)), 10, 62)
 
@@ -7955,16 +7962,19 @@ class Sim:
             preserved = int(dig.get("preserved", 0)) if isinstance(dig, dict) else 0
             forage = int(dig.get("forage", 0)) if isinstance(dig, dict) else 0
             rationing = int(dig.get("rationing", 0)) != 0 if isinstance(dig, dict) else False
+            eat_today_d = clampi(int(dig.get("eat_today", eat)), 0, 120)
             eaten_eff = eaten_g + preserved + forage
-            fed_ok = eaten_eff >= eat
+            bio_fed = eaten_eff >= eat
+            grain_plan_ok = rationing and eat_today_d > 0 and eaten_g >= eat_today_d
+            fed_stress = bio_fed or grain_plan_ok
             shortfall = max(0, eat - eaten_eff)
             streak_prev = clampi(int(self.port_starvation_streak_days.get(pid_s, 0)), 0, 999)
-            if fed_ok:
+            if fed_stress:
                 streak = 0
             else:
                 streak = min(999, streak_prev + 1)
             self.port_starvation_streak_days[pid_s] = streak
-            if fed_ok:
+            if fed_stress:
                 plentiful = days_r >= _FOOD_UNREST_PLENTIFUL_FOOD_DAYS
                 dec = _FOOD_UNREST_DECAY_WHEN_PLENTIFUL if plentiful else _FOOD_UNREST_DECAY
                 worry, panic = _food_unrest_decay_panic_first_py(dec, worry, panic)
@@ -7983,7 +7993,7 @@ class Sim:
                 worry = clampi(worry + _FOOD_UNREST_WORRY_RATIONING_DAILY, 0, 100)
             comp = clampi(worry + panic, 0, 200)
             riot_thr = self._food_riot_threshold_for_port(pid_s)
-            famine_riot_eligible = (not fed_ok) and streak >= _FOOD_UNREST_STARVATION_STREAK_THRESHOLD
+            famine_riot_eligible = (not bio_fed) and streak >= _FOOD_UNREST_STARVATION_STREAK_THRESHOLD
             if comp >= riot_thr:
                 if famine_riot_eligible:
                     p_riot = min(
@@ -8385,6 +8395,7 @@ class Sim:
                         200,
                     )
                 ),
+                "food_riot_events": int(self.port_food_riot_events.get(str(pid), 0)),
                 "population_grain": int(self.port_population_grain.get(pid, 0)),
                 "population_grain_cap": int(self.port_population_grain_cap.get(pid, 0)),
                 "famine_streak_days": int(self.port_famine_streak_days.get(pid, 0)),

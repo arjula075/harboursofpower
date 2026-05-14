@@ -1,0 +1,872 @@
+=== Python twin: 5000 ticks (RNG seed 2026), data from world_full.json ===
+  (progress log every 1000 ticks for this run length)
+
+-- baseline (after load + autonomy warmup; calendar day 25 before scripted advances) --
+  player: money=300  fleet=1  cargo_cap=24  ship=100/100  port=akragas  at_sea=False  |  world_treasury=0c  |  npc: agents=2202  ships=2214  at_sea=1995  total_purse=504006
+  npc merchant balance_sheet(all)=1347958c  investments=843952c  (fleet_book=531360c + cargo_mark=312592c)
+  port acre_feed   wealth= 217 (attract= 134)  grain= 115  wine=   7  m= 10 w= 17  spoil= 2  food_days= 28.8  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=2u/10c
+  port agde_bread  wealth= 154 (attract= 122)  grain=  84  wine=   8  m=  0 w=  0  spoil= 2  food_days= 21.0  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 0/ 0/ 1/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port ager_narbonensis  wealth= 189 (attract= 118)  grain=  85  wine=   5  m=  2 w=  3  spoil= 2  food_days= 21.2  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=2u/6c sell=7u/70c
+  port akragas     wealth= 773 (attract= 159)  grain= 130  wine=  22  m= 17 w= 31  spoil= 3  food_days= 16.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=12u/40c sell=17u/123c
+  port aleria      wealth=1171 (attract= 130)  grain=  52  wine=  27  m= 28 w= 32  spoil= 1  food_days= 10.4  unrest=  0 (Calm)  pop=5 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=15u/101c sell=53u/354c
+  port alexandria  wealth=1022 (attract= 186)  grain= 102  wine=  32  m= 26 w= 34  spoil= 2  food_days=  7.8  unrest=  4 (Calm)  pop=13 out×1.00 fam=0 pro=24  ind_mwtx= 3/ 3/ 3/ 3      npc_wholesale buy=35u/141c sell=67u/489c
+  port antipolis   wealth= 340 (attract=  92)  grain=  51  wine=   1  m= 15 w= 24  spoil= 1  food_days= 10.2  unrest= 57 (Uneasy)  pop=5 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=6u/60c sell=6u/71c
+  port antium_coast  wealth= 266 (attract= 125)  grain=  88  wine=   4  m= 14 w= 21  spoil= 2  food_days= 22.0  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=6u/26c
+  port apollonia_cyrenaica  wealth= 267 (attract= 102)  grain=  40  wine=   1  m= 11 w= 19  spoil= 1  food_days=  5.7  unrest=138 (Critical)  pop=7 out×1.00 fam=3 pro=5  ind_mwtx= 1/ 1/ 2/ 0      npc_wholesale buy=0u/0c sell=13u/105c
+  port arados      wealth= 281 (attract= 119)  grain=  38  wine=  12  m= 21 w=  1  spoil= 1  food_days=  5.4  unrest=120 (Critical)  pop=7 out×1.00 fam=1 pro=15  ind_mwtx= 1/ 2/ 2/ 1      npc_wholesale buy=0u/0c sell=10u/40c
+  port arelate_bread  wealth= 311 (attract= 132)  grain= 115  wine=   8  m=  8 w= 12  spoil= 2  food_days= 28.8  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=11u/121c
+  port athens_piraeus  wealth= 646 (attract= 147)  grain=  57  wine=   8  m= 27 w= 31  spoil= 1  food_days=  4.4  unrest=154 (Critical)  pop=13 out×1.00 fam=8 pro=0  ind_mwtx= 3/ 3/ 4/ 4      npc_wholesale buy=16u/167c sell=34u/173c
+  port baitis_estuary  wealth= 170 (attract= 127)  grain=  93  wine=   5  m= 15 w=  0  spoil= 2  food_days= 23.2  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 0/ 1/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port byblos      wealth= 226 (attract= 117)  grain=  52  wine=   5  m= 18 w=  0  spoil= 1  food_days=  7.4  unrest= 63 (Uneasy)  pop=7 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 0/ 2/ 1      npc_wholesale buy=0u/0c sell=5u/10c
+  port byzantion   wealth= 950 (attract= 111)  grain=  71  wine=   4  m= 26 w= 11  spoil= 2  food_days=  5.9  unrest=158 (Critical)  pop=12 out×1.00 fam=9 pro=0  ind_mwtx= 3/ 2/ 4/ 2      npc_wholesale buy=37u/167c sell=45u/302c
+  port caere       wealth= 283 (attract= 104)  grain=  46  wine=   7  m= 13 w=  0  spoil= 1  food_days=  6.6  unrest=138 (Critical)  pop=7 out×1.00 fam=3 pro=5  ind_mwtx= 4/ 1/ 1/ 1      npc_wholesale buy=5u/15c sell=6u/25c
+  port caralis     wealth= 241 (attract= 120)  grain=  54  wine=   6  m= 13 w=  0  spoil= 1  food_days=  7.7  unrest=134 (Critical)  pop=7 out×1.00 fam=2 pro=10  ind_mwtx= 1/ 1/ 0/ 1      npc_wholesale buy=6u/6c sell=9u/28c
+  port carteia_coast  wealth= 240 (attract= 130)  grain=  87  wine=   4  m= 22 w= 24  spoil= 2  food_days= 21.8  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=4u/54c
+  port carthage    wealth= 337 (attract= 146)  grain=   0  wine=   0  m= 26 w=  0  spoil= 1  food_days=  0.0  unrest=138 (Critical)  pop=16 out×1.00 fam=4 pro=0  ind_mwtx= 3/ 1/ 2/ 0      npc_wholesale buy=6u/12c sell=3u/21c
+  port carthago_nova  wealth= 530 (attract= 144)  grain=  69  wine=  33  m= 32 w= 21  spoil= 2  food_days=  5.8  unrest=158 (Critical)  pop=12 out×1.00 fam=9 pro=0  ind_mwtx= 7/ 4/ 2/ 1      npc_wholesale buy=7u/42c sell=33u/208c
+  port catane      wealth= 408 (attract= 128)  grain=  66  wine=   8  m= 25 w= 18  spoil= 2  food_days=  7.3  unrest=  4 (Calm)  pop=9 out×1.12 fam=0 pro=17  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=15u/55c sell=25u/184c
+  port cenchreae_bread  wealth= 160 (attract= 122)  grain=  90  wine=   7  m=  0 w=  3  spoil= 2  food_days= 22.5  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 0/ 1/ 1      npc_wholesale buy=0u/0c sell=5u/38c
+  port chalcedon   wealth= 224 (attract=  89)  grain=  40  wine=   5  m= 12 w= 19  spoil= 1  food_days=  8.0  unrest= 91 (Critical)  pop=5 out×1.00 fam=0 pro=22  ind_mwtx= 1/ 1/ 2/ 0      npc_wholesale buy=0u/0c sell=6u/23c
+  port chalcis     wealth= 262 (attract= 106)  grain=  41  wine=   6  m= 20 w= 20  spoil= 1  food_days=  5.9  unrest=142 (Critical)  pop=7 out×1.00 fam=4 pro=0  ind_mwtx= 1/ 1/ 1/ 2      npc_wholesale buy=0u/0c sell=3u/12c
+  port chersonesos  wealth= 257 (attract= 127)  grain=  66  wine=  13  m= 11 w=  0  spoil= 2  food_days=  8.2  unrest=  4 (Calm)  pop=8 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=0u/0c sell=4u/44c
+  port corinth     wealth= 250 (attract= 127)  grain=  41  wine=   4  m=  0 w=  0  spoil= 1  food_days=  4.1  unrest=150 (Critical)  pop=10 out×1.00 fam=6 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=7u/20c
+  port croton      wealth= 198 (attract= 105)  grain=  33  wine=   7  m= 13 w= 19  spoil= 1  food_days=  4.7  unrest=138 (Critical)  pop=7 out×1.00 fam=3 pro=5  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=0u/0c sell=3u/39c
+  port cumae       wealth= 220 (attract= 100)  grain=  33  wine=   6  m=  6 w= 18  spoil= 1  food_days=  4.7  unrest=120 (Critical)  pop=7 out×1.00 fam=1 pro=15  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=5u/49c sell=8u/32c
+  port cyrene      wealth= 214 (attract= 122)  grain=  66  wine=   7  m= 14 w=  7  spoil= 2  food_days=  8.2  unrest=  4 (Calm)  pop=8 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=0u/0c sell=13u/118c
+  port dor_coast_bread  wealth= 247 (attract= 128)  grain=  86  wine=   5  m= 21 w= 17  spoil= 2  food_days= 21.5  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=2u/2c sell=8u/50c
+  port emporion    wealth= 208 (attract= 102)  grain=  20  wine=   4  m= 13 w= 17  spoil= 1  food_days=  2.9  unrest=142 (Critical)  pop=7 out×1.00 fam=4 pro=0  ind_mwtx= 1/ 1/ 1/ 0      npc_wholesale buy=1u/15c sell=9u/28c
+  port ephesus     wealth= 201 (attract= 124)  grain=  16  wine=   2  m=  0 w=  0  spoil= 1  food_days=  1.6  unrest=150 (Critical)  pop=10 out×1.00 fam=6 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port eretria     wealth= 210 (attract= 105)  grain=  32  wine=   4  m= 11 w= 28  spoil= 1  food_days=  4.6  unrest=134 (Critical)  pop=7 out×1.00 fam=2 pro=10  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=2u/4c
+  port gades       wealth= 286 (attract= 154)  grain=   4  wine=   4  m= 24 w=  0  spoil= 1  food_days=  0.3  unrest=154 (Critical)  pop=13 out×1.00 fam=8 pro=0  ind_mwtx= 7/ 2/ 0/ 2      npc_wholesale buy=9u/73c sell=7u/71c
+  port gela        wealth= 228 (attract= 120)  grain=  69  wine=   6  m= 15 w=  1  spoil= 2  food_days=  8.6  unrest=  4 (Calm)  pop=8 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=3u/39c sell=8u/146c
+  port gythion     wealth= 202 (attract= 105)  grain=  34  wine=   2  m=  8 w= 16  spoil= 1  food_days=  4.9  unrest=134 (Critical)  pop=7 out×1.00 fam=2 pro=10  ind_mwtx= 1/ 1/ 1/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port halicarnassus  wealth= 245 (attract= 107)  grain=  36  wine=   7  m= 19 w= 15  spoil= 1  food_days=  5.1  unrest= 82 (Tense)  pop=7 out×1.00 fam=0 pro=22  ind_mwtx= 1/ 1/ 2/ 0      npc_wholesale buy=0u/0c sell=6u/26c
+  port hippo       wealth= 257 (attract= 134)  grain=  83  wine=   7  m= 40 w= 33  spoil= 2  food_days= 11.9  unrest=  0 (Calm)  pop=7 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=5u/20c
+  port kition      wealth= 276 (attract= 125)  grain=  29  wine=   6  m= 34 w= 30  spoil= 1  food_days=  4.1  unrest=101 (Critical)  pop=7 out×1.00 fam=0 pro=20  ind_mwtx= 5/ 3/ 2/ 1      npc_wholesale buy=10u/25c sell=8u/40c
+  port knossos     wealth= 200 (attract= 106)  grain=  37  wine=   7  m= 12 w= 14  spoil= 1  food_days=  5.3  unrest=142 (Critical)  pop=7 out×1.00 fam=4 pro=0  ind_mwtx= 1/ 1/ 1/ 2      npc_wholesale buy=0u/0c sell=6u/18c
+  port kourion_coast  wealth= 198 (attract= 126)  grain=  66  wine=   7  m= 22 w= 24  spoil= 2  food_days= 16.5  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=2u/12c
+  port kydonia     wealth= 216 (attract=  90)  grain=  48  wine=   5  m= 17 w= 25  spoil= 1  food_days=  9.6  unrest=  6 (Calm)  pop=5 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=0u/0c sell=12u/53c
+  port larnaca_fields  wealth= 245 (attract= 133)  grain=  87  wine=  10  m= 27 w= 26  spoil= 2  food_days= 21.8  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=7u/62c
+  port lepcis_minor_bread  wealth= 273 (attract= 130)  grain=  87  wine=   7  m= 23 w= 11  spoil= 2  food_days= 21.8  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=4u/30c
+  port leptis_magna  wealth= 191 (attract= 110)  grain=  36  wine=   5  m= 11 w=  1  spoil= 1  food_days=  5.1  unrest=142 (Critical)  pop=7 out×1.00 fam=4 pro=0  ind_mwtx= 1/ 0/ 1/ 1      npc_wholesale buy=0u/0c sell=8u/45c
+  port licata_bread  wealth= 193 (attract= 124)  grain=  81  wine=   7  m= 17 w=  5  spoil= 2  food_days= 20.2  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=1u/2c sell=4u/64c
+  port locri       wealth= 202 (attract= 104)  grain=  27  wine=   4  m= 10 w= 14  spoil= 1  food_days=  3.9  unrest=101 (Critical)  pop=7 out×1.00 fam=0 pro=20  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=0u/0c sell=4u/16c
+  port malaka      wealth= 210 (attract= 120)  grain=  36  wine=   5  m= 16 w=  0  spoil= 1  food_days=  5.1  unrest=134 (Critical)  pop=7 out×1.00 fam=2 pro=10  ind_mwtx= 1/ 0/ 1/ 1      npc_wholesale buy=0u/0c sell=11u/33c
+  port maroni_plain  wealth= 185 (attract= 127)  grain=  83  wine=   8  m= 13 w= 19  spoil= 2  food_days= 20.8  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=4u/22c
+  port massalia    wealth= 281 (attract= 125)  grain=  34  wine=   0  m=  4 w=  0  spoil= 1  food_days=  3.4  unrest=150 (Critical)  pop=10 out×1.00 fam=6 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=5u/84c
+  port mazara_bread  wealth= 220 (attract= 127)  grain=  87  wine=   6  m= 24 w=  2  spoil= 2  food_days= 21.8  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=3u/25c
+  port megara      wealth= 165 (attract=  91)  grain=  32  wine=   8  m= 17 w= 16  spoil= 1  food_days=  6.4  unrest=125 (Critical)  pop=5 out×1.00 fam=1 pro=15  ind_mwtx= 1/ 1/ 1/ 2      npc_wholesale buy=3u/6c sell=3u/44c
+  port memphis     wealth= 193 (attract= 144)  grain= 202  wine=   5  m=  1 w=  0  spoil= 4  food_days= 25.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 0/ 1/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port messana     wealth= 296 (attract= 118)  grain=  77  wine=   3  m= 22 w= 20  spoil= 2  food_days=  7.7  unrest=  6 (Calm)  pop=10 out×1.00 fam=0 pro=24  ind_mwtx= 2/ 3/ 3/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port miletus     wealth= 225 (attract= 123)  grain=   3  wine=   4  m=  2 w=  1  spoil= 1  food_days=  0.3  unrest=150 (Critical)  pop=10 out×1.00 fam=6 pro=0  ind_mwtx= 0/ 3/ 0/ 0      npc_wholesale buy=0u/0c sell=7u/55c
+  port motya       wealth= 182 (attract= 110)  grain=  29  wine=   7  m= 11 w=  0  spoil= 1  food_days=  4.1  unrest=134 (Critical)  pop=7 out×1.00 fam=2 pro=10  ind_mwtx= 1/ 0/ 1/ 1      npc_wholesale buy=4u/52c sell=8u/56c
+  port naucratis   wealth= 221 (attract= 150)  grain= 219  wine=   4  m=  8 w=  0  spoil= 4  food_days= 27.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 0/ 2      npc_wholesale buy=0u/0c sell=0u/0c
+  port naxos_sicily  wealth= 211 (attract=  91)  grain=  35  wine=   6  m=  9 w= 14  spoil= 1  food_days=  7.0  unrest= 74 (Tense)  pop=5 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=0u/0c sell=4u/35c
+  port neapolis    wealth= 307 (attract= 132)  grain=  35  wine=   5  m= 26 w= 24  spoil= 1  food_days=  3.9  unrest=146 (Critical)  pop=9 out×1.00 fam=5 pro=0  ind_mwtx= 2/ 2/ 1/ 3      npc_wholesale buy=3u/7c sell=15u/59c
+  port nikaia      wealth= 220 (attract=  88)  grain=  42  wine=   6  m= 17 w= 20  spoil= 1  food_days=  8.4  unrest=125 (Critical)  pop=5 out×1.00 fam=1 pro=15  ind_mwtx= 1/ 1/ 2/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port oea         wealth= 173 (attract= 101)  grain=  42  wine=   8  m=  8 w=  4  spoil= 1  food_days=  8.4  unrest= 74 (Tense)  pop=5 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 2/ 0/ 1      npc_wholesale buy=0u/0c sell=6u/44c
+  port olbia_pontic  wealth= 171 (attract= 119)  grain=  68  wine=   6  m=  4 w=  0  spoil= 2  food_days=  8.5  unrest=  4 (Calm)  pop=8 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port olbia_sardinia  wealth= 164 (attract= 109)  grain=  19  wine=   8  m= 11 w=  0  spoil= 1  food_days=  2.7  unrest=138 (Critical)  pop=7 out×1.00 fam=3 pro=5  ind_mwtx= 1/ 0/ 1/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port onoba_bread  wealth= 171 (attract= 133)  grain=  95  wine=   5  m= 10 w= 21  spoil= 2  food_days= 23.8  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=2u/2c sell=2u/26c
+  port ostia       wealth= 366 (attract=  97)  grain=  31  wine=   2  m=  2 w=  5  spoil= 1  food_days=  2.8  unrest=130 (Critical)  pop=11 out×1.00 fam=1 pro=15  ind_mwtx= 4/ 3/ 0/ 2      npc_wholesale buy=1u/4c sell=11u/52c
+  port panormus    wealth= 313 (attract= 136)  grain=  51  wine=   6  m= 16 w= 16  spoil= 1  food_days=  5.7  unrest=134 (Critical)  pop=9 out×1.00 fam=2 pro=10  ind_mwtx= 2/ 2/ 2/ 2      npc_wholesale buy=8u/112c sell=3u/36c
+  port pantikapaion  wealth= 242 (attract= 125)  grain=  19  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.9  unrest=150 (Critical)  pop=10 out×1.00 fam=6 pro=0  ind_mwtx= 0/ 0/ 0/ 3      npc_wholesale buy=3u/33c sell=9u/45c
+  port paphos      wealth= 309 (attract= 106)  grain=  40  wine=   7  m= 21 w= 14  spoil= 1  food_days=  5.7  unrest=138 (Critical)  pop=7 out×1.00 fam=3 pro=5  ind_mwtx= 1/ 1/ 0/ 2      npc_wholesale buy=4u/67c sell=2u/20c
+  port populonia   wealth= 249 (attract= 107)  grain=  46  wine=   4  m= 22 w= 15  spoil= 1  food_days=  6.6  unrest=150 (Critical)  pop=7 out×1.00 fam=6 pro=0  ind_mwtx= 8/ 3/ 1/ 1      npc_wholesale buy=2u/30c sell=13u/97c
+  port poseidonia  wealth= 245 (attract= 109)  grain=  39  wine=   4  m= 22 w= 23  spoil= 1  food_days=  5.6  unrest=142 (Critical)  pop=7 out×1.00 fam=4 pro=0  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=7u/98c sell=17u/137c
+  port ptolemais_akkaron  wealth= 232 (attract= 124)  grain=  79  wine=   8  m= 18 w= 23  spoil= 2  food_days= 19.8  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=5u/36c
+  port pupput_fields  wealth= 234 (attract= 126)  grain=  80  wine=   6  m= 22 w= 13  spoil= 2  food_days= 20.0  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=5u/57c
+  port pyrgi       wealth= 172 (attract=  85)  grain=  39  wine=   5  m=  0 w=  0  spoil= 1  food_days=  7.8  unrest= 91 (Critical)  pop=5 out×1.00 fam=0 pro=22  ind_mwtx= 2/ 2/ 0/ 0      npc_wholesale buy=2u/48c sell=5u/12c
+  port rhegium     wealth= 315 (attract= 109)  grain=  54  wine=   6  m= 30 w= 34  spoil= 1  food_days=  9.0  unrest=146 (Critical)  pop=6 out×1.00 fam=4 pro=0  ind_mwtx= 1/ 1/ 2/ 0      npc_wholesale buy=3u/21c sell=9u/56c
+  port rhode_iberia  wealth= 186 (attract=  90)  grain=  33  wine=   9  m= 22 w= 12  spoil= 1  food_days=  6.6  unrest= 57 (Uneasy)  pop=5 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 2/ 1      npc_wholesale buy=0u/0c sell=10u/65c
+  port rhodes      wealth= 217 (attract= 122)  grain=  17  wine=   0  m=  0 w=  5  spoil= 1  food_days=  1.7  unrest=150 (Critical)  pop=10 out×1.00 fam=6 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=15u/94c
+  port rome        wealth= 210 (attract= 101)  grain=  28  wine=   0  m=  1 w=  1  spoil= 1  food_days=  2.8  unrest=134 (Critical)  pop=10 out×1.00 fam=2 pro=10  ind_mwtx= 3/ 3/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sabratha    wealth= 188 (attract= 100)  grain=  31  wine=   7  m=  5 w=  0  spoil= 1  food_days=  6.2  unrest= 91 (Critical)  pop=5 out×1.00 fam=0 pro=22  ind_mwtx= 1/ 0/ 2/ 1      npc_wholesale buy=0u/0c sell=1u/12c
+  port salamis_cyprus  wealth= 343 (attract= 111)  grain=  50  wine=   5  m= 23 w= 28  spoil= 1  food_days=  7.1  unrest=134 (Critical)  pop=7 out×1.00 fam=2 pro=10  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=16u/96c sell=10u/79c
+  port sciacca_coast  wealth= 223 (attract= 122)  grain=  64  wine=   6  m= 26 w=  5  spoil= 2  food_days= 12.8  unrest=  0 (Calm)  pop=5 out×1.25 fam=0 pro=10  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=4u/44c
+  port selinus     wealth= 180 (attract= 102)  grain=  29  wine=   7  m= 13 w= 15  spoil= 1  food_days=  4.1  unrest=150 (Critical)  pop=7 out×1.00 fam=6 pro=0  ind_mwtx= 1/ 1/ 0/ 2      npc_wholesale buy=5u/10c sell=4u/30c
+  port sexi        wealth= 164 (attract= 101)  grain=  40  wine=   8  m= 12 w=  4  spoil= 1  food_days=  8.0  unrest= 91 (Critical)  pop=5 out×1.00 fam=0 pro=22  ind_mwtx= 1/ 0/ 2/ 1      npc_wholesale buy=0u/0c sell=4u/44c
+  port sicyon_bread  wealth= 202 (attract= 123)  grain=  58  wine=   6  m= 19 w=  5  spoil= 2  food_days= 14.5  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port sidon       wealth= 217 (attract= 116)  grain=  32  wine=   8  m= 20 w=  0  spoil= 1  food_days=  4.6  unrest=101 (Critical)  pop=7 out×1.00 fam=0 pro=20  ind_mwtx= 1/ 0/ 0/ 1      npc_wholesale buy=0u/0c sell=4u/15c
+  port sinope      wealth= 299 (attract= 116)  grain=  40  wine=  16  m= 18 w= 16  spoil= 1  food_days=  5.7  unrest=120 (Critical)  pop=7 out×1.00 fam=1 pro=15  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=11u/77c
+  port smyrna      wealth= 217 (attract= 105)  grain=  37  wine=   5  m= 20 w= 24  spoil= 1  food_days=  5.3  unrest=142 (Critical)  pop=7 out×1.00 fam=4 pro=0  ind_mwtx= 1/ 1/ 2/ 2      npc_wholesale buy=0u/0c sell=0u/0c
+  port solus       wealth= 152 (attract=  95)  grain=  19  wine=   6  m= 13 w=  5  spoil= 1  food_days=  3.8  unrest= 74 (Tense)  pop=5 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 0/ 0/ 1      npc_wholesale buy=0u/0c sell=9u/82c
+  port sulci       wealth= 274 (attract= 122)  grain=  49  wine=   5  m= 37 w= 20  spoil= 1  food_days=  7.0  unrest=120 (Critical)  pop=7 out×1.00 fam=1 pro=15  ind_mwtx= 5/ 3/ 1/ 1      npc_wholesale buy=2u/28c sell=9u/62c
+  port syracuse    wealth= 200 (attract= 116)  grain=   4  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.4  unrest=150 (Critical)  pop=10 out×1.00 fam=6 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=3u/12c
+  port taras       wealth= 251 (attract= 128)  grain=  40  wine=   4  m=  0 w=  0  spoil= 1  food_days=  4.0  unrest=150 (Critical)  pop=10 out×1.00 fam=6 pro=0  ind_mwtx= 0/ 0/ 0/ 1      npc_wholesale buy=7u/14c sell=17u/71c
+  port thapsus_bread  wealth= 250 (attract= 128)  grain=  98  wine=   5  m= 25 w=  6  spoil= 2  food_days= 24.5  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=4u/48c sell=4u/88c
+  port tharros     wealth= 218 (attract= 118)  grain=  36  wine=   7  m= 34 w=  0  spoil= 1  food_days=  5.1  unrest=120 (Critical)  pop=7 out×1.00 fam=1 pro=15  ind_mwtx= 1/ 1/ 2/ 1      npc_wholesale buy=5u/79c sell=7u/25c
+  port tiber_mouth_bread  wealth= 408 (attract= 128)  grain=  93  wine=   8  m= 27 w=  7  spoil= 2  food_days= 23.2  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=11u/82c sell=22u/227c
+  port tingis      wealth= 265 (attract= 106)  grain=  52  wine=  20  m= 38 w= 18  spoil= 1  food_days=  8.7  unrest= 40 (Uneasy)  pop=6 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 2/ 1/ 1      npc_wholesale buy=3u/28c sell=13u/42c
+  port trapezus    wealth= 180 (attract= 101)  grain=  25  wine=   8  m=  8 w= 13  spoil= 1  food_days=  3.6  unrest=134 (Critical)  pop=7 out×1.00 fam=2 pro=10  ind_mwtx= 1/ 1/ 0/ 1      npc_wholesale buy=6u/18c sell=0u/0c
+  port troezen_coast  wealth= 220 (attract= 128)  grain=  65  wine=   8  m= 18 w= 22  spoil= 2  food_days= 16.2  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=0u/0c sell=8u/123c
+  port tyre        wealth= 288 (attract= 153)  grain=   7  wine=   5  m=  1 w=  1  spoil= 1  food_days=  0.5  unrest=154 (Critical)  pop=13 out×1.00 fam=8 pro=0  ind_mwtx= 3/ 0/ 0/ 3      npc_wholesale buy=0u/0c sell=3u/26c
+  port utica       wealth= 221 (attract= 113)  grain=  33  wine=   7  m= 13 w=  0  spoil= 1  food_days=  4.7  unrest=146 (Critical)  pop=7 out×1.00 fam=5 pro=0  ind_mwtx= 1/ 2/ 0/ 1      npc_wholesale buy=0u/0c sell=6u/123c
+  port velletri_plain  wealth= 245 (attract= 119)  grain=  92  wine=   3  m= 16 w= 26  spoil= 2  food_days= 23.0  unrest=  0 (Calm)  pop=4 out×1.00 fam=0 pro=24  ind_mwtx= 1/ 1/ 1/ 1      npc_wholesale buy=4u/16c sell=2u/13c
+
+-- after advance #1000 (calendar day 1025) --
+  player: money=0  fleet=1  cargo_cap=24  ship=98/100  port=akragas  at_sea=False  |  world_treasury=0c  |  npc: agents=2158  ships=2159  at_sea=1954  total_purse=242681
+  npc merchant balance_sheet(all)=945661c  investments=702980c  (fleet_book=518160c + cargo_mark=184820c)
+  port acre_feed   wealth=1885 (attract=1762)  grain=6724  wine=   0  m=  0 w=  0  spoil=38  food_days=840.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=258  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=22u/27c sell=0u/0c
+  port agde_bread  wealth=2347 (attract=2212)  grain=9027  wine=   0  m=  0 w=  0  spoil=38  food_days=1128.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=385  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=10u/10c sell=8u/16c
+  port ager_narbonensis  wealth=2486 (attract=2262)  grain=8973  wine= 114  m=  0 w=  0  spoil=38  food_days=1121.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=377  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=1u/12c
+  port akragas     wealth=7136 (attract=6720)  grain=27428  wine=1730  m=  0 w=  0  spoil=38  food_days=1714.2  unrest=  0 (Calm)  pop=16 out×1.07 fam=0 pro=356  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=7u/7c sell=4u/12c
+  port aleria      wealth= 615 (attract= 292)  grain= 502  wine=   3  m=  2 w=  0  spoil= 9  food_days= 50.2  unrest=  0 (Calm)  pop=10 out×1.25 fam=0 pro=111  ind_mwtx= 1/ 0/ 0/ 1      npc_wholesale buy=8u/8c sell=5u/47c
+  port alexandria  wealth=7180 (attract=6858)  grain=32892  wine=  13  m=  0 w=  0  spoil=38  food_days=1265.1  unrest=  0 (Calm)  pop=26 out×1.28 fam=0 pro=268  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=14u/14c sell=1u/4c
+  port antipolis   wealth= 868 (attract= 575)  grain= 339  wine= 679  m=  0 w=  0  spoil= 6  food_days= 42.4  unrest=  0 (Calm)  pop=8 out×1.28 fam=0 pro=31  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=3u/21c
+  port antium_coast  wealth=2110 (attract=1959)  grain=7348  wine= 164  m=  0 w=  0  spoil=38  food_days=918.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=288  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=0u/0c
+  port apollonia_cyrenaica  wealth= 671 (attract= 382)  grain= 290  wine= 324  m=  1 w=  1  spoil= 6  food_days= 32.2  unrest=  0 (Calm)  pop=9 out×1.28 fam=0 pro=14  ind_mwtx= 0/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=6u/30c
+  port arados      wealth= 781 (attract= 582)  grain= 329  wine=   0  m=  0 w=  0  spoil= 6  food_days= 25.3  unrest=  0 (Calm)  pop=13 out×1.28 fam=0 pro=20  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port arelate_bread  wealth=3028 (attract=2821)  grain=12384  wine=   0  m=  0 w=  0  spoil=38  food_days=1548.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=340  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=1u/2c
+  port athens_piraeus  wealth=1525 (attract=1171)  grain=1107  wine=1248  m=  2 w=  0  spoil=20  food_days= 69.2  unrest=  0 (Calm)  pop=16 out×1.14 fam=0 pro=17  ind_mwtx= 3/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port baitis_estuary  wealth=2527 (attract=2338)  grain=8640  wine=  52  m=  0 w=  0  spoil=38  food_days=1080.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=363  ind_mwtx= 0/ 0/ 1/ 1      npc_wholesale buy=1u/1c sell=4u/17c
+  port byblos      wealth= 691 (attract= 525)  grain= 358  wine=   0  m=  0 w=  0  spoil= 7  food_days= 29.8  unrest=  0 (Calm)  pop=12 out×1.28 fam=0 pro=19  ind_mwtx= 0/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/12c
+  port byzantion   wealth= 682 (attract= 219)  grain=  95  wine=   3  m=  2 w=  1  spoil= 2  food_days=  4.0  unrest=126 (Critical)  pop=24 out×1.28 fam=2 pro=12  ind_mwtx= 1/ 0/ 0/ 1      npc_wholesale buy=29u/38c sell=8u/58c
+  port caere       wealth= 382 (attract= 228)  grain= 226  wine=   0  m=  0 w=  0  spoil= 4  food_days= 16.1  unrest=  0 (Calm)  pop=14 out×1.28 fam=0 pro=29  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/24c
+  port caralis     wealth= 762 (attract= 628)  grain= 330  wine=   0  m=  0 w=  0  spoil= 6  food_days= 23.6  unrest=  0 (Calm)  pop=14 out×1.28 fam=0 pro=31  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port carteia_coast  wealth=2301 (attract=2083)  grain=7498  wine=   0  m=  0 w=  0  spoil=38  food_days=937.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=315  ind_mwtx= 0/ 0/ 0/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port carthage    wealth=1021 (attract= 869)  grain= 664  wine=   0  m=  0 w=  0  spoil=12  food_days= 33.2  unrest=  0 (Calm)  pop=20 out×1.18 fam=0 pro=23  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/8c
+  port carthago_nova  wealth= 754 (attract= 589)  grain= 109  wine=   5  m=  4 w=  1  spoil= 2  food_days=  6.4  unrest=  4 (Calm)  pop=17 out×1.28 fam=0 pro=26  ind_mwtx= 6/ 2/ 0/ 0      npc_wholesale buy=0u/0c sell=18u/127c
+  port catane      wealth=6491 (attract=6300)  grain=30267  wine=   0  m=  0 w=  0  spoil=38  food_days=1891.7  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=497  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port cenchreae_bread  wealth=2281 (attract=2162)  grain=8607  wine=   0  m=  0 w=  0  spoil=38  food_days=1075.9  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=404  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=8u/11c sell=7u/24c
+  port chalcedon   wealth= 618 (attract= 460)  grain= 259  wine= 528  m=  0 w=  0  spoil= 5  food_days= 25.9  unrest=  0 (Calm)  pop=10 out×1.28 fam=0 pro=46  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/15c
+  port chalcis     wealth= 759 (attract= 587)  grain= 324  wine= 700  m=  0 w=  0  spoil= 6  food_days= 32.4  unrest=  0 (Calm)  pop=10 out×1.28 fam=0 pro=21  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=1u/15c
+  port chersonesos  wealth=7500 (attract=7331)  grain=32374  wine=1330  m=  0 w=  0  spoil=38  food_days=2023.4  unrest=  0 (Calm)  pop=16 out×1.07 fam=0 pro=326  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=0u/0c
+  port corinth     wealth=1228 (attract= 991)  grain= 927  wine= 693  m=  0 w=  0  spoil=17  food_days= 71.3  unrest=  0 (Calm)  pop=13 out×1.18 fam=0 pro=15  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port croton      wealth= 702 (attract= 575)  grain= 326  wine= 737  m=  0 w=  0  spoil= 6  food_days= 40.8  unrest=  0 (Calm)  pop=8 out×1.14 fam=0 pro=21  ind_mwtx= 0/ 0/ 0/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port cumae       wealth= 539 (attract= 401)  grain= 276  wine= 396  m=  0 w=  0  spoil= 5  food_days= 23.0  unrest=  0 (Calm)  pop=12 out×1.28 fam=0 pro=13  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=1u/6c
+  port cyrene      wealth=6949 (attract=6757)  grain=27747  wine=2002  m=  0 w=  0  spoil=38  food_days=1734.2  unrest=  0 (Calm)  pop=16 out×1.14 fam=0 pro=189  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port dor_coast_bread  wealth=2280 (attract=2041)  grain=7214  wine= 130  m=  0 w=  0  spoil=38  food_days=901.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=315  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port emporion    wealth= 541 (attract= 304)  grain= 252  wine= 197  m=  0 w=  0  spoil= 5  food_days= 21.0  unrest=  0 (Calm)  pop=12 out×1.28 fam=0 pro=16  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=1u/8c sell=13u/39c
+  port ephesus     wealth=1997 (attract=1790)  grain=1665  wine=1764  m=  0 w=  0  spoil=29  food_days=138.8  unrest=  0 (Calm)  pop=12 out×1.00 fam=0 pro=22  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=8u/8c sell=26u/89c
+  port eretria     wealth= 431 (attract= 255)  grain= 223  wine=  88  m=  0 w=  0  spoil= 4  food_days= 20.3  unrest=  0 (Calm)  pop=11 out×1.28 fam=0 pro=19  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port gades       wealth=1311 (attract=1147)  grain=1126  wine=   0  m=  0 w=  0  spoil=20  food_days= 66.2  unrest=  0 (Calm)  pop=17 out×1.21 fam=0 pro=13  ind_mwtx= 6/ 2/ 0/ 0      npc_wholesale buy=0u/0c sell=7u/14c
+  port gela        wealth=6383 (attract=6222)  grain=30143  wine=   0  m=  0 w=  0  spoil=38  food_days=1883.9  unrest=  0 (Calm)  pop=16 out×1.07 fam=0 pro=285  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=9u/9c sell=4u/37c
+  port gythion     wealth= 580 (attract= 459)  grain= 291  wine= 483  m=  0 w=  0  spoil= 6  food_days= 36.4  unrest=  0 (Calm)  pop=8 out×1.14 fam=0 pro=33  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port halicarnassus  wealth= 539 (attract= 359)  grain= 338  wine= 295  m=  0 w=  0  spoil= 6  food_days= 37.6  unrest=  0 (Calm)  pop=9 out×1.28 fam=0 pro=22  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/8c
+  port hippo       wealth=6766 (attract=6635)  grain=31607  wine=   0  m=138 w=  0  spoil=38  food_days=2257.6  unrest=  0 (Calm)  pop=14 out×1.00 fam=0 pro=336  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=9u/9c sell=10u/20c
+  port kition      wealth= 809 (attract= 633)  grain= 300  wine=   1  m= 24 w=  0  spoil= 6  food_days= 27.3  unrest=  0 (Calm)  pop=11 out×1.28 fam=0 pro=25  ind_mwtx= 5/ 2/ 1/ 0      npc_wholesale buy=6u/21c sell=7u/40c
+  port knossos     wealth= 828 (attract= 708)  grain= 305  wine= 971  m=  0 w=  0  spoil= 6  food_days= 30.5  unrest=  0 (Calm)  pop=10 out×1.28 fam=0 pro=19  ind_mwtx= 0/ 0/ 0/ 1      npc_wholesale buy=0u/0c sell=3u/6c
+  port kourion_coast  wealth=2210 (attract=2063)  grain=7226  wine= 137  m=  0 w=  0  spoil=38  food_days=903.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=282  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port kydonia     wealth= 696 (attract= 543)  grain= 304  wine= 747  m=  0 w=  0  spoil= 6  food_days= 33.8  unrest=  0 (Calm)  pop=9 out×1.28 fam=0 pro=25  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port larnaca_fields  wealth=2396 (attract=2298)  grain=8644  wine=   0  m=  2 w=  1  spoil=38  food_days=1080.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=336  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=3u/49c
+  port lepcis_minor_bread  wealth=2167 (attract=2023)  grain=7307  wine=   0  m=  0 w=  0  spoil=38  food_days=913.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=285  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port leptis_magna  wealth= 662 (attract= 562)  grain= 221  wine=   0  m=  0 w=  0  spoil= 4  food_days= 15.8  unrest=  0 (Calm)  pop=14 out×1.28 fam=0 pro=26  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/18c sell=1u/12c
+  port licata_bread  wealth=2354 (attract=2221)  grain=9237  wine=  12  m=  0 w=  0  spoil=38  food_days=1154.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=250  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port locri       wealth= 719 (attract= 560)  grain= 353  wine= 631  m=  0 w=  0  spoil= 7  food_days= 39.2  unrest=  0 (Calm)  pop=9 out×1.28 fam=0 pro=16  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port malaka      wealth= 764 (attract= 638)  grain= 345  wine=   5  m=  0 w=  0  spoil= 6  food_days= 31.4  unrest=  0 (Calm)  pop=11 out×1.28 fam=0 pro=29  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=2u/15c
+  port maroni_plain  wealth=2076 (attract=1895)  grain=7357  wine=   0  m=  0 w=  0  spoil=38  food_days=919.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=296  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port massalia    wealth=1404 (attract=1225)  grain= 980  wine=1107  m=  0 w=  0  spoil=17  food_days= 89.1  unrest=  0 (Calm)  pop=11 out×1.10 fam=0 pro=19  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port mazara_bread  wealth=2432 (attract=2247)  grain=9067  wine= 130  m=  0 w=  0  spoil=38  food_days=1133.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=256  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=8u/16c
+  port megara      wealth= 743 (attract= 557)  grain= 381  wine= 745  m=  0 w=  0  spoil= 7  food_days= 63.5  unrest=  0 (Calm)  pop=6 out×1.20 fam=0 pro=27  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=6u/45c
+  port memphis     wealth=8062 (attract=8000)  grain=87163  wine=   0  m=  0 w=  0  spoil=38  food_days=5447.7  unrest=  0 (Calm)  pop=16 out×1.07 fam=0 pro=647  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port messana     wealth=5439 (attract=5292)  grain=26318  wine=   0  m=  1 w=  0  spoil=38  food_days=1315.9  unrest=  0 (Calm)  pop=20 out×1.25 fam=0 pro=199  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port miletus     wealth=1309 (attract=1094)  grain= 951  wine= 946  m=  0 w=  0  spoil=17  food_days= 95.1  unrest=  0 (Calm)  pop=10 out×1.00 fam=0 pro=16  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port motya       wealth= 622 (attract= 515)  grain= 307  wine=   3  m=  0 w=  0  spoil= 6  food_days= 25.6  unrest=  0 (Calm)  pop=12 out×1.28 fam=0 pro=17  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port naucratis   wealth=8081 (attract=8000)  grain=88949  wine= 850  m=  0 w=  0  spoil=38  food_days=5559.3  unrest=  0 (Calm)  pop=16 out×1.07 fam=0 pro=616  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/6c sell=4u/22c
+  port naxos_sicily  wealth= 577 (attract= 456)  grain= 300  wine= 544  m=  0 w=  0  spoil= 6  food_days= 33.3  unrest=  0 (Calm)  pop=9 out×1.28 fam=0 pro=23  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/7c sell=0u/0c
+  port neapolis    wealth=1573 (attract=1310)  grain=1129  wine=1002  m=  3 w=  0  spoil=20  food_days= 86.8  unrest=  0 (Calm)  pop=13 out×1.28 fam=0 pro=17  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port nikaia      wealth=1030 (attract= 844)  grain= 518  wine=1201  m=  0 w=  0  spoil= 9  food_days= 74.0  unrest=  0 (Calm)  pop=7 out×1.17 fam=0 pro=33  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port oea         wealth= 706 (attract= 625)  grain= 308  wine=   3  m=  0 w=  0  spoil= 6  food_days= 30.8  unrest=  0 (Calm)  pop=10 out×1.28 fam=0 pro=29  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=1u/11c
+  port olbia_pontic  wealth=7936 (attract=7776)  grain=33576  wine=1875  m=  0 w=  0  spoil=38  food_days=2098.5  unrest=  0 (Calm)  pop=16 out×1.07 fam=0 pro=309  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port olbia_sardinia  wealth= 635 (attract= 526)  grain= 344  wine=   0  m=  0 w=  0  spoil= 6  food_days= 31.3  unrest=  0 (Calm)  pop=11 out×1.28 fam=0 pro=30  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port onoba_bread  wealth=2250 (attract=2112)  grain=7307  wine=   0  m=  0 w=  0  spoil=38  food_days=913.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=354  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=0u/0c
+  port ostia       wealth= 413 (attract= 196)  grain= 159  wine=   0  m=  0 w=  0  spoil= 3  food_days= 12.2  unrest=  0 (Calm)  pop=13 out×1.18 fam=0 pro=21  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=2u/4c
+  port panormus    wealth=6226 (attract=6190)  grain=26887  wine=   0  m=  0 w=  0  spoil=38  food_days=1493.7  unrest=  0 (Calm)  pop=18 out×1.20 fam=0 pro=246  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=4u/4c sell=2u/10c
+  port pantikapaion  wealth=2236 (attract=2029)  grain=2135  wine=2135  m=  0 w=  0  spoil=37  food_days=152.5  unrest=  0 (Calm)  pop=14 out×1.17 fam=0 pro=20  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port paphos      wealth= 890 (attract= 750)  grain= 388  wine= 928  m=  0 w=  0  spoil= 7  food_days= 29.8  unrest=  0 (Calm)  pop=13 out×1.28 fam=0 pro=18  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port populonia   wealth= 318 (attract= 251)  grain= 276  wine=   3  m=  0 w=  0  spoil= 5  food_days= 23.0  unrest=  0 (Calm)  pop=12 out×1.28 fam=0 pro=22  ind_mwtx= 6/ 2/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port poseidonia  wealth= 451 (attract= 264)  grain= 221  wine= 135  m=  0 w=  0  spoil= 4  food_days= 20.1  unrest=  0 (Calm)  pop=11 out×1.28 fam=0 pro=27  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=11u/22c
+  port ptolemais_akkaron  wealth=2060 (attract=1876)  grain=7289  wine=  32  m=  0 w=  0  spoil=38  food_days=911.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=260  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pupput_fields  wealth=2625 (attract=2416)  grain=9164  wine=  94  m=  0 w=  0  spoil=38  food_days=1145.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=307  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pyrgi       wealth= 341 (attract= 205)  grain= 343  wine=  42  m=  0 w=  0  spoil= 6  food_days= 42.9  unrest=  0 (Calm)  pop=8 out×1.28 fam=0 pro=13  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=8u/22c
+  port rhegium     wealth= 608 (attract= 415)  grain= 284  wine= 433  m= 39 w=  0  spoil= 5  food_days= 25.8  unrest=  0 (Calm)  pop=11 out×1.28 fam=0 pro=20  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=3u/18c sell=0u/0c
+  port rhode_iberia  wealth= 663 (attract= 526)  grain= 350  wine= 665  m=  0 w=  0  spoil= 7  food_days= 50.0  unrest=  0 (Calm)  pop=7 out×1.28 fam=0 pro=23  ind_mwtx= 1/ 0/ 0/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port rhodes      wealth=2117 (attract=1827)  grain=1572  wine=1741  m=  0 w=  0  spoil=28  food_days=120.9  unrest=  0 (Calm)  pop=13 out×1.08 fam=0 pro=26  ind_mwtx= 0/ 0/ 1/ 3      npc_wholesale buy=8u/12c sell=4u/12c
+  port rome        wealth= 967 (attract= 693)  grain=2959  wine=   0  m=  0 w=  0  spoil=38  food_days=211.4  unrest=  0 (Calm)  pop=14 out×1.08 fam=0 pro=25  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sabratha    wealth= 683 (attract= 593)  grain= 347  wine=   1  m=  0 w=  0  spoil= 7  food_days= 34.7  unrest=  0 (Calm)  pop=10 out×1.28 fam=0 pro=19  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port salamis_cyprus  wealth= 762 (attract= 600)  grain= 317  wine= 749  m=  0 w=  0  spoil= 6  food_days= 31.7  unrest=  0 (Calm)  pop=10 out×1.28 fam=0 pro=13  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=3u/9c
+  port sciacca_coast  wealth=2170 (attract=1997)  grain=7198  wine=  12  m=  0 w=  0  spoil=38  food_days=899.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=261  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=3u/10c
+  port selinus     wealth= 657 (attract= 453)  grain= 364  wine= 476  m=  0 w=  0  spoil= 7  food_days= 40.4  unrest=  0 (Calm)  pop=9 out×1.28 fam=0 pro=30  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=6u/12c
+  port sexi        wealth= 701 (attract= 578)  grain= 338  wine=   5  m=  0 w=  0  spoil= 6  food_days= 42.2  unrest=  0 (Calm)  pop=8 out×1.28 fam=0 pro=34  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sicyon_bread  wealth=2101 (attract=1904)  grain=7169  wine= 159  m=  0 w=  0  spoil=38  food_days=896.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=277  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sidon       wealth= 546 (attract= 455)  grain= 226  wine=   0  m=  0 w=  0  spoil= 4  food_days= 22.6  unrest=  0 (Calm)  pop=10 out×1.25 fam=0 pro=19  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sinope      wealth= 832 (attract= 703)  grain= 223  wine= 982  m=  0 w=  0  spoil= 4  food_days= 18.6  unrest=  0 (Calm)  pop=12 out×1.28 fam=0 pro=15  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port smyrna      wealth= 418 (attract= 234)  grain= 235  wine=  85  m=  0 w=  0  spoil= 5  food_days= 21.4  unrest=  0 (Calm)  pop=11 out×1.28 fam=0 pro=24  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port solus       wealth= 658 (attract= 565)  grain= 354  wine=   3  m=  0 w=  0  spoil= 7  food_days= 35.4  unrest=  0 (Calm)  pop=10 out×1.28 fam=0 pro=40  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sulci       wealth= 811 (attract= 639)  grain= 334  wine=   0  m= 31 w=  0  spoil= 6  food_days= 30.4  unrest=  0 (Calm)  pop=11 out×1.28 fam=0 pro=20  ind_mwtx= 5/ 2/ 0/ 0      npc_wholesale buy=1u/6c sell=7u/34c
+  port syracuse    wealth=2100 (attract=1924)  grain=1631  wine=2147  m=  0 w=  0  spoil=29  food_days=135.9  unrest=  0 (Calm)  pop=12 out×1.00 fam=0 pro=19  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=0u/0c
+  port taras       wealth=1422 (attract=1138)  grain= 972  wine=1015  m=  0 w=  0  spoil=17  food_days= 97.2  unrest=  0 (Calm)  pop=10 out×1.00 fam=0 pro=31  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=9u/13c sell=4u/24c
+  port thapsus_bread  wealth=2530 (attract=2356)  grain=9184  wine=   0  m=  5 w=  0  spoil=38  food_days=1148.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=403  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=5u/95c
+  port tharros     wealth= 788 (attract= 671)  grain= 299  wine=   4  m= 51 w=  0  spoil= 6  food_days= 21.4  unrest=  0 (Calm)  pop=14 out×1.28 fam=0 pro=17  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port tiber_mouth_bread  wealth=2271 (attract=2086)  grain=9049  wine=   0  m=  0 w=  0  spoil=38  food_days=1131.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=253  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=12u/12c sell=0u/0c
+  port tingis      wealth= 417 (attract= 210)  grain= 347  wine=   0  m= 52 w=  0  spoil= 7  food_days= 31.5  unrest=  0 (Calm)  pop=11 out×1.28 fam=0 pro=19  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=3u/18c sell=13u/66c
+  port trapezus    wealth= 781 (attract= 637)  grain= 347  wine= 878  m=  0 w=  0  spoil= 7  food_days= 43.4  unrest=  0 (Calm)  pop=8 out×1.14 fam=0 pro=22  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port troezen_coast  wealth=2146 (attract=1993)  grain=7124  wine=  13  m=  0 w=  0  spoil=38  food_days=890.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=248  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port tyre        wealth=1254 (attract=1098)  grain=1128  wine=   0  m=  0 w=  0  spoil=20  food_days= 70.5  unrest=  0 (Calm)  pop=16 out×1.14 fam=0 pro=22  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port utica       wealth= 724 (attract= 638)  grain= 279  wine=   0  m=  0 w=  0  spoil= 5  food_days= 19.9  unrest=  0 (Calm)  pop=14 out×1.28 fam=0 pro=26  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port velletri_plain  wealth=1894 (attract=1747)  grain=7248  wine=   0  m=  0 w=  0  spoil=38  food_days=906.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=262  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+
+-- after advance #2000 (calendar day 2025) --
+  player: money=0  fleet=1  cargo_cap=24  ship=93/100  port=akragas  at_sea=False  |  world_treasury=0c  |  npc: agents=2163  ships=2163  at_sea=1973  total_purse=305333
+  npc merchant balance_sheet(all)=994795c  investments=689462c  (fleet_book=519120c + cargo_mark=170342c)
+  port acre_feed   wealth=2502 (attract=2668)  grain=7489  wine= 810  m=  0 w=  0  spoil=38  food_days=936.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=623  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=4u/4c sell=14u/41c
+  port agde_bread  wealth=2662 (attract=2926)  grain=8492  wine= 811  m=  0 w=  0  spoil=38  food_days=1061.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=759  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port ager_narbonensis  wealth=2652 (attract=2990)  grain=8435  wine= 889  m=  0 w=  0  spoil=38  food_days=1054.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=848  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port akragas     wealth=7262 (attract=7546)  grain=28109  wine=1904  m=  0 w=  0  spoil=38  food_days=1756.8  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=958  ind_mwtx= 0/ 0/ 1/ 2      npc_wholesale buy=3u/8c sell=7u/134c
+  port aleria      wealth= 615 (attract= 416)  grain=1309  wine=  51  m=  0 w=  0  spoil=23  food_days=130.9  unrest=  0 (Calm)  pop=10 out×1.00 fam=0 pro=24  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=0u/0c
+  port alexandria  wealth=8104 (attract=8000)  grain=46911  wine= 918  m=  0 w=  0  spoil=38  food_days=1804.3  unrest=  0 (Calm)  pop=26 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port antipolis   wealth=1120 (attract= 920)  grain=1292  wine= 950  m=  0 w=  1  spoil=23  food_days=258.4  unrest=  0 (Calm)  pop=5 out×0.72 fam=0 pro=21  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=11u/11c sell=17u/41c
+  port antium_coast  wealth=2703 (attract=2760)  grain=7506  wine= 901  m=  0 w=  0  spoil=38  food_days=938.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=666  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=0u/0c
+  port apollonia_cyrenaica  wealth= 998 (attract= 872)  grain=1287  wine= 932  m=  0 w=  0  spoil=23  food_days=183.9  unrest=  0 (Calm)  pop=7 out×0.88 fam=0 pro=12  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=13u/13c sell=14u/48c
+  port arados      wealth=1336 (attract=1114)  grain=1259  wine=   4  m=  0 w=  0  spoil=22  food_days=139.9  unrest=  0 (Calm)  pop=9 out×0.90 fam=0 pro=13  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=9u/9c sell=13u/40c
+  port arelate_bread  wealth=2944 (attract=3128)  grain=9822  wine= 792  m=  0 w=  0  spoil=38  food_days=1227.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=691  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=1u/2c
+  port athens_piraeus  wealth=1949 (attract=1998)  grain=3203  wine=1870  m=  0 w=  0  spoil=38  food_days=228.8  unrest=  0 (Calm)  pop=14 out×0.88 fam=0 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=7u/7c sell=0u/0c
+  port baitis_estuary  wealth=3008 (attract=3208)  grain=8397  wine= 835  m=  0 w=  0  spoil=38  food_days=1049.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=907  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port byblos      wealth=1393 (attract=1004)  grain=1223  wine=   5  m=  0 w=  0  spoil=22  food_days=152.9  unrest=  0 (Calm)  pop=8 out×0.89 fam=0 pro=19  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=17u/17c sell=22u/50c
+  port byzantion   wealth= 932 (attract= 763)  grain=1310  wine= 612  m=  0 w=  0  spoil=23  food_days=100.8  unrest=  0 (Calm)  pop=13 out×1.00 fam=0 pro=20  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=0u/0c
+  port caere       wealth= 548 (attract= 527)  grain=1388  wine=  70  m=  0 w=  0  spoil=25  food_days=138.8  unrest=  0 (Calm)  pop=10 out×1.00 fam=0 pro=25  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=8u/8c sell=8u/16c
+  port caralis     wealth=1400 (attract=1275)  grain=1387  wine=   8  m=  0 w=  0  spoil=24  food_days=138.7  unrest=  0 (Calm)  pop=10 out×1.00 fam=0 pro=13  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=6u/29c
+  port carteia_coast  wealth=2766 (attract=2955)  grain=7473  wine= 780  m=  0 w=  0  spoil=38  food_days=934.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=838  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=0u/0c
+  port carthage    wealth=2250 (attract=2074)  grain=2780  wine=  92  m=  0 w=  0  spoil=38  food_days=163.5  unrest=  0 (Calm)  pop=17 out×0.89 fam=0 pro=27  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=8u/16c
+  port carthago_nova  wealth=1486 (attract=1273)  grain=1287  wine=  37  m=  0 w=  0  spoil=23  food_days=107.2  unrest=  0 (Calm)  pop=12 out×1.00 fam=0 pro=18  ind_mwtx= 5/ 2/ 0/ 0      npc_wholesale buy=9u/9c sell=11u/25c
+  port catane      wealth=6827 (attract=7097)  grain=30820  wine= 278  m=  0 w=  0  spoil=38  food_days=1926.2  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=959  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port cenchreae_bread  wealth=2762 (attract=2956)  grain=8312  wine= 798  m=  0 w=  0  spoil=38  food_days=1039.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=907  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port chalcedon   wealth=1310 (attract=1234)  grain=1787  wine=1512  m=  0 w=  0  spoil=31  food_days=297.8  unrest=  0 (Calm)  pop=6 out×1.00 fam=0 pro=9  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=9u/9c sell=8u/16c
+  port chalcis     wealth= 956 (attract= 959)  grain=1441  wine= 964  m=  0 w=  0  spoil=25  food_days=180.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=14  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=3u/6c
+  port chersonesos  wealth=7893 (attract=8000)  grain=34106  wine=1792  m=  0 w=  0  spoil=38  food_days=2131.6  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=957  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=0u/0c
+  port corinth     wealth=2164 (attract=2214)  grain=3074  wine=1300  m=  0 w=  0  spoil=38  food_days=307.4  unrest=  0 (Calm)  pop=10 out×0.83 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=1u/7c
+  port croton      wealth=1018 (attract=1026)  grain=1483  wine=1132  m=  0 w=  0  spoil=26  food_days=247.2  unrest=  0 (Calm)  pop=6 out×0.86 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=9u/31c
+  port cumae       wealth= 924 (attract= 928)  grain=1484  wine= 990  m=  0 w=  0  spoil=26  food_days=247.3  unrest=  0 (Calm)  pop=6 out×0.86 fam=0 pro=3  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=9u/9c sell=8u/24c
+  port cyrene      wealth=7516 (attract=7915)  grain=31452  wine=1896  m=  0 w=  0  spoil=38  food_days=1965.8  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=843  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/7c sell=8u/16c
+  port dor_coast_bread  wealth=2777 (attract=2955)  grain=7528  wine= 885  m=  0 w=  0  spoil=38  food_days=941.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=744  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port emporion    wealth= 841 (attract= 870)  grain=1513  wine= 784  m=  0 w=  0  spoil=27  food_days=252.2  unrest=  0 (Calm)  pop=6 out×0.86 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port ephesus     wealth=2537 (attract=2479)  grain=2766  wine=1627  m=  0 w=  0  spoil=38  food_days=251.5  unrest=  0 (Calm)  pop=11 out×0.79 fam=0 pro=15  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=12u/12c sell=13u/43c
+  port eretria     wealth= 841 (attract= 755)  grain=1287  wine= 714  m=  0 w=  0  spoil=23  food_days=257.4  unrest=  0 (Calm)  pop=5 out×0.72 fam=0 pro=28  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port gades       wealth=2412 (attract=2391)  grain=2675  wine= 241  m=  0 w=  0  spoil=38  food_days=191.1  unrest=  0 (Calm)  pop=14 out×0.88 fam=0 pro=10  ind_mwtx= 4/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port gela        wealth=7190 (attract=7480)  grain=33339  wine= 253  m=  0 w=  0  spoil=38  food_days=2083.7  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=961  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=2u/8c
+  port gythion     wealth= 878 (attract= 886)  grain=1318  wine= 879  m=  0 w=  0  spoil=23  food_days=329.5  unrest=  0 (Calm)  pop=4 out×0.72 fam=0 pro=13  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=8u/16c
+  port halicarnassus  wealth= 848 (attract= 897)  grain=1276  wine= 922  m=  0 w=  0  spoil=23  food_days=255.2  unrest=  0 (Calm)  pop=5 out×0.72 fam=0 pro=1  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=0u/0c sell=4u/25c
+  port hippo       wealth=7958 (attract=8000)  grain=39343  wine= 380  m= 69 w=  3  spoil=38  food_days=2810.2  unrest=  0 (Calm)  pop=14 out×1.00 fam=0 pro=959  ind_mwtx= 1/ 1/ 0/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port kition      wealth=1420 (attract=1357)  grain=1377  wine=   5  m=  0 w=  0  spoil=24  food_days=196.7  unrest=  0 (Calm)  pop=7 out×0.88 fam=0 pro=32  ind_mwtx= 4/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port knossos     wealth=1164 (attract=1136)  grain=1522  wine=1331  m=  0 w=  0  spoil=27  food_days=253.7  unrest=  0 (Calm)  pop=6 out×0.86 fam=0 pro=1  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=11u/11c sell=14u/28c
+  port kourion_coast  wealth=2784 (attract=2955)  grain=7431  wine= 873  m=  0 w=  0  spoil=38  food_days=928.9  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=711  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=5u/32c
+  port kydonia     wealth=1198 (attract=1300)  grain=1800  wine=1687  m=  0 w=  0  spoil=32  food_days=300.0  unrest=  0 (Calm)  pop=6 out×1.00 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port larnaca_fields  wealth=3002 (attract=3184)  grain=8541  wine= 785  m=  0 w=  0  spoil=38  food_days=1067.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=743  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=8u/16c
+  port lepcis_minor_bread  wealth=2728 (attract=2934)  grain=7522  wine= 779  m=  0 w=  0  spoil=38  food_days=940.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=696  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=0u/0c
+  port leptis_magna  wealth=1302 (attract=1238)  grain=1398  wine=  10  m=  0 w=  0  spoil=25  food_days=155.3  unrest=  0 (Calm)  pop=9 out×1.00 fam=0 pro=22  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=3u/15c
+  port licata_bread  wealth=2670 (attract=2892)  grain=8460  wine= 861  m=  0 w=  0  spoil=38  food_days=1057.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=650  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port locri       wealth= 803 (attract= 921)  grain=1391  wine= 923  m=  0 w=  0  spoil=25  food_days=231.8  unrest=  0 (Calm)  pop=6 out×0.86 fam=0 pro=1  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/12c
+  port malaka      wealth=1387 (attract=1309)  grain=1262  wine=  15  m=  0 w=  0  spoil=22  food_days=180.3  unrest=  0 (Calm)  pop=7 out×0.88 fam=0 pro=30  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port maroni_plain  wealth=2490 (attract=2701)  grain=7560  wine= 812  m=  0 w=  0  spoil=38  food_days=945.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=669  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port massalia    wealth=2245 (attract=2289)  grain=2739  wine=1672  m=  0 w=  0  spoil=38  food_days=342.4  unrest=  0 (Calm)  pop=8 out×0.73 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port mazara_bread  wealth=2664 (attract=2911)  grain=8442  wine= 908  m=  0 w=  0  spoil=38  food_days=1055.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=528  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port megara      wealth=1023 (attract=1076)  grain=1467  wine=1379  m=  0 w=  0  spoil=26  food_days=366.8  unrest=  0 (Calm)  pop=4 out×0.80 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port memphis     wealth=8070 (attract=8000)  grain=132176  wine=   4  m=  0 w=  0  spoil=38  food_days=8261.0  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port messana     wealth=5795 (attract=6025)  grain=28051  wine= 257  m=  4 w=  0  spoil=38  food_days=1402.5  unrest=  0 (Calm)  pop=20 out×1.00 fam=0 pro=861  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=4u/4c sell=0u/0c
+  port miletus     wealth=1963 (attract=2074)  grain=2853  wine=1533  m=  0 w=  0  spoil=38  food_days=570.6  unrest=  0 (Calm)  pop=5 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port motya       wealth=1288 (attract=1221)  grain=1506  wine=  45  m=  0 w=  0  spoil=27  food_days=188.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=19  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=5u/14c
+  port naucratis   wealth=8103 (attract=8000)  grain=132223  wine=1350  m=  0 w=  0  spoil=38  food_days=8263.9  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port naxos_sicily  wealth= 941 (attract= 965)  grain=1427  wine=1156  m=  0 w=  0  spoil=25  food_days=237.8  unrest=  0 (Calm)  pop=6 out×0.86 fam=0 pro=10  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port neapolis    wealth=2392 (attract=2456)  grain=3143  wine=1503  m=  0 w=  0  spoil=38  food_days=349.2  unrest=  0 (Calm)  pop=9 out×0.82 fam=0 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=2u/6c
+  port nikaia      wealth= 996 (attract= 929)  grain=1424  wine=1074  m=  0 w=  0  spoil=25  food_days=284.8  unrest=  0 (Calm)  pop=5 out×0.83 fam=0 pro=8  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=10u/10c sell=9u/20c
+  port oea         wealth=1387 (attract=1315)  grain=1529  wine=  45  m=  0 w=  0  spoil=27  food_days=218.4  unrest=  0 (Calm)  pop=7 out×1.00 fam=0 pro=23  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=1u/2c
+  port olbia_pontic  wealth=8055 (attract=8000)  grain=38940  wine=1991  m=  0 w=  0  spoil=38  food_days=2433.8  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=968  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=20u/20c sell=8u/22c
+  port olbia_sardinia  wealth=1367 (attract=1229)  grain=1489  wine=  62  m=  0 w=  0  spoil=26  food_days=186.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=26  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=9u/9c sell=23u/52c
+  port onoba_bread  wealth=2908 (attract=3110)  grain=7539  wine= 788  m=  0 w=  0  spoil=38  food_days=942.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=777  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port ostia       wealth= 516 (attract= 441)  grain=1261  wine=  48  m=  0 w=  0  spoil=22  food_days=126.1  unrest=  0 (Calm)  pop=10 out×0.91 fam=0 pro=12  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=6u/6c sell=0u/0c
+  port panormus    wealth=7589 (attract=7861)  grain=30194  wine=  87  m=  0 w=  0  spoil=38  food_days=1677.4  unrest=  0 (Calm)  pop=18 out×1.00 fam=0 pro=910  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pantikapaion  wealth=3063 (attract=3245)  grain=3910  wine=2514  m=  0 w=  0  spoil=38  food_days=279.3  unrest=  0 (Calm)  pop=14 out×1.00 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=0u/0c
+  port paphos      wealth=1014 (attract= 998)  grain=1377  wine=1039  m=  0 w=  0  spoil=24  food_days=196.7  unrest=  0 (Calm)  pop=7 out×0.88 fam=0 pro=24  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=16u/16c sell=5u/15c
+  port populonia   wealth= 573 (attract= 580)  grain=1537  wine=  61  m=  0 w=  0  spoil=27  food_days=192.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=21  ind_mwtx= 5/ 2/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port poseidonia  wealth= 770 (attract= 743)  grain=1306  wine= 620  m=  0 w=  0  spoil=23  food_days=326.5  unrest=  0 (Calm)  pop=4 out×0.72 fam=0 pro=14  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/7c sell=9u/27c
+  port ptolemais_akkaron  wealth=2537 (attract=2689)  grain=7474  wine= 864  m=  0 w=  0  spoil=38  food_days=934.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=661  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pupput_fields  wealth=2957 (attract=3179)  grain=8529  wine= 871  m=  0 w=  0  spoil=38  food_days=1066.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=722  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pyrgi       wealth= 563 (attract= 497)  grain=1477  wine= 193  m=  0 w=  0  spoil=26  food_days=246.2  unrest=  0 (Calm)  pop=6 out×1.00 fam=0 pro=13  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=7u/7c sell=8u/16c
+  port rhegium     wealth=1004 (attract= 997)  grain=1506  wine=1132  m=  8 w=  0  spoil=27  food_days=251.0  unrest=  0 (Calm)  pop=6 out×0.86 fam=0 pro=3  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=6u/6c sell=5u/15c
+  port rhode_iberia  wealth=1006 (attract=1068)  grain=1451  wine=1361  m=  0 w=  0  spoil=26  food_days=362.8  unrest=  0 (Calm)  pop=4 out×0.80 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port rhodes      wealth=2796 (attract=2779)  grain=3223  wine=1737  m=  0 w=  0  spoil=38  food_days=230.2  unrest=  0 (Calm)  pop=14 out×1.00 fam=0 pro=16  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port rome        wealth=1247 (attract=1174)  grain=3987  wine= 562  m=  0 w=  0  spoil=38  food_days=306.7  unrest=  0 (Calm)  pop=13 out×0.87 fam=0 pro=26  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/8c
+  port sabratha    wealth=1158 (attract=1173)  grain=1469  wine=  53  m=  0 w=  0  spoil=26  food_days=209.9  unrest=  0 (Calm)  pop=7 out×1.00 fam=0 pro=11  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port salamis_cyprus  wealth=1050 (attract=1014)  grain=1435  wine=1097  m=  0 w=  0  spoil=25  food_days=205.0  unrest=  0 (Calm)  pop=7 out×0.88 fam=0 pro=8  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=2u/12c
+  port sciacca_coast  wealth=2702 (attract=2907)  grain=7479  wine= 832  m=  0 w=  0  spoil=38  food_days=934.9  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=607  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port selinus     wealth= 788 (attract= 778)  grain=1305  wine= 716  m=  0 w=  0  spoil=23  food_days=217.5  unrest=  0 (Calm)  pop=6 out×0.86 fam=0 pro=20  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=9u/36c
+  port sexi        wealth=1163 (attract=1188)  grain=1328  wine=  43  m=  0 w=  0  spoil=23  food_days=189.7  unrest=  0 (Calm)  pop=7 out×0.88 fam=0 pro=16  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sicyon_bread  wealth=2524 (attract=2702)  grain=7431  wine= 903  m=  0 w=  0  spoil=38  food_days=928.9  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=450  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=6u/12c
+  port sidon       wealth=1057 (attract= 998)  grain=1352  wine=  31  m=  0 w=  0  spoil=24  food_days=193.1  unrest=  0 (Calm)  pop=7 out×0.88 fam=0 pro=22  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sinope      wealth=1024 (attract=1084)  grain=1481  wine=1197  m=  0 w=  0  spoil=26  food_days=246.8  unrest=  0 (Calm)  pop=6 out×0.86 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port smyrna      wealth= 894 (attract= 922)  grain=1514  wine=1000  m=  0 w=  0  spoil=27  food_days=252.3  unrest=  0 (Calm)  pop=6 out×0.86 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port solus       wealth=1159 (attract=1152)  grain=1395  wine=  43  m=  0 w=  0  spoil=25  food_days=199.3  unrest=  0 (Calm)  pop=7 out×0.88 fam=0 pro=24  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=3u/12c
+  port sulci       wealth=1415 (attract=1358)  grain=1327  wine=  10  m=  0 w=  0  spoil=23  food_days=165.9  unrest=  0 (Calm)  pop=8 out×0.89 fam=0 pro=13  ind_mwtx= 4/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port syracuse    wealth=2232 (attract=2326)  grain=2794  wine=1717  m=  0 w=  0  spoil=38  food_days=310.4  unrest=  0 (Calm)  pop=9 out×0.75 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port taras       wealth=2226 (attract=2235)  grain=2770  wine=1517  m=  0 w=  0  spoil=38  food_days=395.7  unrest=  0 (Calm)  pop=7 out×0.72 fam=0 pro=13  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port thapsus_bread  wealth=2969 (attract=3190)  grain=8518  wine= 777  m=  0 w=  0  spoil=38  food_days=1064.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=828  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port tharros     wealth=1471 (attract=1403)  grain=1456  wine=  25  m= 24 w=  0  spoil=26  food_days=161.8  unrest=  0 (Calm)  pop=9 out×1.00 fam=0 pro=18  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port tiber_mouth_bread  wealth=2511 (attract=2688)  grain=8422  wine= 838  m=  0 w=  0  spoil=38  food_days=1052.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=598  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/8c
+  port tingis      wealth= 541 (attract= 412)  grain=1318  wine=  50  m=  8 w=  0  spoil=23  food_days=146.4  unrest=  0 (Calm)  pop=9 out×1.00 fam=0 pro=13  ind_mwtx= 1/ 1/ 1/ 0      npc_wholesale buy=3u/3c sell=4u/13c
+  port trapezus    wealth= 892 (attract= 902)  grain=1251  wine=1057  m=  0 w=  0  spoil=22  food_days=250.2  unrest=  0 (Calm)  pop=5 out×0.72 fam=0 pro=18  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=10u/10c sell=6u/12c
+  port troezen_coast  wealth=2775 (attract=2968)  grain=7442  wine= 836  m=  0 w=  0  spoil=38  food_days=930.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=584  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port tyre        wealth=2292 (attract=2240)  grain=2708  wine= 129  m=  0 w=  0  spoil=38  food_days=193.4  unrest=  0 (Calm)  pop=14 out×0.82 fam=0 pro=24  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=8u/16c
+  port utica       wealth=1406 (attract=1409)  grain=1569  wine=  43  m=  0 w=  0  spoil=28  food_days=174.3  unrest=  0 (Calm)  pop=9 out×1.12 fam=0 pro=15  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port velletri_plain  wealth=2282 (attract=2470)  grain=7549  wine= 870  m=  0 w=  0  spoil=38  food_days=943.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=570  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+
+-- after advance #3000 (calendar day 3025) --
+  player: money=0  fleet=1  cargo_cap=24  ship=83/100  port=akragas  at_sea=False  |  world_treasury=0c  |  npc: agents=2172  ships=2172  at_sea=2004  total_purse=320937
+  npc merchant balance_sheet(all)=1035241c  investments=714304c  (fleet_book=521280c + cargo_mark=193024c)
+  port acre_feed   wealth=1337 (attract=1278)  grain= 182  wine=   0  m=  0 w=  0  spoil= 4  food_days= 22.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port agde_bread  wealth=1521 (attract=1446)  grain= 556  wine=   0  m=  0 w=  0  spoil=10  food_days= 69.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/5c sell=0u/0c
+  port ager_narbonensis  wealth=1602 (attract=1489)  grain= 505  wine=   1  m=  0 w=  0  spoil= 9  food_days= 63.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port akragas     wealth=5797 (attract=5514)  grain=19564  wine=   0  m=  0 w=  0  spoil=38  food_days=1222.8  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=35u/35c sell=16u/50c
+  port aleria      wealth= 369 (attract= 128)  grain=   5  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.8  unrest= 15 (Calm)  pop=6 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 1/ 1      npc_wholesale buy=4u/19c sell=13u/69c
+  port alexandria  wealth=8116 (attract=8000)  grain=41489  wine=   0  m=  0 w=  0  spoil=38  food_days=1595.7  unrest=  0 (Calm)  pop=26 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port antipolis   wealth= 241 (attract= 164)  grain=   2  wine=   0  m=  4 w=  0  spoil= 1  food_days=  0.5  unrest=  4 (Calm)  pop=4 out×0.72 fam=0 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port antium_coast  wealth=1359 (attract=1292)  grain= 150  wine=   1  m=  0 w=  0  spoil= 3  food_days= 18.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port apollonia_cyrenaica  wealth= 308 (attract= 172)  grain=  25  wine=   0  m=  0 w=  0  spoil= 1  food_days=  4.2  unrest=  4 (Calm)  pop=6 out×0.75 fam=0 pro=25  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=3u/12c
+  port arados      wealth=1579 (attract=1327)  grain=  17  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.4  unrest= 32 (Calm)  pop=7 out×0.72 fam=0 pro=5  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/5c sell=5u/15c
+  port arelate_bread  wealth=1678 (attract=1571)  grain=1361  wine=   0  m=  0 w=  0  spoil=24  food_days=170.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=15u/15c sell=6u/22c
+  port athens_piraeus  wealth= 882 (attract= 739)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=16 out×0.89 fam=26 pro=0  ind_mwtx= 3/ 3/ 0/ 0      npc_wholesale buy=0u/0c sell=2u/8c
+  port baitis_estuary  wealth=1971 (attract=1839)  grain= 482  wine=   1  m=  0 w=  0  spoil= 9  food_days= 60.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=8u/8c sell=0u/0c
+  port byblos      wealth=1144 (attract=1057)  grain=   2  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.5  unrest=  6 (Calm)  pop=4 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=3u/12c
+  port byzantion   wealth= 335 (attract= 208)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=8 out×0.72 fam=8 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port caere       wealth= 491 (attract= 354)  grain=   1  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.2  unrest=  4 (Calm)  pop=6 out×0.72 fam=0 pro=8  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=2u/6c sell=4u/18c
+  port caralis     wealth=1747 (attract=1432)  grain=   4  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.6  unrest= 27 (Calm)  pop=7 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=18u/18c sell=8u/16c
+  port carteia_coast  wealth=1743 (attract=1694)  grain= 151  wine=   0  m=  0 w=  0  spoil= 3  food_days= 18.9  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port carthage    wealth=2381 (attract=2249)  grain=   2  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.2  unrest=180 (Critical)  pop=13 out×0.72 fam=9 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=7u/11c sell=11u/39c
+  port carthago_nova  wealth=1726 (attract=1525)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=8 out×0.72 fam=20 pro=0  ind_mwtx= 3/ 1/ 0/ 0      npc_wholesale buy=4u/12c sell=5u/25c
+  port catane      wealth=6130 (attract=5890)  grain=22056  wine=   0  m=  0 w=  0  spoil=38  food_days=1378.5  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 1/ 1      npc_wholesale buy=10u/10c sell=6u/18c
+  port cenchreae_bread  wealth=1653 (attract=1535)  grain= 379  wine=   0  m=  0 w=  0  spoil= 7  food_days= 47.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=3u/10c
+  port chalcedon   wealth= 208 (attract= 107)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=193 (Critical)  pop=5 out×0.72 fam=24 pro=0  ind_mwtx= 0/ 0/ 0/ 1  W32  npc_wholesale buy=0u/0c sell=1u/14c
+  port chalcis     wealth= 350 (attract= 250)  grain=  29  wine=   0  m=  0 w=  0  spoil= 1  food_days=  4.1  unrest=174 (Critical)  pop=7 out×0.72 fam=19 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/27c sell=24u/170c
+  port chersonesos  wealth=7039 (attract=6833)  grain=27419  wine=   0  m=  0 w=  0  spoil=38  food_days=1713.7  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=0u/0c
+  port corinth     wealth=1540 (attract=1473)  grain=   0  wine=   0  m=  3 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=9 out×0.72 fam=10 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=3u/54c
+  port croton      wealth= 327 (attract= 200)  grain=   7  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.8  unrest=  4 (Calm)  pop=4 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=5u/20c
+  port cumae       wealth= 324 (attract= 188)  grain=   0  wine=   0  m=  0 w=  2  spoil= 0  food_days=  0.0  unrest= 79 (Tense)  pop=4 out×0.72 fam=3 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=23u/23c sell=10u/48c
+  port cyrene      wealth=6530 (attract=6280)  grain=25177  wine=   0  m=  0 w=  0  spoil=38  food_days=1573.6  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=1u/5c
+  port dor_coast_bread  wealth=1754 (attract=1612)  grain=  73  wine=   1  m=  0 w=  0  spoil= 2  food_days=  9.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=8u/16c
+  port emporion    wealth= 320 (attract= 258)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=186 (Critical)  pop=6 out×0.75 fam=18 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port ephesus     wealth=1750 (attract=1634)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=12 out×0.80 fam=13 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port eretria     wealth= 297 (attract= 207)  grain=   0  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.0  unrest=  6 (Calm)  pop=5 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/18c sell=6u/24c
+  port gades       wealth=2660 (attract=2567)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=11 out×0.72 fam=21 pro=0  ind_mwtx= 3/ 1/ 0/ 0      npc_wholesale buy=5u/21c sell=0u/0c
+  port gela        wealth=6943 (attract=6645)  grain=26846  wine=   0  m=  0 w=  0  spoil=38  food_days=1677.9  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=8u/16c
+  port gythion     wealth= 400 (attract= 230)  grain=   7  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.8  unrest=  4 (Calm)  pop=4 out×0.72 fam=0 pro=9  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=15u/93c sell=0u/0c
+  port halicarnassus  wealth= 399 (attract= 324)  grain=   0  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.0  unrest=144 (Critical)  pop=4 out×0.72 fam=15 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=1u/5c
+  port hippo       wealth=8182 (attract=8000)  grain=37056  wine=   0  m= 38 w=  0  spoil=38  food_days=2646.9  unrest=  0 (Calm)  pop=14 out×1.00 fam=0 pro=999  ind_mwtx= 1/ 1/ 0/ 1      npc_wholesale buy=8u/12c sell=2u/10c
+  port kition      wealth=1933 (attract=1679)  grain=   8  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.0  unrest= 43 (Uneasy)  pop=4 out×0.72 fam=18 pro=5  ind_mwtx= 3/ 1/ 0/ 0      npc_wholesale buy=19u/31c sell=22u/50c
+  port knossos     wealth= 480 (attract= 271)  grain=   7  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.2  unrest= 99 (Critical)  pop=6 out×0.86 fam=20 pro=0  ind_mwtx= 0/ 0/ 2/ 1      npc_wholesale buy=5u/10c sell=5u/16c
+  port kourion_coast  wealth=1639 (attract=1614)  grain= 192  wine=   1  m=  0 w=  0  spoil= 4  food_days= 24.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port kydonia     wealth= 373 (attract= 109)  grain=   3  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.6  unrest= 38 (Calm)  pop=5 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/6c sell=4u/31c
+  port larnaca_fields  wealth=1938 (attract=1849)  grain= 686  wine=   0  m=  0 w=  0  spoil=12  food_days= 85.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port lepcis_minor_bread  wealth=1745 (attract=1658)  grain= 167  wine=   0  m=  0 w=  0  spoil= 3  food_days= 18.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0  W7  npc_wholesale buy=0u/0c sell=0u/0c
+  port leptis_magna  wealth=1562 (attract=1428)  grain=  13  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.6  unrest=163 (Critical)  pop=5 out×0.72 fam=16 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/2c sell=11u/62c
+  port licata_bread  wealth=1461 (attract=1373)  grain= 652  wine=   0  m=  0 w=  0  spoil=12  food_days= 81.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port locri       wealth= 446 (attract= 274)  grain=  13  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.6  unrest=  4 (Calm)  pop=5 out×0.72 fam=0 pro=12  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/6c sell=11u/52c
+  port malaka      wealth=1744 (attract=1601)  grain=  38  wine=   0  m=  0 w=  0  spoil= 1  food_days=  7.6  unrest=  4 (Calm)  pop=5 out×0.72 fam=0 pro=31  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/7c sell=0u/0c
+  port maroni_plain  wealth=1402 (attract=1314)  grain= 200  wine=   0  m=  0 w=  0  spoil= 4  food_days= 25.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=9u/9c sell=8u/16c
+  port massalia    wealth=1551 (attract=1378)  grain=  10  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.1  unrest=  4 (Calm)  pop=9 out×0.82 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=0u/0c
+  port mazara_bread  wealth=1486 (attract=1387)  grain= 598  wine=   1  m=  0 w=  0  spoil=11  food_days= 74.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port megara      wealth= 285 (attract= 111)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=  6 (Calm)  pop=4 out×0.80 fam=0 pro=0  ind_mwtx= 0/ 1/ 0/ 2  W2  npc_wholesale buy=12u/83c sell=12u/125c
+  port memphis     wealth=8129 (attract=8000)  grain=160887  wine=   0  m=  0 w=  0  spoil=38  food_days=10055.4  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/6c sell=5u/10c
+  port messana     wealth=4563 (attract=4366)  grain=18474  wine=   0  m=  0 w=  0  spoil=38  food_days=923.7  unrest=  0 (Calm)  pop=20 out×1.00 fam=0 pro=999  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port miletus     wealth=1304 (attract=1175)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest= 96 (Critical)  pop=7 out×0.72 fam=16 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/6c sell=4u/16c
+  port motya       wealth=1553 (attract=1444)  grain=   1  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.2  unrest= 63 (Uneasy)  pop=6 out×0.75 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=10u/10c sell=0u/0c
+  port naucratis   wealth=8164 (attract=8000)  grain=160148  wine=   0  m=  0 w=  2  spoil=38  food_days=10009.2  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port naxos_sicily  wealth= 286 (attract= 113)  grain=   5  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.2  unrest=  4 (Calm)  pop=4 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=21u/141c sell=13u/149c
+  port neapolis    wealth=1981 (attract=1690)  grain=  18  wine=   3  m=  3 w=  0  spoil= 1  food_days=  2.0  unrest=152 (Critical)  pop=9 out×0.72 fam=13 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=14u/14c sell=19u/130c
+  port nikaia      wealth= 223 (attract= 173)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest= 89 (Critical)  pop=4 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port oea         wealth=1461 (attract=1389)  grain=   2  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.5  unrest= 30 (Calm)  pop=4 out×0.72 fam=25 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port olbia_pontic  wealth=8099 (attract=7939)  grain=34554  wine=   0  m=  0 w=  0  spoil=38  food_days=2159.6  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 2      npc_wholesale buy=4u/4c sell=2u/4c
+  port olbia_sardinia  wealth=1503 (attract=1397)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=155 (Critical)  pop=6 out×0.75 fam=3 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port onoba_bread  wealth=1954 (attract=1883)  grain= 184  wine=   0  m=  0 w=  0  spoil= 4  food_days= 23.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=1u/12c
+  port ostia       wealth= 446 (attract= 208)  grain=  32  wine=   0  m=  0 w=  0  spoil= 1  food_days=  6.4  unrest=135 (Critical)  pop=5 out×0.72 fam=15 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=17u/23c sell=21u/80c
+  port panormus    wealth=7670 (attract=7507)  grain=23093  wine=   0  m=  0 w=  0  spoil=38  food_days=1282.9  unrest=  0 (Calm)  pop=18 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/6c sell=1u/9c
+  port pantikapaion  wealth=1902 (attract=1830)  grain=   9  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.8  unrest=188 (Critical)  pop=12 out×0.80 fam=22 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=9u/18c sell=10u/60c
+  port paphos      wealth= 490 (attract= 265)  grain=  35  wine=   0  m=  1 w=  0  spoil= 1  food_days=  5.0  unrest=  4 (Calm)  pop=7 out×0.88 fam=0 pro=8  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=8u/79c sell=13u/163c
+  port populonia   wealth= 322 (attract= 275)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=158 (Critical)  pop=5 out×0.72 fam=8 pro=0  ind_mwtx= 3/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port poseidonia  wealth= 378 (attract= 259)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=102 (Critical)  pop=5 out×0.72 fam=12 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port ptolemais_akkaron  wealth=1327 (attract=1248)  grain= 138  wine=   0  m=  0 w=  0  spoil= 3  food_days= 17.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pupput_fields  wealth=1852 (attract=1762)  grain= 652  wine=   1  m=  0 w=  0  spoil=12  food_days= 81.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pyrgi       wealth= 250 (attract= 121)  grain=  13  wine=   0  m=  0 w=  0  spoil= 1  food_days=  3.2  unrest=169 (Critical)  pop=4 out×0.72 fam=76 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=1u/4c
+  port rhegium     wealth= 349 (attract= 195)  grain=   1  wine=   0  m=  2 w=  0  spoil= 1  food_days=  0.2  unrest= 82 (Tense)  pop=5 out×0.72 fam=0 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=3u/25c
+  port rhode_iberia  wealth= 199 (attract= 129)  grain=   0  wine=   0  m=  1 w=  0  spoil= 0  food_days=  0.0  unrest=166 (Critical)  pop=4 out×0.80 fam=36 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port rhodes      wealth=2034 (attract=1906)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=182 (Critical)  pop=12 out×0.72 fam=11 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=15u/18c sell=3u/9c
+  port rome        wealth= 432 (attract= 132)  grain=   0  wine=   3  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=162 (Critical)  pop=11 out×0.72 fam=13 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=9u/102c sell=12u/483c
+  port sabratha    wealth=1350 (attract=1255)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest= 32 (Calm)  pop=4 out×0.72 fam=63 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=0u/0c
+  port salamis_cyprus  wealth= 306 (attract= 229)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=126 (Critical)  pop=5 out×0.72 fam=25 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sciacca_coast  wealth=1658 (attract=1580)  grain= 194  wine=   0  m=  0 w=  0  spoil= 4  food_days= 24.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port selinus     wealth= 286 (attract= 218)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=  4 (Calm)  pop=4 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sexi        wealth=1451 (attract=1316)  grain=  11  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.2  unrest=  4 (Calm)  pop=5 out×0.72 fam=0 pro=13  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=6u/18c
+  port sicyon_bread  wealth=1405 (attract=1268)  grain= 142  wine=   0  m=  0 w=  0  spoil= 3  food_days= 17.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=969  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=9u/30c
+  port sidon       wealth=1270 (attract=1150)  grain=   3  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.8  unrest= 69 (Tense)  pop=4 out×0.72 fam=0 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=4u/16c
+  port sinope      wealth= 364 (attract= 289)  grain=   4  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.7  unrest=162 (Critical)  pop=6 out×0.86 fam=9 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=9u/43c
+  port smyrna      wealth= 275 (attract= 185)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=111 (Critical)  pop=4 out×0.72 fam=44 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/8c
+  port solus       wealth=1319 (attract=1254)  grain=   0  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.0  unrest=  4 (Calm)  pop=4 out×0.72 fam=0 pro=6  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sulci       wealth=1799 (attract=1630)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest= 10 (Calm)  pop=5 out×0.72 fam=0 pro=0  ind_mwtx= 4/ 1/ 0/ 0      npc_wholesale buy=19u/39c sell=8u/16c
+  port syracuse    wealth=1399 (attract=1341)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=186 (Critical)  pop=8 out×0.72 fam=13 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port taras       wealth=1743 (attract=1479)  grain=   2  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.2  unrest=178 (Critical)  pop=11 out×0.85 fam=18 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=10u/36c
+  port thapsus_bread  wealth=1993 (attract=1868)  grain= 564  wine=   0  m=  0 w=  0  spoil=10  food_days= 70.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port tharros     wealth=1722 (attract=1642)  grain=   0  wine=   0  m= 20 w=  0  spoil= 0  food_days=  0.0  unrest= 69 (Tense)  pop=5 out×0.72 fam=0 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port tiber_mouth_bread  wealth=1123 (attract=1071)  grain= 549  wine=   1  m=  0 w=  0  spoil=10  food_days= 68.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port tingis      wealth= 354 (attract= 122)  grain=   3  wine=   2  m= 13 w=  0  spoil= 1  food_days=  0.5  unrest=  4 (Calm)  pop=6 out×0.72 fam=0 pro=0  ind_mwtx= 1/ 0/ 1/ 1      npc_wholesale buy=8u/32c sell=17u/181c
+  port trapezus    wealth= 230 (attract= 164)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest= 66 (Tense)  pop=4 out×0.72 fam=7 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port troezen_coast  wealth=1756 (attract=1689)  grain= 118  wine=   0  m=  0 w=  0  spoil= 3  food_days= 14.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port tyre        wealth=2601 (attract=2528)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=14 out×0.74 fam=20 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port utica       wealth=1749 (attract=1600)  grain=   0  wine=   0  m=  4 w=  4  spoil= 0  food_days=  0.0  unrest=148 (Critical)  pop=6 out×0.72 fam=24 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/6c sell=8u/154c
+  port velletri_plain  wealth=1027 (attract= 958)  grain= 165  wine=   3  m=  0 w=  0  spoil= 3  food_days= 20.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+
+-- after advance #4000 (calendar day 4025) --
+  player: money=0  fleet=1  cargo_cap=24  ship=68/100  port=akragas  at_sea=False  |  world_treasury=0c  |  npc: agents=2174  ships=2174  at_sea=1991  total_purse=312264
+  npc merchant balance_sheet(all)=1022538c  investments=710274c  (fleet_book=521760c + cargo_mark=188514c)
+  port acre_feed   wealth=2036 (attract=1916)  grain=1485  wine=   0  m=  0 w=  0  spoil=26  food_days=185.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port agde_bread  wealth=2345 (attract=2303)  grain=2947  wine=   0  m=  0 w=  0  spoil=38  food_days=368.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port ager_narbonensis  wealth=2545 (attract=2423)  grain=3208  wine=   1  m=  0 w=  0  spoil=38  food_days=401.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port akragas     wealth=7703 (attract=7365)  grain=26155  wine=   0  m=  1 w=  0  spoil=38  food_days=1634.7  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 1/ 0/ 1/ 0      npc_wholesale buy=6u/9c sell=7u/68c
+  port aleria      wealth= 366 (attract= 160)  grain=  20  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.9  unrest=180 (Critical)  pop=7 out×0.72 fam=23 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/17c sell=3u/18c
+  port alexandria  wealth=8322 (attract=8000)  grain=56373  wine=   0  m=  0 w=  0  spoil=38  food_days=2168.2  unrest=  0 (Calm)  pop=26 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=15u/15c sell=0u/0c
+  port antipolis   wealth= 330 (attract= 151)  grain=  18  wine=   0  m=  0 w=  3  spoil= 1  food_days=  3.0  unrest=188 (Critical)  pop=6 out×0.72 fam=24 pro=0  ind_mwtx= 0/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port antium_coast  wealth=2124 (attract=1989)  grain=1872  wine=   0  m=  0 w=  0  spoil=33  food_days=234.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=0u/0c sell=1u/8c
+  port apollonia_cyrenaica  wealth= 391 (attract= 216)  grain=   5  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.6  unrest=180 (Critical)  pop=8 out×1.00 fam=9 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/7c sell=6u/30c
+  port arados      wealth=1950 (attract=1806)  grain=  14  wine=   0  m=  4 w=  0  spoil= 1  food_days=  1.4  unrest=180 (Critical)  pop=10 out×1.00 fam=11 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=15u/30c sell=11u/107c
+  port arelate_bread  wealth=2699 (attract=2585)  grain=4654  wine=   0  m=  0 w=  0  spoil=38  food_days=581.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port athens_piraeus  wealth=1056 (attract= 923)  grain=   4  wine=   0  m=  2 w=  0  spoil= 1  food_days=  0.2  unrest=180 (Critical)  pop=20 out×1.00 fam=20 pro=0  ind_mwtx= 2/ 1/ 1/ 0      npc_wholesale buy=0u/0c sell=8u/82c
+  port baitis_estuary  wealth=2929 (attract=2830)  grain=2991  wine=   0  m=  0 w=  0  spoil=38  food_days=373.9  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port byblos      wealth=1656 (attract=1455)  grain=   2  wine=   0  m=  2 w=  0  spoil= 1  food_days=  0.3  unrest=178 (Critical)  pop=7 out×0.78 fam=10 pro=0  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=8u/24c
+  port byzantion   wealth= 537 (attract= 265)  grain=  10  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.7  unrest=188 (Critical)  pop=15 out×1.15 fam=12 pro=0  ind_mwtx= 0/ 0/ 0/ 2      npc_wholesale buy=10u/10c sell=14u/95c
+  port caere       wealth= 569 (attract= 432)  grain=   3  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.3  unrest=188 (Critical)  pop=9 out×0.82 fam=13 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=3u/6c sell=1u/6c
+  port caralis     wealth=2028 (attract=1873)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=10 out×0.91 fam=19 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=9u/22c
+  port carteia_coast  wealth=2643 (attract=2501)  grain=1939  wine=   0  m=  0 w=  0  spoil=34  food_days=242.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=3u/3c sell=0u/0c
+  port carthage    wealth=3223 (attract=3034)  grain=  14  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.7  unrest=180 (Critical)  pop=19 out×0.90 fam=17 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=5u/10c sell=23u/204c
+  port carthago_nova  wealth=2289 (attract=2024)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=12 out×1.00 fam=18 pro=0  ind_mwtx= 5/ 2/ 0/ 0      npc_wholesale buy=6u/8c sell=10u/28c
+  port catane      wealth=7959 (attract=7720)  grain=29046  wine=   0  m=  3 w=  0  spoil=38  food_days=1815.4  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=0u/0c
+  port cenchreae_bread  wealth=2532 (attract=2473)  grain=3084  wine=   0  m=  0 w=  0  spoil=38  food_days=385.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=1u/4c
+  port chalcedon   wealth= 326 (attract= 114)  grain=   0  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.0  unrest=180 (Critical)  pop=7 out×0.72 fam=15 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/48c sell=5u/62c
+  port chalcis     wealth= 383 (attract= 271)  grain=  13  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.3  unrest=188 (Critical)  pop=10 out×1.00 fam=24 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=11u/21c sell=2u/8c
+  port chersonesos  wealth=8231 (attract=8000)  grain=36385  wine=   0  m=  0 w=  0  spoil=38  food_days=2274.1  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=11u/19c sell=8u/16c
+  port corinth     wealth=2051 (attract=1892)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=171 (Critical)  pop=15 out×1.15 fam=16 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=27u/34c sell=9u/32c
+  port croton      wealth= 383 (attract= 232)  grain=  49  wine=   0  m=  0 w=  0  spoil= 1  food_days= 12.2  unrest=178 (Critical)  pop=4 out×0.72 fam=10 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=0u/0c
+  port cumae       wealth= 239 (attract= 183)  grain=   4  wine=   0  m=  2 w=  0  spoil= 1  food_days=  0.6  unrest=188 (Critical)  pop=7 out×0.78 fam=17 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=7u/70c
+  port cyrene      wealth=8143 (attract=8000)  grain=34095  wine=   0  m=  0 w=  0  spoil=38  food_days=2130.9  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/7c sell=1u/2c
+  port dor_coast_bread  wealth=2511 (attract=2434)  grain=2001  wine=   0  m=  0 w=  0  spoil=35  food_days=250.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port emporion    wealth= 417 (attract= 285)  grain=  15  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.7  unrest=178 (Critical)  pop=9 out×1.00 fam=12 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=19u/29c sell=27u/106c
+  port ephesus     wealth=2395 (attract=2122)  grain=  21  wine=   1  m=  0 w=  0  spoil= 1  food_days=  1.3  unrest=180 (Critical)  pop=16 out×1.07 fam=10 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=9u/24c sell=33u/137c
+  port eretria     wealth= 382 (attract= 289)  grain=  19  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.4  unrest=178 (Critical)  pop=8 out×1.00 fam=14 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=8u/40c
+  port gades       wealth=3494 (attract=3366)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=15 out×0.83 fam=11 pro=0  ind_mwtx= 4/ 1/ 0/ 0      npc_wholesale buy=2u/2c sell=2u/8c
+  port gela        wealth=8150 (attract=8000)  grain=35624  wine=   0  m=  0 w=  0  spoil=38  food_days=2226.5  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port gythion     wealth= 387 (attract= 298)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=7 out×1.00 fam=15 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/10c sell=6u/30c
+  port halicarnassus  wealth= 440 (attract= 380)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=7 out×1.00 fam=24 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port hippo       wealth=8169 (attract=8000)  grain=49034  wine=   0  m= 58 w=  0  spoil=38  food_days=3502.4  unrest=  0 (Calm)  pop=14 out×1.00 fam=0 pro=999  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port kition      wealth=2424 (attract=2225)  grain=   0  wine=   0  m= 15 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=8 out×1.00 fam=18 pro=0  ind_mwtx= 5/ 2/ 0/ 0      npc_wholesale buy=19u/59c sell=15u/74c
+  port knossos     wealth= 385 (attract= 288)  grain=   3  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.3  unrest=180 (Critical)  pop=9 out×1.28 fam=25 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=5u/24c
+  port kourion_coast  wealth=2582 (attract=2399)  grain=1892  wine=   0  m=  0 w=  0  spoil=33  food_days=236.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=13u/13c sell=8u/16c
+  port kydonia     wealth= 295 (attract= 115)  grain=   6  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.9  unrest=180 (Critical)  pop=7 out×0.78 fam=27 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=13u/42c
+  port larnaca_fields  wealth=2943 (attract=2834)  grain=3322  wine=   0  m=  0 w=  0  spoil=38  food_days=415.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port lepcis_minor_bread  wealth=2590 (attract=2475)  grain=1907  wine=   0  m=  0 w=  1  spoil=33  food_days=238.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=1u/12c
+  port leptis_magna  wealth=1991 (attract=1918)  grain=   1  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.1  unrest=188 (Critical)  pop=9 out×0.90 fam=18 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/11c sell=0u/0c
+  port licata_bread  wealth=2319 (attract=2240)  grain=3261  wine=   0  m=  0 w=  0  spoil=38  food_days=407.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port locri       wealth= 417 (attract= 330)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=8 out×0.89 fam=8 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port malaka      wealth=2309 (attract=2095)  grain=  10  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.2  unrest=188 (Critical)  pop=8 out×0.89 fam=17 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=10u/30c
+  port maroni_plain  wealth=2156 (attract=2024)  grain=2019  wine=   0  m=  0 w=  0  spoil=35  food_days=252.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=0u/0c
+  port massalia    wealth=1946 (attract=1881)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=13 out×1.08 fam=9 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port mazara_bread  wealth=2386 (attract=2255)  grain=3055  wine=   1  m=  0 w=  0  spoil=38  food_days=381.9  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 1/ 1      npc_wholesale buy=13u/13c sell=1u/13c
+  port megara      wealth= 236 (attract= 142)  grain=   2  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.4  unrest=178 (Critical)  pop=5 out×1.00 fam=13 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port memphis     wealth=8084 (attract=8000)  grain=214138  wine=   0  m=  0 w=  0  spoil=38  food_days=13383.6  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 1/ 0/ 0/ 1      npc_wholesale buy=6u/6c sell=8u/16c
+  port messana     wealth=5893 (attract=5710)  grain=24379  wine=   0  m=  1 w=  0  spoil=38  food_days=1219.0  unrest=  0 (Calm)  pop=20 out×1.00 fam=0 pro=999  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=2u/2c sell=8u/16c
+  port miletus     wealth=1662 (attract=1550)  grain=   0  wine=   0  m=  0 w=  1  spoil= 0  food_days=  0.0  unrest=172 (Critical)  pop=12 out×1.09 fam=23 pro=0  ind_mwtx= 0/ 3/ 0/ 0      npc_wholesale buy=6u/12c sell=10u/46c
+  port motya       wealth=2005 (attract=1910)  grain=   1  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.1  unrest=178 (Critical)  pop=8 out×0.89 fam=11 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/4c sell=2u/10c
+  port naucratis   wealth=8276 (attract=8000)  grain=215420  wine=   0  m=  0 w=  0  spoil=38  food_days=13463.8  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=9u/9c sell=16u/32c
+  port naxos_sicily  wealth= 336 (attract= 118)  grain=  10  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.7  unrest=180 (Critical)  pop=6 out×0.72 fam=8 pro=0  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=7u/52c sell=19u/113c
+  port neapolis    wealth=2200 (attract=2130)  grain=   0  wine=   0  m=  9 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=14 out×0.93 fam=21 pro=0  ind_mwtx= 2/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port nikaia      wealth= 301 (attract= 129)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=6 out×0.75 fam=15 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/13c sell=8u/42c
+  port oea         wealth=1738 (attract=1625)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=6 out×0.72 fam=10 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/3c sell=8u/23c
+  port olbia_pontic  wealth=8110 (attract=8000)  grain=45395  wine=   0  m=  0 w=  0  spoil=38  food_days=2837.2  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=19u/19c sell=8u/16c
+  port olbia_sardinia  wealth=2027 (attract=1935)  grain=   0  wine=   2  m=  5 w=  0  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=9 out×1.12 fam=15 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=11u/149c
+  port onoba_bread  wealth=2882 (attract=2782)  grain=2056  wine=   0  m=  0 w=  0  spoil=36  food_days=257.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port ostia       wealth= 442 (attract= 200)  grain=   0  wine=   0  m=  0 w=  2  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=9 out×0.82 fam=23 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=6u/7c sell=9u/186c
+  port panormus    wealth=8158 (attract=8000)  grain=31157  wine=   0  m=  0 w=  0  spoil=38  food_days=1730.9  unrest=  0 (Calm)  pop=18 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/7c sell=0u/0c
+  port pantikapaion  wealth=2435 (attract=2354)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=17 out×1.06 fam=12 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/4c sell=0u/0c
+  port paphos      wealth= 383 (attract= 311)  grain=   7  wine=   0  m=  3 w=  0  spoil= 1  food_days=  0.7  unrest=178 (Critical)  pop=10 out×1.11 fam=11 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=21u/132c
+  port populonia   wealth= 453 (attract= 303)  grain=   8  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.9  unrest=181 (Critical)  pop=9 out×1.00 fam=8 pro=0  ind_mwtx= 5/ 2/ 0/ 0      npc_wholesale buy=1u/2c sell=10u/49c
+  port poseidonia  wealth= 490 (attract= 331)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=9 out×1.12 fam=16 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=4u/8c sell=2u/8c
+  port ptolemais_akkaron  wealth=2136 (attract=1924)  grain=1851  wine=   0  m=  0 w=  0  spoil=33  food_days=231.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=0u/0c
+  port pupput_fields  wealth=2637 (attract=2526)  grain=2183  wine=   1  m=  0 w=  0  spoil=38  food_days=272.9  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pyrgi       wealth= 225 (attract= 130)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=4 out×0.72 fam=12 pro=0  ind_mwtx= 1/ 0/ 0/ 1      npc_wholesale buy=2u/6c sell=0u/0c
+  port rhegium     wealth= 512 (attract= 227)  grain=  41  wine=   0  m= 14 w= 10  spoil= 1  food_days=  5.1  unrest=189 (Critical)  pop=8 out×0.89 fam=18 pro=0  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=4u/8c sell=21u/84c
+  port rhode_iberia  wealth= 196 (attract= 131)  grain=  10  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.7  unrest=188 (Critical)  pop=6 out×1.20 fam=21 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=11u/44c
+  port rhodes      wealth=2556 (attract=2430)  grain=   1  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.1  unrest=180 (Critical)  pop=16 out×0.84 fam=20 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=14u/16c sell=6u/24c
+  port rome        wealth= 375 (attract= 127)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=16 out×0.80 fam=15 pro=0  ind_mwtx= 0/ 0/ 0/ 2      npc_wholesale buy=9u/18c sell=9u/18c
+  port sabratha    wealth=1726 (attract=1639)  grain=  24  wine=   0  m=  0 w=  0  spoil= 1  food_days=  6.0  unrest=188 (Critical)  pop=4 out×0.72 fam=17 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port salamis_cyprus  wealth= 416 (attract= 262)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=9 out×1.12 fam=29 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/12c sell=8u/18c
+  port sciacca_coast  wealth=2516 (attract=2372)  grain=1908  wine=   0  m=  0 w=  0  spoil=33  food_days=238.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=0u/0c
+  port selinus     wealth= 361 (attract= 284)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=9 out×1.12 fam=15 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sexi        wealth=1791 (attract=1713)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=6 out×0.72 fam=22 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sicyon_bread  wealth=2124 (attract=1944)  grain=1706  wine=   0  m=  0 w=  0  spoil=30  food_days=213.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sidon       wealth=1667 (attract=1528)  grain=  13  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.2  unrest=178 (Critical)  pop=6 out×0.75 fam=14 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=14u/56c
+  port sinope      wealth= 515 (attract= 368)  grain=   0  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.0  unrest=180 (Critical)  pop=10 out×1.25 fam=26 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/2c sell=15u/46c
+  port smyrna      wealth= 341 (attract= 215)  grain=   8  wine=   0  m=  3 w=  0  spoil= 1  food_days=  1.1  unrest=178 (Critical)  pop=7 out×0.72 fam=16 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/77c
+  port solus       wealth=1636 (attract=1523)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=5 out×0.72 fam=20 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sulci       wealth=2260 (attract=2140)  grain=   0  wine=   0  m= 12 w=  0  spoil= 1  food_days=  0.0  unrest=188 (Critical)  pop=9 out×0.90 fam=17 pro=0  ind_mwtx= 5/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port syracuse    wealth=1750 (attract=1704)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=13 out×1.08 fam=20 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port taras       wealth=2067 (attract=1952)  grain=   7  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.5  unrest=180 (Critical)  pop=15 out×1.15 fam=21 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/6c sell=0u/0c
+  port thapsus_bread  wealth=3043 (attract=2911)  grain=3148  wine=   0  m=  0 w=  0  spoil=38  food_days=393.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 1      npc_wholesale buy=2u/2c sell=0u/0c
+  port tharros     wealth=2356 (attract=2170)  grain=   0  wine=   0  m= 32 w=  0  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=9 out×0.90 fam=19 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=3u/9c
+  port tiber_mouth_bread  wealth=2037 (attract=1849)  grain=3292  wine=   0  m=  0 w=  0  spoil=38  food_days=411.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/7c sell=7u/21c
+  port tingis      wealth= 470 (attract= 124)  grain=  23  wine=   0  m= 17 w=  0  spoil= 1  food_days=  3.8  unrest=179 (Critical)  pop=6 out×0.72 fam=17 pro=0  ind_mwtx= 1/ 0/ 1/ 0      npc_wholesale buy=8u/46c sell=20u/80c
+  port trapezus    wealth= 289 (attract= 183)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=179 (Critical)  pop=7 out×1.00 fam=12 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=3u/6c sell=2u/8c
+  port troezen_coast  wealth=2652 (attract=2519)  grain=1816  wine=   0  m=  0 w=  0  spoil=32  food_days=227.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port tyre        wealth=3465 (attract=3345)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=19 out×0.95 fam=14 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=4u/11c sell=0u/0c
+  port utica       wealth=2223 (attract=2092)  grain=   4  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.4  unrest=188 (Critical)  pop=10 out×1.00 fam=25 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=30u/30c sell=1u/2c
+  port velletri_plain  wealth=1774 (attract=1555)  grain=1891  wine=   0  m=  0 w=  0  spoil=33  food_days=236.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=1u/1c sell=1u/5c
+
+-- after advance #5000 (calendar day 5025) --
+  player: money=0  fleet=1  cargo_cap=24  ship=58/100  port=akragas  at_sea=False  |  world_treasury=0c  |  npc: agents=2179  ships=2179  at_sea=2009  total_purse=289201
+  npc merchant balance_sheet(all)=994416c  investments=705215c  (fleet_book=522960c + cargo_mark=182255c)
+  port acre_feed   wealth=3188 (attract=3007)  grain=5353  wine=   0  m=  0 w=  0  spoil=38  food_days=669.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port agde_bread  wealth=3522 (attract=3417)  grain=6854  wine=   0  m=  0 w=  0  spoil=38  food_days=856.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port ager_narbonensis  wealth=3541 (attract=3371)  grain=6161  wine=   1  m=  0 w=  0  spoil=38  food_days=770.1  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=4u/4c sell=8u/16c
+  port akragas     wealth=8302 (attract=8000)  grain=33205  wine= 538  m=  0 w=  0  spoil=38  food_days=2075.3  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 1/ 0/ 0/ 2      npc_wholesale buy=26u/26c sell=10u/92c
+  port aleria      wealth= 415 (attract= 146)  grain=  31  wine=   0  m=  1 w=  0  spoil= 1  food_days=  3.1  unrest=170 (Critical)  pop=10 out×1.00 fam=11 pro=86  ind_mwtx= 1/ 0/ 0/ 1      npc_wholesale buy=8u/31c sell=15u/68c
+  port alexandria  wealth=8239 (attract=8000)  grain=70751  wine=   0  m=  0 w=  0  spoil=38  food_days=2721.2  unrest=  0 (Calm)  pop=26 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 3/ 0/ 0      npc_wholesale buy=9u/9c sell=1u/3c
+  port antipolis   wealth= 330 (attract= 166)  grain=  47  wine=   0  m=  0 w=  2  spoil= 1  food_days=  4.7  unrest=174 (Critical)  pop=10 out×1.11 fam=12 pro=34  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=16u/80c
+  port antium_coast  wealth=3121 (attract=3034)  grain=5474  wine=   0  m=  0 w=  0  spoil=38  food_days=684.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=981  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=8u/8c sell=0u/0c
+  port apollonia_cyrenaica  wealth= 360 (attract= 222)  grain=  13  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.0  unrest=182 (Critical)  pop=13 out×1.28 fam=15 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port arados      wealth=2606 (attract=2311)  grain=  10  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.7  unrest=178 (Critical)  pop=14 out×1.28 fam=26 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=22u/66c sell=19u/57c
+  port arelate_bread  wealth=3834 (attract=3654)  grain=8267  wine=   0  m=  0 w=  0  spoil=38  food_days=1033.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=8u/8c sell=8u/24c
+  port athens_piraeus  wealth=1284 (attract=1034)  grain=  17  wine=   0  m=  1 w=  0  spoil= 1  food_days=  0.7  unrest=188 (Critical)  pop=25 out×1.25 fam=19 pro=0  ind_mwtx= 3/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=5u/34c
+  port baitis_estuary  wealth=4203 (attract=4062)  grain=6763  wine=   1  m=  0 w=  0  spoil=38  food_days=845.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port byblos      wealth=1909 (attract=1741)  grain=  56  wine=   0  m=  0 w=  0  spoil= 1  food_days=  4.7  unrest=178 (Critical)  pop=12 out×1.28 fam=14 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=8u/8c sell=11u/46c
+  port byzantion   wealth= 568 (attract= 300)  grain=  15  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.8  unrest=188 (Critical)  pop=20 out×1.28 fam=18 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=9u/33c
+  port caere       wealth= 661 (attract= 509)  grain=   3  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.2  unrest=188 (Critical)  pop=13 out×1.18 fam=8 pro=0  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=15u/30c sell=8u/36c
+  port caralis     wealth=2445 (attract=2255)  grain=   9  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.6  unrest=188 (Critical)  pop=14 out×1.27 fam=27 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=14u/46c sell=18u/64c
+  port carteia_coast  wealth=3802 (attract=3627)  grain=5347  wine=   0  m=  0 w=  0  spoil=38  food_days=668.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port carthage    wealth=3977 (attract=3710)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=25 out×1.19 fam=19 pro=0  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=17u/20c sell=6u/30c
+  port carthago_nova  wealth=2939 (attract=2543)  grain=  46  wine=   0  m=  2 w=  0  spoil= 1  food_days=  2.9  unrest=180 (Critical)  pop=16 out×1.28 fam=15 pro=0  ind_mwtx= 7/ 2/ 0/ 1      npc_wholesale buy=18u/100c sell=43u/156c
+  port catane      wealth=8176 (attract=8000)  grain=34327  wine=   0  m=  0 w=  0  spoil=38  food_days=2145.4  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 1      npc_wholesale buy=21u/21c sell=0u/0c
+  port cenchreae_bread  wealth=3771 (attract=3602)  grain=6605  wine=   0  m=  0 w=  0  spoil=38  food_days=825.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port chalcedon   wealth= 358 (attract= 131)  grain=  42  wine=   0  m=  1 w=  0  spoil= 1  food_days=  4.2  unrest=174 (Critical)  pop=10 out×1.00 fam=12 pro=68  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/17c
+  port chalcis     wealth= 442 (attract= 289)  grain=   0  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.0  unrest=188 (Critical)  pop=14 out×1.28 fam=27 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=10u/20c sell=0u/0c
+  port chersonesos  wealth=8105 (attract=8000)  grain=45155  wine=  83  m=  0 w=  0  spoil=38  food_days=2822.2  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/6c sell=2u/10c
+  port corinth     wealth=2656 (attract=2353)  grain= 122  wine=   2  m=  2 w=  0  spoil= 3  food_days=  6.4  unrest=  4 (Calm)  pop=19 out×1.28 fam=0 pro=10  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=23u/23c sell=27u/94c
+  port croton      wealth= 345 (attract= 243)  grain=  15  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.4  unrest=178 (Critical)  pop=11 out×1.28 fam=13 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=4u/12c
+  port cumae       wealth= 405 (attract= 171)  grain=  14  wine=   0  m=  3 w=  0  spoil= 1  food_days=  1.1  unrest=188 (Critical)  pop=13 out×1.28 fam=17 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=1u/2c sell=11u/45c
+  port cyrene      wealth=8064 (attract=8000)  grain=43368  wine= 391  m=  0 w=  0  spoil=38  food_days=2710.5  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=8u/8c sell=8u/16c
+  port dor_coast_bread  wealth=3668 (attract=3559)  grain=5504  wine=   0  m=  0 w=  0  spoil=38  food_days=688.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port emporion    wealth= 529 (attract= 280)  grain=   0  wine=   0  m=  1 w=  2  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=13 out×1.28 fam=10 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=12u/32c sell=17u/103c
+  port ephesus     wealth=2853 (attract=2643)  grain= 108  wine=   0  m=  0 w=  0  spoil= 2  food_days=  5.4  unrest=  5 (Calm)  pop=20 out×1.25 fam=0 pro=21  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/2c sell=0u/0c
+  port eretria     wealth= 404 (attract= 270)  grain=   0  wine=   0  m=  0 w=  2  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=12 out×1.28 fam=8 pro=0  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port gades       wealth=4437 (attract=4210)  grain=  27  wine=   0  m=  0 w=  1  spoil= 1  food_days=  1.2  unrest=170 (Critical)  pop=22 out×1.16 fam=13 pro=0  ind_mwtx= 5/ 3/ 0/ 0      npc_wholesale buy=8u/8c sell=37u/105c
+  port gela        wealth=8101 (attract=8000)  grain=44551  wine=   0  m=  1 w=  0  spoil=38  food_days=2784.4  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=16u/16c sell=1u/17c
+  port gythion     wealth= 426 (attract= 331)  grain=  13  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.1  unrest=186 (Critical)  pop=12 out×1.28 fam=16 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=8u/16c sell=0u/0c
+  port halicarnassus  wealth= 592 (attract= 453)  grain=   4  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.3  unrest=142 (Critical)  pop=12 out×1.28 fam=5 pro=1  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port hippo       wealth=8107 (attract=8000)  grain=61978  wine=   2  m=115 w=  3  spoil=38  food_days=4427.0  unrest=  0 (Calm)  pop=14 out×1.00 fam=0 pro=999  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=4u/5c sell=8u/17c
+  port kition      wealth=2945 (attract=2725)  grain=   0  wine=   0  m= 18 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=13 out×1.28 fam=18 pro=0  ind_mwtx= 5/ 2/ 2/ 0      npc_wholesale buy=21u/37c sell=12u/36c
+  port knossos     wealth= 404 (attract= 331)  grain=   1  wine=   1  m=  0 w=  0  spoil= 1  food_days=  0.1  unrest=186 (Critical)  pop=14 out×1.28 fam=16 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=4u/13c sell=11u/42c
+  port kourion_coast  wealth=3607 (attract=3516)  grain=5464  wine=   0  m=  0 w=  0  spoil=38  food_days=683.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port kydonia     wealth= 305 (attract= 123)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=10 out×1.00 fam=13 pro=50  ind_mwtx= 0/ 0/ 1/ 0      npc_wholesale buy=8u/16c sell=8u/47c
+  port larnaca_fields  wealth=4157 (attract=3996)  grain=6840  wine=   0  m=  0 w=  0  spoil=38  food_days=855.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port lepcis_minor_bread  wealth=3725 (attract=3618)  grain=5494  wine=   0  m=  0 w=  0  spoil=38  food_days=686.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port leptis_magna  wealth=2548 (attract=2325)  grain=   2  wine=   0  m=  1 w=  0  spoil= 1  food_days=  0.2  unrest=180 (Critical)  pop=13 out×1.28 fam=10 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/20c sell=16u/62c
+  port licata_bread  wealth=3398 (attract=3275)  grain=6836  wine=   0  m=  0 w=  0  spoil=38  food_days=854.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=4u/4c sell=0u/0c
+  port locri       wealth= 455 (attract= 328)  grain=   3  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.2  unrest=188 (Critical)  pop=13 out×1.28 fam=21 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/10c sell=1u/3c
+  port malaka      wealth=2669 (attract=2535)  grain=  29  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.4  unrest=180 (Critical)  pop=12 out×1.28 fam=22 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port maroni_plain  wealth=3203 (attract=3083)  grain=5503  wine=   0  m=  0 w=  0  spoil=38  food_days=687.9  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port massalia    wealth=2531 (attract=2364)  grain= 187  wine=   0  m=  0 w=  0  spoil= 4  food_days= 11.7  unrest=  0 (Calm)  pop=16 out×1.23 fam=0 pro=34  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port mazara_bread  wealth=3452 (attract=3317)  grain=6659  wine=   0  m=  0 w=  0  spoil=38  food_days=832.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=8u/16c
+  port megara      wealth= 239 (attract= 144)  grain=   9  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.9  unrest=166 (Critical)  pop=10 out×1.28 fam=10 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port memphis     wealth=8165 (attract=8000)  grain=267936  wine=   0  m=  0 w=  0  spoil=38  food_days=16746.0  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=0u/0c
+  port messana     wealth=7187 (attract=7020)  grain=29855  wine=   0  m=  3 w=  0  spoil=38  food_days=1492.8  unrest=  0 (Calm)  pop=20 out×1.00 fam=0 pro=999  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=7u/7c sell=8u/16c
+  port miletus     wealth=2090 (attract=1963)  grain= 232  wine=   0  m=  1 w=  0  spoil= 5  food_days= 19.3  unrest=  0 (Calm)  pop=12 out×1.09 fam=0 pro=28  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=1u/20c
+  port motya       wealth=2408 (attract=2282)  grain=   6  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.5  unrest=178 (Critical)  pop=13 out×1.28 fam=23 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=3u/7c sell=8u/31c
+  port naucratis   wealth=8093 (attract=8000)  grain=267059  wine=   0  m=  0 w=  0  spoil=38  food_days=16691.2  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port naxos_sicily  wealth= 274 (attract= 139)  grain=   0  wine=   0  m=  2 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=10 out×1.00 fam=13 pro=50  ind_mwtx= 1/ 0/ 0/ 2      npc_wholesale buy=3u/3c sell=7u/24c
+  port neapolis    wealth=2753 (attract=2556)  grain=  50  wine=   0  m= 18 w=  2  spoil= 1  food_days=  2.8  unrest= 87 (Tense)  pop=18 out×1.20 fam=0 pro=70  ind_mwtx= 2/ 2/ 1/ 1      npc_wholesale buy=3u/3c sell=6u/34c
+  port nikaia      wealth= 387 (attract= 133)  grain=   2  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.2  unrest=178 (Critical)  pop=10 out×1.00 fam=16 pro=16  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=10u/15c sell=11u/36c
+  port oea         wealth=2088 (attract=1947)  grain=  19  wine=   1  m=  2 w=  2  spoil= 1  food_days=  1.9  unrest=174 (Critical)  pop=10 out×1.00 fam=12 pro=63  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/8c sell=8u/80c
+  port olbia_pontic  wealth=8054 (attract=8000)  grain=56116  wine= 748  m=  0 w=  0  spoil=38  food_days=3507.2  unrest=  0 (Calm)  pop=16 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/7c sell=0u/0c
+  port olbia_sardinia  wealth=2500 (attract=2387)  grain=   2  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.1  unrest=188 (Critical)  pop=14 out×1.28 fam=21 pro=0  ind_mwtx= 0/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port onoba_bread  wealth=4157 (attract=3988)  grain=5549  wine=   0  m=  0 w=  0  spoil=38  food_days=693.6  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=22u/22c sell=8u/24c
+  port ostia       wealth= 453 (attract= 220)  grain=   4  wine=   2  m=  0 w=  1  spoil= 1  food_days=  0.3  unrest=188 (Critical)  pop=14 out×1.27 fam=27 pro=0  ind_mwtx= 3/ 1/ 0/ 0      npc_wholesale buy=23u/37c sell=7u/37c
+  port panormus    wealth=8042 (attract=8000)  grain=39247  wine=   0  m=  0 w=  0  spoil=38  food_days=2180.4  unrest=  0 (Calm)  pop=18 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pantikapaion  wealth=2969 (attract=2817)  grain=  18  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.9  unrest=154 (Critical)  pop=20 out×1.18 fam=9 pro=2  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port paphos      wealth= 440 (attract= 336)  grain=   9  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.6  unrest=180 (Critical)  pop=14 out×1.28 fam=25 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=13u/55c
+  port populonia   wealth= 474 (attract= 345)  grain=   0  wine=   0  m=  4 w=  0  spoil= 0  food_days=  0.0  unrest=188 (Critical)  pop=13 out×1.28 fam=8 pro=0  ind_mwtx= 8/ 2/ 0/ 0      npc_wholesale buy=2u/4c sell=4u/14c
+  port poseidonia  wealth= 561 (attract= 388)  grain=   2  wine=   3  m=  0 w=  0  spoil= 1  food_days=  0.1  unrest=188 (Critical)  pop=14 out×1.28 fam=18 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=4u/11c sell=12u/54c
+  port ptolemais_akkaron  wealth=3105 (attract=2942)  grain=5444  wine=   0  m=  0 w=  0  spoil=38  food_days=680.5  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pupput_fields  wealth=3957 (attract=3865)  grain=6792  wine=   0  m=  0 w=  0  spoil=38  food_days=849.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port pyrgi       wealth= 321 (attract= 142)  grain=   6  wine=   0  m=  2 w=  0  spoil= 1  food_days=  0.6  unrest=162 (Critical)  pop=10 out×1.25 fam=9 pro=14  ind_mwtx= 2/ 1/ 0/ 0      npc_wholesale buy=6u/18c sell=13u/64c
+  port rhegium     wealth= 472 (attract= 174)  grain=  26  wine=   2  m= 27 w=  9  spoil= 1  food_days=  2.2  unrest=188 (Critical)  pop=12 out×1.28 fam=18 pro=0  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=8u/19c sell=14u/68c
+  port rhode_iberia  wealth= 233 (attract= 155)  grain=  36  wine=   0  m=  0 w=  0  spoil= 1  food_days=  4.5  unrest=  4 (Calm)  pop=8 out×1.28 fam=0 pro=17  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port rhodes      wealth=2988 (attract=2813)  grain=   0  wine=   0  m=  0 w=  0  spoil= 1  food_days=  0.0  unrest=178 (Critical)  pop=20 out×1.00 fam=15 pro=25  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=1u/4c
+  port rome        wealth= 338 (attract= 195)  grain= 143  wine=   0  m=  0 w=  0  spoil= 3  food_days=  7.2  unrest=  4 (Calm)  pop=20 out×1.00 fam=0 pro=95  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=8u/16c
+  port sabratha    wealth=2023 (attract=1903)  grain=  14  wine=   0  m=  0 w=  0  spoil= 1  food_days=  1.4  unrest=178 (Critical)  pop=10 out×1.11 fam=13 pro=2  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=5u/5c sell=0u/0c
+  port salamis_cyprus  wealth= 445 (attract= 270)  grain=  10  wine=   0  m= 12 w=  0  spoil= 1  food_days=  0.8  unrest=188 (Critical)  pop=13 out×1.28 fam=21 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=3u/6c sell=3u/9c
+  port sciacca_coast  wealth=3564 (attract=3498)  grain=5487  wine=   0  m=  0 w=  0  spoil=38  food_days=685.9  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port selinus     wealth= 449 (attract= 316)  grain=  19  wine=   0  m=  0 w=  3  spoil= 1  food_days=  1.4  unrest=180 (Critical)  pop=14 out×1.28 fam=19 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=7u/14c sell=4u/40c
+  port sexi        wealth=2203 (attract=2002)  grain=  27  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.7  unrest=178 (Critical)  pop=10 out×1.11 fam=13 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=21u/38c sell=0u/0c
+  port sicyon_bread  wealth=3177 (attract=3039)  grain=5378  wine=   0  m=  0 w=  0  spoil=38  food_days=672.2  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sidon       wealth=1975 (attract=1900)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=12 out×1.28 fam=14 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port sinope      wealth= 511 (attract= 418)  grain=   7  wine=   0  m=  2 w=  0  spoil= 1  food_days=  0.5  unrest=178 (Critical)  pop=14 out×1.28 fam=26 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=9u/36c
+  port smyrna      wealth= 471 (attract= 218)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=178 (Critical)  pop=13 out×1.28 fam=16 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=6u/12c sell=16u/50c
+  port solus       wealth=1963 (attract=1834)  grain=   1  wine=   0  m=  1 w=  0  spoil= 1  food_days=  0.1  unrest=186 (Critical)  pop=10 out×1.11 fam=15 pro=26  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=11u/11c sell=1u/13c
+  port sulci       wealth=2737 (attract=2580)  grain=  33  wine=   0  m= 20 w=  0  spoil= 1  food_days=  2.8  unrest=180 (Critical)  pop=12 out×1.20 fam=8 pro=0  ind_mwtx= 5/ 2/ 0/ 0      npc_wholesale buy=0u/0c sell=17u/99c
+  port syracuse    wealth=2304 (attract=2181)  grain= 332  wine=   0  m=  0 w=  0  spoil= 6  food_days= 22.1  unrest=  0 (Calm)  pop=15 out×1.25 fam=0 pro=17  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=0u/0c
+  port taras       wealth=2543 (attract=2426)  grain=  83  wine=   0  m=  0 w=  0  spoil= 2  food_days=  4.9  unrest=  4 (Calm)  pop=17 out×1.21 fam=0 pro=21  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=0u/0c sell=5u/47c
+  port thapsus_bread  wealth=4222 (attract=4147)  grain=6742  wine=   0  m=  0 w=  0  spoil=38  food_days=842.8  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=4u/4c sell=0u/0c
+  port tharros     wealth=2906 (attract=2687)  grain=   0  wine=   0  m= 60 w=  0  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=13 out×1.28 fam=10 pro=0  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=0u/0c sell=1u/6c
+  port tiber_mouth_bread  wealth=2849 (attract=2771)  grain=6760  wine=   0  m=  1 w=  0  spoil=38  food_days=845.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 1/ 1/ 0/ 0      npc_wholesale buy=4u/4c sell=0u/0c
+  port tingis      wealth= 373 (attract= 143)  grain=  33  wine=   0  m= 25 w=  0  spoil= 1  food_days=  3.0  unrest=180 (Critical)  pop=11 out×0.92 fam=14 pro=0  ind_mwtx= 1/ 0/ 0/ 0      npc_wholesale buy=1u/2c sell=6u/25c
+  port trapezus    wealth= 381 (attract= 193)  grain=  22  wine=   0  m=  0 w=  0  spoil= 1  food_days=  2.0  unrest=142 (Critical)  pop=11 out×1.28 fam=4 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=2u/4c sell=1u/4c
+  port troezen_coast  wealth=3861 (attract=3701)  grain=5464  wine=   0  m=  0 w=  0  spoil=38  food_days=683.0  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=999  ind_mwtx= 0/ 0/ 0/ 1      npc_wholesale buy=0u/0c sell=0u/0c
+  port tyre        wealth=4348 (attract=4112)  grain=  11  wine=   0  m=  0 w=  2  spoil= 1  food_days=  0.5  unrest=180 (Critical)  pop=24 out×1.20 fam=20 pro=0  ind_mwtx= 3/ 0/ 0/ 0      npc_wholesale buy=9u/20c sell=19u/84c
+  port utica       wealth=2644 (attract=2517)  grain=   0  wine=   0  m=  0 w=  0  spoil= 0  food_days=  0.0  unrest=180 (Critical)  pop=13 out×1.28 fam=8 pro=0  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=6u/30c sell=3u/12c
+  port velletri_plain  wealth=2591 (attract=2490)  grain=5459  wine=   0  m=  0 w=  0  spoil=38  food_days=682.4  unrest=  0 (Calm)  pop=8 out×1.00 fam=0 pro=981  ind_mwtx= 0/ 0/ 0/ 0      npc_wholesale buy=4u/4c sell=8u/16c
+
+=== end ===
+  Food riots (total across run): 194
+  Phase 0 civic grain contracts: signed=16276, fulfilled=3394, breached=12793
+
+— Run analysis (first snapshot → final) —
+  Calendar: day 25 → 5025  (5000 advances)
+  NPC purse total: 504006 → 289201  (Δ -214805)
+  NPC investments (fleet book 240c/hull + cargo wholesale mark): 843952 → 705215  (Δ -138737)
+  NPC balance sheet (purse + investments): 1347958 → 994416  (Δ -353542)
+  NPC merchant hulls (sum of fleet_ships): 2214 → 2179  (Δ -35)
+  Food riots: 194  |  Merchant bankruptcies: 8911
+  Phase 0 civic grain contracts (enabled=True): signed=16276, fulfilled=3394, breached=12793
+  Institutional contract rows (NPC schema, end): 72
+  Phase 1 route habit (end): mass=731.76, slots=13647
+  Phase 2 lane contracts active (merchants, end): 72
+  Phase 3 alliances (end): bands=4, ports_tagged=26
+  Phase 4 patronage (end): enabled=False, merchant_houses=28
+  Phase 5 charter clerk gate (end): surface_enabled=True
+  NPC merchant convoys formed (multi-ship departures): 4770
+  Escort wages paid (convoy arrivals, coins): 92718
+  Pirates: encounter rolls=25899, successful raids=1052, escort flees=0, marines lost (boarding)=4, loot coins=49277
+  Player vs pirates (at-sea days only): rolls=0, repelled=0, hits=0
+  Per port (wealth Δ, grain Δ, final grain-days, final unrest, min grain-days seen, max unrest seen):
+    acre_feed   wealth  217→3188 (Δ+2971)  grain  115→5353 (Δ+5238)  end_days=669.1  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    agde_bread  wealth  154→3522 (Δ+3368)  grain   84→6854 (Δ+6770)  end_days=856.8  end_unrest=  0  min_days≈  8.83  max_unrest=188
+    ager_narbonensis  wealth  189→3541 (Δ+3352)  grain   85→6161 (Δ+6076)  end_days=770.1  end_unrest=  0  min_days≈  7.86  max_unrest=188
+    akragas     wealth  773→8302 (Δ+7529)  grain  130→33205 (Δ+33075)  end_days=2075.3  end_unrest=  0  min_days≈  5.89  max_unrest=188
+    aleria      wealth 1171→ 415 (Δ-756)  grain   52→  31 (Δ -21)  end_days=  3.1  end_unrest=170  min_days≈  0.00  max_unrest=200
+    alexandria  wealth 1022→8239 (Δ+7217)  grain  102→70751 (Δ+70649)  end_days=2721.2  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    antipolis   wealth  340→ 330 (Δ -10)  grain   51→  47 (Δ  -4)  end_days=  4.7  end_unrest=174  min_days≈  0.00  max_unrest=200
+    antium_coast  wealth  266→3121 (Δ+2855)  grain   88→5474 (Δ+5386)  end_days=684.2  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    apollonia_cyrenaica  wealth  267→ 360 (Δ +93)  grain   40→  13 (Δ -27)  end_days=  1.0  end_unrest=182  min_days≈  0.00  max_unrest=200
+    arados      wealth  281→2606 (Δ+2325)  grain   38→  10 (Δ -28)  end_days=  0.7  end_unrest=178  min_days≈  0.00  max_unrest=200
+    arelate_bread  wealth  311→3834 (Δ+3523)  grain  115→8267 (Δ+8152)  end_days=1033.4  end_unrest=  0  min_days≈  8.00  max_unrest=188
+    athens_piraeus  wealth  646→1284 (Δ+638)  grain   57→  17 (Δ -40)  end_days=  0.7  end_unrest=188  min_days≈  0.00  max_unrest=200
+    baitis_estuary  wealth  170→4203 (Δ+4033)  grain   93→6763 (Δ+6670)  end_days=845.4  end_unrest=  0  min_days≈  8.67  max_unrest=188
+    byblos      wealth  226→1909 (Δ+1683)  grain   52→  56 (Δ  +4)  end_days=  4.7  end_unrest=178  min_days≈  0.00  max_unrest=200
+    byzantion   wealth  950→ 568 (Δ-382)  grain   71→  15 (Δ -56)  end_days=  0.8  end_unrest=188  min_days≈  0.00  max_unrest=200
+    caere       wealth  283→ 661 (Δ+378)  grain   46→   3 (Δ -43)  end_days=  0.2  end_unrest=188  min_days≈  0.00  max_unrest=200
+    caralis     wealth  241→2445 (Δ+2204)  grain   54→   9 (Δ -45)  end_days=  0.6  end_unrest=188  min_days≈  0.00  max_unrest=200
+    carteia_coast  wealth  240→3802 (Δ+3562)  grain   87→5347 (Δ+5260)  end_days=668.4  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    carthage    wealth  337→3977 (Δ+3640)  grain    0→   0 (Δ  +0)  end_days=  0.0  end_unrest=188  min_days≈  0.00  max_unrest=200
+    carthago_nova  wealth  530→2939 (Δ+2409)  grain   69→  46 (Δ -23)  end_days=  2.9  end_unrest=180  min_days≈  0.00  max_unrest=200
+    catane      wealth  408→8176 (Δ+7768)  grain   66→34327 (Δ+34261)  end_days=2145.4  end_unrest=  0  min_days≈  3.08  max_unrest=188
+    cenchreae_bread  wealth  160→3771 (Δ+3611)  grain   90→6605 (Δ+6515)  end_days=825.6  end_unrest=  0  min_days≈  5.88  max_unrest=188
+    chalcedon   wealth  224→ 358 (Δ+134)  grain   40→  42 (Δ  +2)  end_days=  4.2  end_unrest=174  min_days≈  0.00  max_unrest=200
+    chalcis     wealth  262→ 442 (Δ+180)  grain   41→   0 (Δ -41)  end_days=  0.0  end_unrest=188  min_days≈  0.00  max_unrest=200
+    chersonesos  wealth  257→8105 (Δ+7848)  grain   66→45155 (Δ+45089)  end_days=2822.2  end_unrest=  0  min_days≈  4.50  max_unrest=188
+    corinth     wealth  250→2656 (Δ+2406)  grain   41→ 122 (Δ +81)  end_days=  6.4  end_unrest=  4  min_days≈  0.00  max_unrest=200
+    croton      wealth  198→ 345 (Δ+147)  grain   33→  15 (Δ -18)  end_days=  1.4  end_unrest=178  min_days≈  0.00  max_unrest=200
+    cumae       wealth  220→ 405 (Δ+185)  grain   33→  14 (Δ -19)  end_days=  1.1  end_unrest=188  min_days≈  0.00  max_unrest=200
+    cyrene      wealth  214→8064 (Δ+7850)  grain   66→43368 (Δ+43302)  end_days=2710.5  end_unrest=  0  min_days≈  6.33  max_unrest=188
+    dor_coast_bread  wealth  247→3668 (Δ+3421)  grain   86→5504 (Δ+5418)  end_days=688.0  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    emporion    wealth  208→ 529 (Δ+321)  grain   20→   0 (Δ -20)  end_days=  0.0  end_unrest=178  min_days≈  0.00  max_unrest=200
+    ephesus     wealth  201→2853 (Δ+2652)  grain   16→ 108 (Δ +92)  end_days=  5.4  end_unrest=  5  min_days≈  0.00  max_unrest=200
+    eretria     wealth  210→ 404 (Δ+194)  grain   32→   0 (Δ -32)  end_days=  0.0  end_unrest=180  min_days≈  0.00  max_unrest=200
+    gades       wealth  286→4437 (Δ+4151)  grain    4→  27 (Δ +23)  end_days=  1.2  end_unrest=170  min_days≈  0.00  max_unrest=200
+    gela        wealth  228→8101 (Δ+7873)  grain   69→44551 (Δ+44482)  end_days=2784.4  end_unrest=  0  min_days≈  3.78  max_unrest=188
+    gythion     wealth  202→ 426 (Δ+224)  grain   34→  13 (Δ -21)  end_days=  1.1  end_unrest=186  min_days≈  0.00  max_unrest=200
+    halicarnassus  wealth  245→ 592 (Δ+347)  grain   36→   4 (Δ -32)  end_days=  0.3  end_unrest=142  min_days≈  0.00  max_unrest=200
+    hippo       wealth  257→8107 (Δ+7850)  grain   83→61978 (Δ+61895)  end_days=4427.0  end_unrest=  0  min_days≈  7.12  max_unrest=188
+    kition      wealth  276→2945 (Δ+2669)  grain   29→   0 (Δ -29)  end_days=  0.0  end_unrest=188  min_days≈  0.00  max_unrest=200
+    knossos     wealth  200→ 404 (Δ+204)  grain   37→   1 (Δ -36)  end_days=  0.1  end_unrest=186  min_days≈  0.00  max_unrest=200
+    kourion_coast  wealth  198→3607 (Δ+3409)  grain   66→5464 (Δ+5398)  end_days=683.0  end_unrest=  0  min_days≈  0.25  max_unrest=188
+    kydonia     wealth  216→ 305 (Δ +89)  grain   48→   0 (Δ -48)  end_days=  0.0  end_unrest=178  min_days≈  0.00  max_unrest=200
+    larnaca_fields  wealth  245→4157 (Δ+3912)  grain   87→6840 (Δ+6753)  end_days=855.0  end_unrest=  0  min_days≈  8.83  max_unrest=188
+    lepcis_minor_bread  wealth  273→3725 (Δ+3452)  grain   87→5494 (Δ+5407)  end_days=686.8  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    leptis_magna  wealth  191→2548 (Δ+2357)  grain   36→   2 (Δ -34)  end_days=  0.2  end_unrest=180  min_days≈  0.00  max_unrest=200
+    licata_bread  wealth  193→3398 (Δ+3205)  grain   81→6836 (Δ+6755)  end_days=854.5  end_unrest=  0  min_days≈  8.17  max_unrest=188
+    locri       wealth  202→ 455 (Δ+253)  grain   27→   3 (Δ -24)  end_days=  0.2  end_unrest=188  min_days≈  0.00  max_unrest=200
+    malaka      wealth  210→2669 (Δ+2459)  grain   36→  29 (Δ  -7)  end_days=  2.4  end_unrest=180  min_days≈  0.00  max_unrest=200
+    maroni_plain  wealth  185→3203 (Δ+3018)  grain   83→5503 (Δ+5420)  end_days=687.9  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    massalia    wealth  281→2531 (Δ+2250)  grain   34→ 187 (Δ+153)  end_days= 11.7  end_unrest=  0  min_days≈  0.00  max_unrest=200
+    mazara_bread  wealth  220→3452 (Δ+3232)  grain   87→6659 (Δ+6572)  end_days=832.4  end_unrest=  0  min_days≈  7.67  max_unrest=188
+    megara      wealth  165→ 239 (Δ +74)  grain   32→   9 (Δ -23)  end_days=  0.9  end_unrest=166  min_days≈  0.00  max_unrest=200
+    memphis     wealth  193→8165 (Δ+7972)  grain  202→267936 (Δ+267734)  end_days=16746.0  end_unrest=  0  min_days≈  8.93  max_unrest=188
+    messana     wealth  296→7187 (Δ+6891)  grain   77→29855 (Δ+29778)  end_days=1492.8  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    miletus     wealth  225→2090 (Δ+1865)  grain    3→ 232 (Δ+229)  end_days= 19.3  end_unrest=  0  min_days≈  0.00  max_unrest=200
+    motya       wealth  182→2408 (Δ+2226)  grain   29→   6 (Δ -23)  end_days=  0.5  end_unrest=178  min_days≈  0.00  max_unrest=200
+    naucratis   wealth  221→8093 (Δ+7872)  grain  219→267059 (Δ+266840)  end_days=16691.2  end_unrest=  0  min_days≈  9.00  max_unrest=188
+    naxos_sicily  wealth  211→ 274 (Δ +63)  grain   35→   0 (Δ -35)  end_days=  0.0  end_unrest=178  min_days≈  0.00  max_unrest=200
+    neapolis    wealth  307→2753 (Δ+2446)  grain   35→  50 (Δ +15)  end_days=  2.8  end_unrest= 87  min_days≈  0.00  max_unrest=200
+    nikaia      wealth  220→ 387 (Δ+167)  grain   42→   2 (Δ -40)  end_days=  0.2  end_unrest=178  min_days≈  0.00  max_unrest=200
+    oea         wealth  173→2088 (Δ+1915)  grain   42→  19 (Δ -23)  end_days=  1.9  end_unrest=174  min_days≈  0.00  max_unrest=200
+    olbia_pontic  wealth  171→8054 (Δ+7883)  grain   68→56116 (Δ+56048)  end_days=3507.2  end_unrest=  0  min_days≈  4.30  max_unrest=188
+    olbia_sardinia  wealth  164→2500 (Δ+2336)  grain   19→   2 (Δ -17)  end_days=  0.1  end_unrest=188  min_days≈  0.00  max_unrest=200
+    onoba_bread  wealth  171→4157 (Δ+3986)  grain   95→5549 (Δ+5454)  end_days=693.6  end_unrest=  0  min_days≈  0.25  max_unrest=188
+    ostia       wealth  366→ 453 (Δ +87)  grain   31→   4 (Δ -27)  end_days=  0.3  end_unrest=188  min_days≈  0.00  max_unrest=200
+    panormus    wealth  313→8042 (Δ+7729)  grain   51→39247 (Δ+39196)  end_days=2180.4  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    pantikapaion  wealth  242→2969 (Δ+2727)  grain   19→  18 (Δ  -1)  end_days=  0.9  end_unrest=154  min_days≈  0.00  max_unrest=200
+    paphos      wealth  309→ 440 (Δ+131)  grain   40→   9 (Δ -31)  end_days=  0.6  end_unrest=180  min_days≈  0.00  max_unrest=200
+    populonia   wealth  249→ 474 (Δ+225)  grain   46→   0 (Δ -46)  end_days=  0.0  end_unrest=188  min_days≈  0.00  max_unrest=200
+    poseidonia  wealth  245→ 561 (Δ+316)  grain   39→   2 (Δ -37)  end_days=  0.1  end_unrest=188  min_days≈  0.00  max_unrest=200
+    ptolemais_akkaron  wealth  232→3105 (Δ+2873)  grain   79→5444 (Δ+5365)  end_days=680.5  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    pupput_fields  wealth  234→3957 (Δ+3723)  grain   80→6792 (Δ+6712)  end_days=849.0  end_unrest=  0  min_days≈  7.00  max_unrest=188
+    pyrgi       wealth  172→ 321 (Δ+149)  grain   39→   6 (Δ -33)  end_days=  0.6  end_unrest=162  min_days≈  0.00  max_unrest=200
+    rhegium     wealth  315→ 472 (Δ+157)  grain   54→  26 (Δ -28)  end_days=  2.2  end_unrest=188  min_days≈  0.00  max_unrest=200
+    rhode_iberia  wealth  186→ 233 (Δ +47)  grain   33→  36 (Δ  +3)  end_days=  4.5  end_unrest=  4  min_days≈  0.00  max_unrest=200
+    rhodes      wealth  217→2988 (Δ+2771)  grain   17→   0 (Δ -17)  end_days=  0.0  end_unrest=178  min_days≈  0.00  max_unrest=200
+    rome        wealth  210→ 338 (Δ+128)  grain   28→ 143 (Δ+115)  end_days=  7.2  end_unrest=  4  min_days≈  0.00  max_unrest=200
+    sabratha    wealth  188→2023 (Δ+1835)  grain   31→  14 (Δ -17)  end_days=  1.4  end_unrest=178  min_days≈  0.00  max_unrest=200
+    salamis_cyprus  wealth  343→ 445 (Δ+102)  grain   50→  10 (Δ -40)  end_days=  0.8  end_unrest=188  min_days≈  0.00  max_unrest=200
+    sciacca_coast  wealth  223→3564 (Δ+3341)  grain   64→5487 (Δ+5423)  end_days=685.9  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    selinus     wealth  180→ 449 (Δ+269)  grain   29→  19 (Δ -10)  end_days=  1.4  end_unrest=180  min_days≈  0.00  max_unrest=200
+    sexi        wealth  164→2203 (Δ+2039)  grain   40→  27 (Δ -13)  end_days=  2.7  end_unrest=178  min_days≈  0.00  max_unrest=200
+    sicyon_bread  wealth  202→3177 (Δ+2975)  grain   58→5378 (Δ+5320)  end_days=672.2  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    sidon       wealth  217→1975 (Δ+1758)  grain   32→   0 (Δ -32)  end_days=  0.0  end_unrest=178  min_days≈  0.00  max_unrest=200
+    sinope      wealth  299→ 511 (Δ+212)  grain   40→   7 (Δ -33)  end_days=  0.5  end_unrest=178  min_days≈  0.00  max_unrest=200
+    smyrna      wealth  217→ 471 (Δ+254)  grain   37→   0 (Δ -37)  end_days=  0.0  end_unrest=178  min_days≈  0.00  max_unrest=200
+    solus       wealth  152→1963 (Δ+1811)  grain   19→   1 (Δ -18)  end_days=  0.1  end_unrest=186  min_days≈  0.00  max_unrest=200
+    sulci       wealth  274→2737 (Δ+2463)  grain   49→  33 (Δ -16)  end_days=  2.8  end_unrest=180  min_days≈  0.00  max_unrest=200
+    syracuse    wealth  200→2304 (Δ+2104)  grain    4→ 332 (Δ+328)  end_days= 22.1  end_unrest=  0  min_days≈  0.00  max_unrest=200
+    taras       wealth  251→2543 (Δ+2292)  grain   40→  83 (Δ +43)  end_days=  4.9  end_unrest=  4  min_days≈  0.00  max_unrest=200
+    thapsus_bread  wealth  250→4222 (Δ+3972)  grain   98→6742 (Δ+6644)  end_days=842.8  end_unrest=  0  min_days≈  4.25  max_unrest=188
+    tharros     wealth  218→2906 (Δ+2688)  grain   36→   0 (Δ -36)  end_days=  0.0  end_unrest=180  min_days≈  0.00  max_unrest=200
+    tiber_mouth_bread  wealth  408→2849 (Δ+2441)  grain   93→6760 (Δ+6667)  end_days=845.0  end_unrest=  0  min_days≈  5.75  max_unrest=188
+    tingis      wealth  265→ 373 (Δ+108)  grain   52→  33 (Δ -19)  end_days=  3.0  end_unrest=180  min_days≈  0.00  max_unrest=200
+    trapezus    wealth  180→ 381 (Δ+201)  grain   25→  22 (Δ  -3)  end_days=  2.0  end_unrest=142  min_days≈  0.00  max_unrest=200
+    troezen_coast  wealth  220→3861 (Δ+3641)  grain   65→5464 (Δ+5399)  end_days=683.0  end_unrest=  0  min_days≈  0.00  max_unrest=188
+    tyre        wealth  288→4348 (Δ+4060)  grain    7→  11 (Δ  +4)  end_days=  0.5  end_unrest=180  min_days≈  0.00  max_unrest=200
+    utica       wealth  221→2644 (Δ+2423)  grain   33→   0 (Δ -33)  end_days=  0.0  end_unrest=180  min_days≈  0.00  max_unrest=200
+    velletri_plain  wealth  245→2591 (Δ+2346)  grain   92→5459 (Δ+5367)  end_days=682.4  end_unrest=  0  min_days≈  0.25  max_unrest=188
+
+— NPC dock wholesale commerce (full run; buy = stock out of port, sell = stock into port) —
+  Logged days: 5024  (see sim.commerce_daily_log for per-day rows)
+    acre_feed   mean/day: buy   3.2u       4c  sell   2.3u       9c  |  totals buy   16115u     19270c  sell   11714u     45457c
+    agde_bread  mean/day: buy   2.5u       3c  sell   1.7u       6c  |  totals buy   12737u     16599c  sell    8501u     32407c
+    ager_narbonensis  mean/day: buy   2.9u       4c  sell   2.2u       9c  |  totals buy   14658u     20061c  sell   10890u     44775c
+    akragas     mean/day: buy   8.6u      13c  sell   6.3u      33c  |  totals buy   43157u     66406c  sell   31412u    166084c
+    aleria      mean/day: buy   6.4u      18c  sell  10.7u      60c  |  totals buy   32043u     92368c  sell   53586u    299284c
+    alexandria  mean/day: buy   6.8u       8c  sell   4.3u      23c  |  totals buy   33932u     40892c  sell   21552u    113801c
+    antipolis   mean/day: buy   4.2u      12c  sell   7.0u      33c  |  totals buy   20871u     58746c  sell   35026u    168120c
+    antium_coast  mean/day: buy   2.8u       4c  sell   2.0u       7c  |  totals buy   13974u     17644c  sell   10192u     36774c
+    apollonia_cyrenaica  mean/day: buy   4.2u       9c  sell   6.7u      35c  |  totals buy   20930u     45587c  sell   33602u    177520c
+    arados      mean/day: buy   5.6u      10c  sell   7.3u      33c  |  totals buy   28216u     50843c  sell   36627u    163617c
+    arelate_bread  mean/day: buy   2.7u       3c  sell   2.0u       7c  |  totals buy   13686u     17259c  sell   10277u     36503c
+    athens_piraeus  mean/day: buy   5.3u       8c  sell   6.7u      52c  |  totals buy   26450u     39420c  sell   33529u    262080c
+    baitis_estuary  mean/day: buy   3.2u       4c  sell   2.3u       9c  |  totals buy   16042u     18983c  sell   11629u     47439c
+    byblos      mean/day: buy   4.8u       7c  sell   6.2u      27c  |  totals buy   24043u     34537c  sell   31025u    135860c
+    byzantion   mean/day: buy   5.4u      11c  sell  10.3u      50c  |  totals buy   27026u     55730c  sell   51848u    250270c
+    caere       mean/day: buy   3.4u       8c  sell   6.3u      32c  |  totals buy   16846u     39991c  sell   31834u    160510c
+    caralis     mean/day: buy   5.5u       9c  sell   7.4u      33c  |  totals buy   27750u     45131c  sell   37332u    165540c
+    carteia_coast  mean/day: buy   2.8u       4c  sell   2.0u      10c  |  totals buy   13941u     19507c  sell   10014u     48225c
+    carthage    mean/day: buy   5.6u       8c  sell   7.0u      40c  |  totals buy   28065u     38602c  sell   35410u    199481c
+    carthago_nova  mean/day: buy   6.5u      16c  sell   9.5u      45c  |  totals buy   32871u     82052c  sell   47590u    227322c
+    catane      mean/day: buy   7.7u      13c  sell   4.3u      29c  |  totals buy   38567u     64131c  sell   21565u    144373c
+    cenchreae_bread  mean/day: buy   3.5u       4c  sell   2.7u       9c  |  totals buy   17593u     21895c  sell   13319u     45865c
+    chalcedon   mean/day: buy   3.3u      11c  sell   5.8u      35c  |  totals buy   16557u     57060c  sell   28915u    175835c
+    chalcis     mean/day: buy   4.7u       9c  sell   6.4u      33c  |  totals buy   23548u     46936c  sell   32248u    165721c
+    chersonesos  mean/day: buy   5.5u       8c  sell   2.9u      11c  |  totals buy   27864u     38570c  sell   14694u     57343c
+    corinth     mean/day: buy   3.5u       5c  sell   4.3u      19c  |  totals buy   17393u     27564c  sell   21673u     94664c
+    croton      mean/day: buy   3.0u       6c  sell   4.6u      21c  |  totals buy   14837u     29660c  sell   23029u    104373c
+    cumae       mean/day: buy   2.6u       5c  sell   4.3u      20c  |  totals buy   13242u     25940c  sell   21634u     98727c
+    cyrene      mean/day: buy   5.1u       7c  sell   2.8u      12c  |  totals buy   25509u     33635c  sell   14103u     58806c
+    dor_coast_bread  mean/day: buy   2.7u       3c  sell   1.8u       6c  |  totals buy   13743u     17117c  sell    8801u     32149c
+    emporion    mean/day: buy   3.2u       6c  sell   4.6u      21c  |  totals buy   15964u     29876c  sell   22900u    103784c
+    ephesus     mean/day: buy   4.8u       8c  sell   6.2u      26c  |  totals buy   24183u     39387c  sell   30909u    131039c
+    eretria     mean/day: buy   3.0u       6c  sell   4.9u      22c  |  totals buy   15222u     29618c  sell   24625u    110473c
+    gades       mean/day: buy   3.8u       7c  sell   4.9u      22c  |  totals buy   19324u     37550c  sell   24557u    111753c
+    gela        mean/day: buy   5.5u       6c  sell   3.3u      11c  |  totals buy   27853u     31794c  sell   16595u     53314c
+    gythion     mean/day: buy   3.7u       8c  sell   5.3u      26c  |  totals buy   18379u     42465c  sell   26688u    131617c
+    halicarnassus  mean/day: buy   2.2u       4c  sell   3.8u      17c  |  totals buy   11245u     22201c  sell   19253u     87754c
+    hippo       mean/day: buy   4.5u      12c  sell   3.2u      12c  |  totals buy   22725u     62442c  sell   16170u     58052c
+    kition      mean/day: buy   4.5u      14c  sell   5.9u      29c  |  totals buy   22563u     68256c  sell   29504u    144080c
+    knossos     mean/day: buy   2.9u       5c  sell   3.8u      18c  |  totals buy   14427u     26631c  sell   19321u     89337c
+    kourion_coast  mean/day: buy   2.3u       3c  sell   1.7u       7c  |  totals buy   11340u     15809c  sell    8769u     37264c
+    kydonia     mean/day: buy   2.9u      10c  sell   5.0u      30c  |  totals buy   14561u     52305c  sell   25367u    149635c
+    larnaca_fields  mean/day: buy   2.2u       3c  sell   1.6u       5c  |  totals buy   10821u     13353c  sell    8101u     27493c
+    lepcis_minor_bread  mean/day: buy   2.8u       4c  sell   2.0u       9c  |  totals buy   13949u     18633c  sell    9951u     43342c
+    leptis_magna  mean/day: buy   3.3u       5c  sell   4.5u      19c  |  totals buy   16423u     25124c  sell   22600u     97167c
+    licata_bread  mean/day: buy   2.1u       3c  sell   1.5u       5c  |  totals buy   10763u     13704c  sell    7443u     25296c
+    locri       mean/day: buy   3.7u       6c  sell   5.2u      22c  |  totals buy   18508u     30866c  sell   26001u    111853c
+    malaka      mean/day: buy   5.0u       8c  sell   7.1u      30c  |  totals buy   25311u     38581c  sell   35708u    149736c
+    maroni_plain  mean/day: buy   2.5u       3c  sell   1.8u       7c  |  totals buy   12321u     17459c  sell    9139u     34152c
+    massalia    mean/day: buy   3.1u       5c  sell   3.9u      17c  |  totals buy   15447u     24573c  sell   19835u     84118c
+    mazara_bread  mean/day: buy   2.3u       3c  sell   1.5u       6c  |  totals buy   11694u     14532c  sell    7741u     30583c
+    megara      mean/day: buy   2.5u       7c  sell   4.1u      23c  |  totals buy   12758u     36600c  sell   20617u    115393c
+    memphis     mean/day: buy   5.1u       7c  sell   3.6u      13c  |  totals buy   25382u     33103c  sell   18162u     63676c
+    messana     mean/day: buy   4.4u       6c  sell   2.8u      10c  |  totals buy   22326u     29417c  sell   13869u     48849c
+    miletus     mean/day: buy   2.5u       4c  sell   3.1u      14c  |  totals buy   12391u     19168c  sell   15384u     68465c
+    motya       mean/day: buy   3.4u       5c  sell   4.6u      21c  |  totals buy   16912u     25587c  sell   23002u    104204c
+    naucratis   mean/day: buy   3.8u       5c  sell   2.6u       9c  |  totals buy   19322u     23585c  sell   13305u     46474c
+    naxos_sicily  mean/day: buy   3.1u       9c  sell   5.4u      29c  |  totals buy   15642u     45390c  sell   27254u    146545c
+    neapolis    mean/day: buy   4.4u       8c  sell   5.6u      27c  |  totals buy   22146u     41977c  sell   28116u    135803c
+    nikaia      mean/day: buy   3.2u       9c  sell   5.3u      27c  |  totals buy   16007u     44520c  sell   26778u    137129c
+    oea         mean/day: buy   2.8u       4c  sell   3.7u      16c  |  totals buy   14182u     20460c  sell   18686u     81056c
+    olbia_pontic  mean/day: buy   3.3u       4c  sell   2.2u       9c  |  totals buy   16760u     21699c  sell   11198u     44781c
+    olbia_sardinia  mean/day: buy   3.2u       5c  sell   4.3u      20c  |  totals buy   16047u     26988c  sell   21700u     99307c
+    onoba_bread  mean/day: buy   2.8u       4c  sell   2.0u       9c  |  totals buy   14081u     19877c  sell   10037u     43578c
+    ostia       mean/day: buy   4.4u       8c  sell   7.1u      46c  |  totals buy   22070u     42253c  sell   35541u    232568c
+    panormus    mean/day: buy   3.5u       5c  sell   2.4u       8c  |  totals buy   17697u     23487c  sell   11948u     42394c
+    pantikapaion  mean/day: buy   3.2u       5c  sell   4.0u      17c  |  totals buy   16292u     25348c  sell   19896u     84580c
+    paphos      mean/day: buy   3.9u       8c  sell   5.3u      27c  |  totals buy   19672u     41867c  sell   26392u    134271c
+    populonia   mean/day: buy   2.7u       6c  sell   4.2u      18c  |  totals buy   13589u     31326c  sell   20998u     88028c
+    poseidonia  mean/day: buy   2.4u       4c  sell   3.9u      18c  |  totals buy   12249u     21440c  sell   19758u     91114c
+    ptolemais_akkaron  mean/day: buy   3.1u       5c  sell   2.3u      10c  |  totals buy   15493u     23255c  sell   11692u     48606c
+    pupput_fields  mean/day: buy   2.5u       4c  sell   1.8u       7c  |  totals buy   12731u     19173c  sell    9203u     34254c
+    pyrgi       mean/day: buy   3.0u      13c  sell   5.5u      34c  |  totals buy   15139u     66316c  sell   27575u    171610c
+    rhegium     mean/day: buy   4.0u      14c  sell   6.4u      30c  |  totals buy   20211u     69980c  sell   31974u    149226c
+    rhode_iberia  mean/day: buy   2.0u       6c  sell   3.5u      18c  |  totals buy   10289u     28117c  sell   17825u     90922c
+    rhodes      mean/day: buy   4.4u       7c  sell   5.6u      24c  |  totals buy   22023u     37073c  sell   28342u    119521c
+    rome        mean/day: buy   4.7u      17c  sell   8.7u      53c  |  totals buy   23446u     86461c  sell   43813u    268729c
+    sabratha    mean/day: buy   3.5u       6c  sell   4.6u      20c  |  totals buy   17541u     29051c  sell   23057u    100822c
+    salamis_cyprus  mean/day: buy   3.8u       8c  sell   5.3u      25c  |  totals buy   18976u     39976c  sell   26554u    125450c
+    sciacca_coast  mean/day: buy   2.2u       3c  sell   1.6u       6c  |  totals buy   11002u     14985c  sell    8267u     30909c
+    selinus     mean/day: buy   2.2u       5c  sell   3.7u      17c  |  totals buy   11097u     22901c  sell   18462u     85010c
+    sexi        mean/day: buy   3.7u       6c  sell   4.9u      21c  |  totals buy   18802u     28465c  sell   24551u    104632c
+    sicyon_bread  mean/day: buy   2.6u       3c  sell   1.9u       8c  |  totals buy   13122u     16413c  sell    9525u     40488c
+    sidon       mean/day: buy   3.6u       6c  sell   4.8u      21c  |  totals buy   18098u     28018c  sell   24117u    104337c
+    sinope      mean/day: buy   3.5u       7c  sell   4.5u      23c  |  totals buy   17626u     35876c  sell   22654u    118027c
+    smyrna      mean/day: buy   2.0u       4c  sell   3.7u      17c  |  totals buy   10213u     19285c  sell   18369u     85938c
+    solus       mean/day: buy   2.6u       4c  sell   3.6u      16c  |  totals buy   13031u     20971c  sell   17968u     79556c
+    sulci       mean/day: buy   3.0u       8c  sell   4.1u      17c  |  totals buy   15197u     42456c  sell   20452u     84016c
+    syracuse    mean/day: buy   2.9u       5c  sell   3.4u      14c  |  totals buy   14757u     22985c  sell   17256u     72035c
+    taras       mean/day: buy   3.1u       4c  sell   3.7u      17c  |  totals buy   15386u     21796c  sell   18692u     84731c
+    thapsus_bread  mean/day: buy   3.3u       4c  sell   2.4u      10c  |  totals buy   16785u     20867c  sell   12263u     51071c
+    tharros     mean/day: buy   3.9u      11c  sell   5.2u      22c  |  totals buy   19399u     54031c  sell   25915u    111735c
+    tiber_mouth_bread  mean/day: buy   2.9u       5c  sell   2.1u       9c  |  totals buy   14337u     23445c  sell   10334u     44069c
+    tingis      mean/day: buy   5.2u      22c  sell   9.1u      50c  |  totals buy   25961u    109018c  sell   45773u    252140c
+    trapezus    mean/day: buy   2.1u       4c  sell   3.6u      17c  |  totals buy   10591u     22342c  sell   18035u     84794c
+    troezen_coast  mean/day: buy   2.2u       3c  sell   1.7u       6c  |  totals buy   11299u     13978c  sell    8292u     28023c
+    tyre        mean/day: buy   4.0u       6c  sell   5.2u      34c  |  totals buy   20301u     29664c  sell   26338u    172928c
+    utica       mean/day: buy   3.5u       6c  sell   4.6u      22c  |  totals buy   17490u     27785c  sell   23293u    108724c
+    velletri_plain  mean/day: buy   2.7u       3c  sell   1.8u       7c  |  totals buy   13366u     17233c  sell    9074u     34225c
+
+— Merchant outcomes (this run) —
+  Bankruptcies (liquidations / conditional rookies): 8911
+  Rule: 9 consecutive days with 0c and empty hold (no gold, no goods) → remove or rookie; rookie only if home had dock wholesale this day, commerce pulse ≥0.20, or ≥36 tradeable units in stock (excl. gold/silver). dock: fire-sale to officer purse (ships×1c) if short, then dust-sell up to 8u while purse below base 28c + neuroticism bump. Start 78–295c. Bankruptcy rookies: chance 0.46 to charter cheapest slip hull at home (listing removed, condition from listing, port wealth −ask/14). NPC peer loans: docked merchants may borrow coin (max 2 debts); sell margin repays creditors; traits bias avoiding creditors' home ports and fleeing shared docks.
+  NPC captains use the same trireme rules as the player (_SHIP_*): crew wine from hold (no daily grain draw), wear at sea, dock repair before voyage advance; docked officer pay + marine wages after that day's port trade; bankruptcy check follows trades and pay.
+  Active merchants: 2179  |  total hulls: 2179  (mean 1.00 ships/merchant)  |  run peak: richest purse 2031c, hulls sum 2490
+  Merchant wealth score (investments): fleet book 240c × hulls + cargo wholesale mark; balance sheet = purse + that score.
+  Median (buy+sell)/2 skill ≈ 1.029
+  Mean purse: skill ≥ median → 128.2 coins   skill < median → 137.2 coins
+  Investment wealth (fleet book + cargo~): sum 705215c  mean 323.6c  max 1447c
+  Balance sheet (purse + investments): sum 994416c  mean 456.4c  max 1508c  min 240c
+  Wealthiest 10% (218 of 2179 merchants, balance sheet desc): sum 152219c  mean 698.3c  range 618–1508c  |  purse mean 291.2c  inv mean 407.1c  |  hold 15.3% of all merchant balance-sheet coin
+  Cargo mark only (wholesale @ dock or voyage dest): sum 182255c  mean 83.6c  max 1207c
+  Fleet book only (240c/hull): sum 522960c  mean 240.0c  max 240c
+  Wealthiest 5 by balance sheet (purse + fleet book + cargo~; id / total / purse / inv / ships / buy / sell):
+    id 16506  total   1508  purse   61  inv  1447  (fleet  240 + cargo 1207)  ships  1  buy 1.06  sell 0.86
+    id 17647  total   1475  purse 1000  inv   475  (fleet  240 + cargo  235)  ships  1  buy 1.12  sell 1.12
+    id 17695  total   1408  purse   82  inv  1326  (fleet  240 + cargo 1086)  ships  1  buy 1.09  sell 1.09
+    id 14163  total   1225  purse   36  inv  1189  (fleet  240 + cargo  949)  ships  1  buy 1.24  sell 1.24
+    id 17682  total   1185  purse  155  inv  1030  (fleet  240 + cargo  790)  ships  1  buy 1.13  sell 1.13
+  Thinnest 5 balance sheets (same columns):
+    id 17797  total    240  purse    0  inv   240  (fleet  240 + cargo    0)  ships  1  buy 1.02  sell 1.07
+    id 18684  total    240  purse    0  inv   240  (fleet  240 + cargo    0)  ships  1  buy 0.92  sell 1.15
+    id 18747  total    240  purse    0  inv   240  (fleet  240 + cargo    0)  ships  1  buy 1.08  sell 1.04
+    id 18975  total    240  purse    0  inv   240  (fleet  240 + cargo    0)  ships  1  buy 1.11  sell 0.98
+    id 19235  total    240  purse    0  inv   240  (fleet  240 + cargo    0)  ships  1  buy 1.19  sell 1.19
+  Purse spread: min 0  max 1000  total 289201

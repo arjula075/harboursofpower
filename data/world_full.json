@@ -22,12 +22,35 @@
           "neapolis",
           "rhegium",
           "messana",
-          "panormus"
+          "panormus",
+          "tiber_mouth_bread",
+          "velletri_plain",
+          "antium_coast"
         ],
         [
           "carthage",
           "hippo",
-          "tingis"
+          "tingis",
+          "thapsus_bread",
+          "lepcis_minor_bread",
+          "pupput_fields"
+        ],
+        [
+          "gades",
+          "malaka",
+          "tingis",
+          "baitis_estuary",
+          "onoba_bread",
+          "carteia_coast"
+        ],
+        [
+          "tyre",
+          "sidon",
+          "acre_feed",
+          "dor_coast_bread",
+          "ptolemais_akkaron",
+          "kition",
+          "salamis_cyprus"
         ]
       ],
       "ally_toll_mul": 0.86,
@@ -54,7 +77,7 @@
     {
       "id": "iberia_gaul",
       "name": "Iberian coast & Ligurian sea",
-      "description": "Atlantic gateway and the Gallo-Iberian rim \u2014 Gades, Massalia, the Catalan strand."
+      "description": "Atlantic gateway and the Gallo-Iberian rim — Gades, Massalia, the Catalan strand."
     },
     {
       "id": "tyrrhenian",
@@ -96,8 +119,8 @@
     {
       "id": "akragas",
       "name": "Akragas",
-      "map_u": 0.435,
-      "map_v": 0.538,
+      "map_u": 0.33253,
+      "map_v": 0.594673,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -136,8 +159,8 @@
     {
       "id": "aleria",
       "name": "Alalia/Aleria",
-      "map_u": 0.35,
-      "map_v": 0.272,
+      "map_u": 0.3,
+      "map_v": 0.3,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -171,8 +194,8 @@
     {
       "id": "alexandria",
       "name": "Alexandria",
-      "map_u": 0.772,
-      "map_v": 0.878,
+      "map_u": 0.740644,
+      "map_v": 0.861884,
       "role": "metropole",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -228,8 +251,8 @@
     {
       "id": "antipolis",
       "name": "Antipolis",
-      "map_u": 0.301,
-      "map_v": 0.19,
+      "map_u": 0.175342,
+      "map_v": 0.28337,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -267,8 +290,8 @@
     {
       "id": "apollonia_cyrenaica",
       "name": "Apollonia",
-      "map_u": 0.605,
-      "map_v": 0.783,
+      "map_u": 0.536647,
+      "map_v": 0.800277,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -309,8 +332,8 @@
     {
       "id": "arados",
       "name": "Arados",
-      "map_u": 0.894,
-      "map_v": 0.675,
+      "map_u": 0.896186,
+      "map_v": 0.644416,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -354,8 +377,8 @@
     {
       "id": "athens_piraeus",
       "name": "Athens / Piraeus",
-      "map_u": 0.642,
-      "map_v": 0.503,
+      "map_u": 0.59,
+      "map_v": 0.5,
       "role": "metropole",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -410,8 +433,8 @@
     {
       "id": "byblos",
       "name": "Byblos",
-      "map_u": 0.89,
-      "map_v": 0.716,
+      "map_u": 0.890265,
+      "map_v": 0.684639,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -455,8 +478,8 @@
     {
       "id": "byzantion",
       "name": "Byzantion",
-      "map_u": 0.753,
-      "map_v": 0.333,
+      "map_u": 0.730208,
+      "map_v": 0.340149,
       "role": "imperial_port",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 2,
@@ -502,8 +525,8 @@
     {
       "id": "caere",
       "name": "Caere",
-      "map_u": 0.404,
-      "map_v": 0.278,
+      "map_u": 0.300457,
+      "map_v": 0.349703,
       "role": "regional_capital",
       "industrial_metal_per_day": 4,
       "industrial_wire_per_day": 3,
@@ -543,8 +566,8 @@
     {
       "id": "caralis",
       "name": "Caralis",
-      "map_u": 0.343,
-      "map_v": 0.432,
+      "map_u": 0.221432,
+      "map_v": 0.509024,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -588,8 +611,8 @@
     {
       "id": "carthage",
       "name": "Carthage",
-      "map_u": 0.47,
-      "map_v": 0.52,
+      "map_u": 0.376191,
+      "map_v": 0.571056,
       "role": "metropole",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 5,
@@ -611,7 +634,7 @@
         "gold": 2,
         "silver": 5
       },
-      "npc_traders": 30,
+      "npc_traders": 36,
       "population_grain_per_day": 16,
       "population_wine_per_day": 4,
       "population_fish_per_day": 5,
@@ -647,8 +670,8 @@
     {
       "id": "carthago_nova",
       "name": "Carthago Nova",
-      "map_u": 0.134,
-      "map_v": 0.522,
+      "map_u": 0.0,
+      "map_v": 0.633202,
       "role": "imperial_port",
       "industrial_metal_per_day": 7,
       "industrial_wire_per_day": 4,
@@ -695,8 +718,8 @@
     {
       "id": "catane",
       "name": "Catane",
-      "map_u": 0.466,
-      "map_v": 0.528,
+      "map_u": 0.371059,
+      "map_v": 0.579481,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -732,8 +755,8 @@
     {
       "id": "chalcedon",
       "name": "Chalcedon",
-      "map_u": 0.753,
-      "map_v": 0.334,
+      "map_u": 0.730184,
+      "map_v": 0.341113,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -775,8 +798,8 @@
     {
       "id": "chalcis",
       "name": "Chalcis",
-      "map_u": 0.641,
-      "map_v": 0.474,
+      "map_u": 0.5885,
+      "map_v": 0.496084,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -817,8 +840,8 @@
     {
       "id": "chersonesos",
       "name": "Chersonesos",
-      "map_u": 0.845,
-      "map_v": 0.133,
+      "map_u": 0.848623,
+      "map_v": 0.130949,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -857,8 +880,8 @@
     {
       "id": "corinth",
       "name": "Corinth",
-      "map_u": 0.627,
-      "map_v": 0.503,
+      "map_u": 0.570515,
+      "map_v": 0.526537,
       "role": "great_city",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -904,8 +927,8 @@
     {
       "id": "croton",
       "name": "Croton",
-      "map_u": 0.508,
-      "map_v": 0.44,
+      "map_u": 0.425039,
+      "map_v": 0.48716,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -946,8 +969,8 @@
     {
       "id": "cumae",
       "name": "Cumae",
-      "map_u": 0.444,
-      "map_v": 0.342,
+      "map_u": 0.348333,
+      "map_v": 0.404202,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -988,8 +1011,8 @@
     {
       "id": "cyrene",
       "name": "Cyrene",
-      "map_u": 0.605,
-      "map_v": 0.788,
+      "map_u": 0.55,
+      "map_v": 0.82,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1028,8 +1051,8 @@
     {
       "id": "emporion",
       "name": "Emporion",
-      "map_u": 0.219,
-      "map_v": 0.271,
+      "map_u": 0.072123,
+      "map_v": 0.376114,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1070,8 +1093,8 @@
     {
       "id": "ephesus",
       "name": "Ephesus",
-      "map_u": 0.718,
-      "map_v": 0.503,
+      "map_u": 0.75,
+      "map_v": 0.52,
       "role": "great_city",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -1117,8 +1140,8 @@
     {
       "id": "eretria",
       "name": "Eretria",
-      "map_u": 0.645,
-      "map_v": 0.478,
+      "map_u": 0.593345,
+      "map_v": 0.499222,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1159,8 +1182,8 @@
     {
       "id": "gades",
       "name": "Gades",
-      "map_u": 0.03,
-      "map_v": 0.582,
+      "map_u": 0.0,
+      "map_v": 0.709655,
       "role": "metropole",
       "industrial_metal_per_day": 7,
       "industrial_wire_per_day": 5,
@@ -1182,7 +1205,7 @@
         "silver": 25,
         "gold": 2
       },
-      "npc_traders": 30,
+      "npc_traders": 36,
       "population_grain_per_day": 13,
       "population_wine_per_day": 4,
       "population_fish_per_day": 5,
@@ -1218,8 +1241,8 @@
     {
       "id": "gela",
       "name": "Gela",
-      "map_u": 0.448,
-      "map_v": 0.552,
+      "map_u": 0.348252,
+      "map_v": 0.605833,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1255,8 +1278,8 @@
     {
       "id": "gythion",
       "name": "Gythion",
-      "map_u": 0.62,
-      "map_v": 0.569,
+      "map_u": 0.560291,
+      "map_v": 0.591386,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1297,8 +1320,8 @@
     {
       "id": "halicarnassus",
       "name": "Halicarnassus",
-      "map_u": 0.72,
-      "map_v": 0.553,
+      "map_u": 0.684188,
+      "map_v": 0.558047,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1339,8 +1362,8 @@
     {
       "id": "hippo",
       "name": "Hippo Regius",
-      "map_u": 0.44,
-      "map_v": 0.56,
+      "map_u": 0.33818,
+      "map_v": 0.614975,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1377,8 +1400,8 @@
     {
       "id": "kition",
       "name": "Kition",
-      "map_u": 0.848,
-      "map_v": 0.671,
+      "map_u": 0.839465,
+      "map_v": 0.648806,
       "role": "regional_capital",
       "industrial_metal_per_day": 5,
       "industrial_wire_per_day": 3,
@@ -1424,8 +1447,8 @@
     {
       "id": "knossos",
       "name": "Knossos",
-      "map_u": 0.673,
-      "map_v": 0.65,
+      "map_u": 0.675,
+      "map_v": 0.72,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1466,8 +1489,8 @@
     {
       "id": "kydonia",
       "name": "Kydonia",
-      "map_u": 0.65,
-      "map_v": 0.638,
+      "map_u": 0.595695,
+      "map_v": 0.652495,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1505,8 +1528,8 @@
     {
       "id": "leptis_magna",
       "name": "Leptis Magna",
-      "map_u": 0.449,
-      "map_v": 0.798,
+      "map_u": 0.343606,
+      "map_v": 0.842689,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -1550,8 +1573,8 @@
     {
       "id": "locri",
       "name": "Locri",
-      "map_u": 0.49,
-      "map_v": 0.487,
+      "map_u": 0.401683,
+      "map_v": 0.535674,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1592,8 +1615,8 @@
     {
       "id": "malaka",
       "name": "Malaka",
-      "map_u": 0.064,
-      "map_v": 0.571,
+      "map_u": 0.0,
+      "map_v": 0.692962,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -1637,8 +1660,8 @@
     {
       "id": "massalia",
       "name": "Massalia",
-      "map_u": 0.265,
-      "map_v": 0.206,
+      "map_u": 0.2,
+      "map_v": 0.18,
       "role": "great_city",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -1683,8 +1706,8 @@
     {
       "id": "megara",
       "name": "Megara",
-      "map_u": 0.636,
-      "map_v": 0.501,
+      "map_u": 0.581679,
+      "map_v": 0.522997,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1722,8 +1745,8 @@
     {
       "id": "memphis",
       "name": "Memphis",
-      "map_u": 0.799,
-      "map_v": 0.94,
+      "map_u": 0.772511,
+      "map_v": 0.916786,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1764,8 +1787,8 @@
     {
       "id": "messana",
       "name": "Messana",
-      "map_u": 0.68,
-      "map_v": 0.41,
+      "map_u": 0.425,
+      "map_v": 0.48,
       "role": "breadbasket",
       "industrial_metal_per_day": 2,
       "industrial_wire_per_day": 3,
@@ -1806,8 +1829,8 @@
     {
       "id": "miletus",
       "name": "Miletus",
-      "map_u": 0.717,
-      "map_v": 0.526,
+      "map_u": 0.681128,
+      "map_v": 0.532569,
       "role": "great_city",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -1852,8 +1875,8 @@
     {
       "id": "motya",
       "name": "Motya",
-      "map_u": 0.412,
-      "map_v": 0.507,
+      "map_u": 0.304863,
+      "map_v": 0.568924,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -1897,8 +1920,8 @@
     {
       "id": "naucratis",
       "name": "Naucratis",
-      "map_u": 0.786,
-      "map_v": 0.894,
+      "map_u": 0.757554,
+      "map_v": 0.874792,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1942,8 +1965,8 @@
     {
       "id": "naxos_sicily",
       "name": "Naxos",
-      "map_u": 0.47,
-      "map_v": 0.509,
+      "map_u": 0.376454,
+      "map_v": 0.560456,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1981,8 +2004,8 @@
     {
       "id": "neapolis",
       "name": "Neapolis",
-      "map_u": 0.58,
-      "map_v": 0.26,
+      "map_u": 0.518273,
+      "map_v": 0.300815,
       "role": "great_city",
       "industrial_metal_per_day": 2,
       "industrial_wire_per_day": 2,
@@ -2026,8 +2049,8 @@
     {
       "id": "nikaia",
       "name": "Nikaia",
-      "map_u": 0.305,
-      "map_v": 0.183,
+      "map_u": 0.18045,
+      "map_v": 0.275908,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2065,8 +2088,8 @@
     {
       "id": "oea",
       "name": "Oea",
-      "map_u": 0.427,
-      "map_v": 0.784,
+      "map_u": 0.316767,
+      "map_v": 0.833142,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -2107,8 +2130,8 @@
     {
       "id": "olbia_sardinia",
       "name": "Olbia",
-      "map_u": 0.351,
-      "map_v": 0.338,
+      "map_u": 0.23356,
+      "map_v": 0.417015,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -2152,8 +2175,8 @@
     {
       "id": "olbia_pontic",
       "name": "Olbia Pontica",
-      "map_u": 0.813,
-      "map_v": 0.06,
+      "map_u": 0.825,
+      "map_v": 0.08,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2192,8 +2215,8 @@
     {
       "id": "ostia",
       "name": "Ostia",
-      "map_u": 0.52,
-      "map_v": 0.2,
+      "map_u": 0.445599,
+      "map_v": 0.253755,
       "role": "imperial_port",
       "industrial_metal_per_day": 4,
       "industrial_wire_per_day": 3,
@@ -2215,7 +2238,7 @@
         "gold": 3,
         "silver": 6
       },
-      "npc_traders": 27,
+      "npc_traders": 34,
       "population_grain_per_day": 11,
       "population_wine_per_day": 2,
       "population_fish_per_day": 2,
@@ -2245,8 +2268,8 @@
     {
       "id": "panormus",
       "name": "Panormus",
-      "map_u": 0.6,
-      "map_v": 0.45,
+      "map_u": 0.538433,
+      "map_v": 0.480307,
       "role": "breadbasket",
       "industrial_metal_per_day": 2,
       "industrial_wire_per_day": 2,
@@ -2289,8 +2312,8 @@
     {
       "id": "pantikapaion",
       "name": "Pantikapaion",
-      "map_u": 0.907,
-      "map_v": 0.092,
+      "map_u": 0.926182,
+      "map_v": 0.080331,
       "role": "great_city",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -2335,8 +2358,8 @@
     {
       "id": "paphos",
       "name": "Paphos",
-      "map_u": 0.823,
-      "map_v": 0.679,
+      "map_u": 0.808395,
+      "map_v": 0.660996,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2377,8 +2400,8 @@
     {
       "id": "populonia",
       "name": "Populonia",
-      "map_u": 0.371,
-      "map_v": 0.223,
+      "map_u": 0.261013,
+      "map_v": 0.302621,
       "role": "regional_capital",
       "industrial_metal_per_day": 8,
       "industrial_wire_per_day": 3,
@@ -2421,8 +2444,8 @@
     {
       "id": "poseidonia",
       "name": "Poseidonia",
-      "map_u": 0.464,
-      "map_v": 0.366,
+      "map_u": 0.372462,
+      "map_v": 0.423743,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2463,8 +2486,8 @@
     {
       "id": "pyrgi",
       "name": "Pyrgi",
-      "map_u": 0.401,
-      "map_v": 0.277,
+      "map_u": 0.296776,
+      "map_v": 0.349277,
       "role": "maritime_town",
       "industrial_metal_per_day": 4,
       "industrial_wire_per_day": 3,
@@ -2501,8 +2524,8 @@
     {
       "id": "rhegium",
       "name": "Rhegium",
-      "map_u": 0.63,
-      "map_v": 0.36,
+      "map_u": 0.577639,
+      "map_v": 0.38821,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2542,8 +2565,8 @@
     {
       "id": "rhode_iberia",
       "name": "Rhode",
-      "map_u": 0.22,
-      "map_v": 0.263,
+      "map_u": 0.07355,
+      "map_v": 0.368227,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2581,8 +2604,8 @@
     {
       "id": "rhodes",
       "name": "Rhodes",
-      "map_u": 0.736,
-      "map_v": 0.587,
+      "map_u": 0.703137,
+      "map_v": 0.58794,
       "role": "great_city",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -2628,8 +2651,8 @@
     {
       "id": "rome",
       "name": "Rome",
-      "map_u": 0.412,
-      "map_v": 0.283,
+      "map_u": 0.310219,
+      "map_v": 0.353087,
       "role": "great_city",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -2673,8 +2696,8 @@
     {
       "id": "sabratha",
       "name": "Sabratha",
-      "map_u": 0.412,
-      "map_v": 0.789,
+      "map_u": 0.298121,
+      "map_v": 0.840648,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -2715,8 +2738,8 @@
     {
       "id": "salamis_cyprus",
       "name": "Salamis",
-      "map_u": 0.854,
-      "map_v": 0.657,
+      "map_u": 0.84721,
+      "map_v": 0.634241,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2757,8 +2780,8 @@
     {
       "id": "selinus",
       "name": "Selinus",
-      "map_u": 0.419,
-      "map_v": 0.523,
+      "map_u": 0.313127,
+      "map_v": 0.583087,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2799,8 +2822,8 @@
     {
       "id": "sexi",
       "name": "Sexi",
-      "map_u": 0.079,
-      "map_v": 0.571,
+      "map_u": 0.0,
+      "map_v": 0.690274,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -2841,8 +2864,8 @@
     {
       "id": "sidon",
       "name": "Sidon",
-      "map_u": 0.884,
-      "map_v": 0.747,
+      "map_u": 0.882113,
+      "map_v": 0.715585,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -2887,8 +2910,8 @@
     {
       "id": "sinope",
       "name": "Sinope",
-      "map_u": 0.879,
-      "map_v": 0.276,
+      "map_u": 0.887199,
+      "map_v": 0.262644,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2929,8 +2952,8 @@
     {
       "id": "smyrna",
       "name": "Smyrna",
-      "map_u": 0.714,
-      "map_v": 0.477,
+      "map_u": 0.678594,
+      "map_v": 0.485892,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2971,8 +2994,8 @@
     {
       "id": "solus",
       "name": "Solus",
-      "map_u": 0.434,
-      "map_v": 0.494,
+      "map_u": 0.332347,
+      "map_v": 0.552455,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -3013,8 +3036,8 @@
     {
       "id": "sulci",
       "name": "Sulci",
-      "map_u": 0.328,
-      "map_v": 0.441,
+      "map_u": 0.202689,
+      "map_v": 0.520384,
       "role": "regional_capital",
       "industrial_metal_per_day": 5,
       "industrial_wire_per_day": 3,
@@ -3060,8 +3083,8 @@
     {
       "id": "syracuse",
       "name": "Syracuse",
-      "map_u": 0.47,
-      "map_v": 0.552,
+      "map_u": 0.375426,
+      "map_v": 0.60189,
       "role": "great_city",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -3106,8 +3129,8 @@
     {
       "id": "taras",
       "name": "Taras",
-      "map_u": 0.51,
-      "map_v": 0.363,
+      "map_u": 0.42935,
+      "map_v": 0.412608,
       "role": "great_city",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 3,
@@ -3152,8 +3175,8 @@
     {
       "id": "tharros",
       "name": "Tharros",
-      "map_u": 0.329,
-      "map_v": 0.396,
+      "map_u": 0.205,
+      "map_v": 0.476845,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -3197,8 +3220,8 @@
     {
       "id": "tingis",
       "name": "Tingis",
-      "map_u": 0.28,
-      "map_v": 0.48,
+      "map_u": 0.04,
+      "map_v": 0.6,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 2,
@@ -3242,8 +3265,8 @@
     {
       "id": "trapezus",
       "name": "Trapezus",
-      "map_u": 0.97,
-      "map_v": 0.333,
+      "map_u": 0.998234,
+      "map_v": 0.301258,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -3284,8 +3307,8 @@
     {
       "id": "tyre",
       "name": "Tyre",
-      "map_u": 0.88,
-      "map_v": 0.763,
+      "map_u": 0.91,
+      "map_v": 0.65,
       "role": "metropole",
       "industrial_metal_per_day": 3,
       "industrial_wire_per_day": 5,
@@ -3307,7 +3330,7 @@
         "gold": 2,
         "silver": 5
       },
-      "npc_traders": 30,
+      "npc_traders": 36,
       "population_grain_per_day": 13,
       "population_wine_per_day": 4,
       "population_fish_per_day": 5,
@@ -3340,8 +3363,8 @@
     {
       "id": "utica",
       "name": "Utica",
-      "map_u": 0.362,
-      "map_v": 0.553,
+      "map_u": 0.242006,
+      "map_v": 0.622209,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 3,
@@ -3381,6 +3404,904 @@
       },
       "npc_traders_base": 6,
       "chart_area_id": "north_africa"
+    },
+    {
+      "id": "cenchreae_bread",
+      "name": "Cenchreae (grain road)",
+      "map_u": 0.586,
+      "map_v": 0.524,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 140,
+        "wine": 55,
+        "salt": 28,
+        "olive_oil": 40,
+        "pottery": 40,
+        "fish": 35,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 12,
+        "wire": 9,
+        "spice": 4,
+        "slaves": 22,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 108,
+      "trade_price_bias": {
+        "grain": -0.07,
+        "wine": -0.04
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "aegean"
+    },
+    {
+      "id": "sicyon_bread",
+      "name": "Sicyon (coastal fields)",
+      "map_u": 0.552,
+      "map_v": 0.531,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 135,
+        "wine": 52,
+        "salt": 26,
+        "olive_oil": 38,
+        "pottery": 38,
+        "fish": 32,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 11,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 105,
+      "trade_price_bias": {
+        "grain": -0.07
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "aegean"
+    },
+    {
+      "id": "troezen_coast",
+      "name": "Troezen (Argolid grain)",
+      "map_u": 0.545,
+      "map_v": 0.518,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 130,
+        "wine": 50,
+        "salt": 25,
+        "olive_oil": 36,
+        "pottery": 36,
+        "fish": 34,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 102,
+      "trade_price_bias": {
+        "grain": -0.06,
+        "fish": -0.04
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "aegean"
+    },
+    {
+      "id": "agde_bread",
+      "name": "Agde (coastal granary)",
+      "map_u": 0.218,
+      "map_v": 0.165,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 138,
+        "wine": 54,
+        "salt": 30,
+        "olive_oil": 40,
+        "pottery": 40,
+        "fish": 38,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 11,
+        "wire": 8,
+        "spice": 4,
+        "slaves": 22,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 106,
+      "trade_price_bias": {
+        "grain": -0.07
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "iberia_gaul"
+    },
+    {
+      "id": "ager_narbonensis",
+      "name": "Narbonensis strip (grain)",
+      "map_u": 0.188,
+      "map_v": 0.195,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 142,
+        "wine": 52,
+        "salt": 28,
+        "olive_oil": 38,
+        "pottery": 38,
+        "fish": 36,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 104,
+      "trade_price_bias": {
+        "grain": -0.07
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "iberia_gaul"
+    },
+    {
+      "id": "arelate_bread",
+      "name": "Arelate (Rhône delta grain)",
+      "map_u": 0.232,
+      "map_v": 0.178,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 145,
+        "wine": 50,
+        "salt": 27,
+        "olive_oil": 36,
+        "pottery": 36,
+        "fish": 34,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 105,
+      "trade_price_bias": {
+        "grain": -0.08
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "iberia_gaul"
+    },
+    {
+      "id": "larnaca_fields",
+      "name": "Larnaca plain (grain)",
+      "map_u": 0.852,
+      "map_v": 0.642,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 132,
+        "wine": 48,
+        "salt": 32,
+        "olive_oil": 34,
+        "pottery": 34,
+        "fish": 40,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 4,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 102,
+      "trade_price_bias": {
+        "grain": -0.07,
+        "fish": -0.04
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "levant_cyprus"
+    },
+    {
+      "id": "kourion_coast",
+      "name": "Kourion (coastal barley)",
+      "map_u": 0.828,
+      "map_v": 0.652,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 128,
+        "wine": 46,
+        "salt": 30,
+        "olive_oil": 32,
+        "pottery": 32,
+        "fish": 42,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 100,
+      "trade_price_bias": {
+        "grain": -0.06
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "levant_cyprus"
+    },
+    {
+      "id": "maroni_plain",
+      "name": "Maroni (eastern Cyprus grain)",
+      "map_u": 0.862,
+      "map_v": 0.658,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 125,
+        "wine": 44,
+        "salt": 30,
+        "olive_oil": 32,
+        "pottery": 32,
+        "fish": 38,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 98,
+      "trade_price_bias": {
+        "grain": -0.06
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "levant_cyprus"
+    },
+    {
+      "id": "mazara_bread",
+      "name": "Mazara (Sicilian grain)",
+      "map_u": 0.298,
+      "map_v": 0.578,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 138,
+        "wine": 52,
+        "salt": 26,
+        "olive_oil": 38,
+        "pottery": 38,
+        "fish": 36,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 11,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 22,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 104,
+      "trade_price_bias": {
+        "grain": -0.07
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "sicily_ionian"
+    },
+    {
+      "id": "sciacca_coast",
+      "name": "Sciacca roadstead (grain)",
+      "map_u": 0.318,
+      "map_v": 0.592,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 134,
+        "wine": 50,
+        "salt": 26,
+        "olive_oil": 36,
+        "pottery": 36,
+        "fish": 38,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 102,
+      "trade_price_bias": {
+        "grain": -0.06,
+        "fish": -0.04
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "sicily_ionian"
+    },
+    {
+      "id": "licata_bread",
+      "name": "Licata (southern Sicily grain)",
+      "map_u": 0.308,
+      "map_v": 0.565,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 136,
+        "wine": 48,
+        "salt": 26,
+        "olive_oil": 36,
+        "pottery": 36,
+        "fish": 34,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 101,
+      "trade_price_bias": {
+        "grain": -0.07
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "sicily_ionian"
+    },
+    {
+      "id": "tiber_mouth_bread",
+      "name": "Tiber mouth farms",
+      "map_u": 0.444,
+      "map_v": 0.2525,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 140,
+        "wine": 48,
+        "salt": 28,
+        "olive_oil": 36,
+        "pottery": 38,
+        "fish": 30,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 11,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 22,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 2,
+      "initial_wealth": 106,
+      "trade_price_bias": {
+        "grain": -0.07
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "tyrrhenian"
+    },
+    {
+      "id": "velletri_plain",
+      "name": "Velletri plain (Latium grain)",
+      "map_u": 0.322,
+      "map_v": 0.338,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 132,
+        "wine": 46,
+        "salt": 26,
+        "olive_oil": 34,
+        "pottery": 36,
+        "fish": 28,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 2,
+      "initial_wealth": 102,
+      "trade_price_bias": {
+        "grain": -0.06
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "tyrrhenian"
+    },
+    {
+      "id": "antium_coast",
+      "name": "Antium coast (grain)",
+      "map_u": 0.358,
+      "map_v": 0.272,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 128,
+        "wine": 44,
+        "salt": 28,
+        "olive_oil": 34,
+        "pottery": 36,
+        "fish": 32,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 100,
+      "trade_price_bias": {
+        "grain": -0.06,
+        "fish": -0.04
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "tyrrhenian"
+    },
+    {
+      "id": "thapsus_bread",
+      "name": "Thapsus strip (grain)",
+      "map_u": 0.362,
+      "map_v": 0.598,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 136,
+        "wine": 48,
+        "salt": 34,
+        "olive_oil": 32,
+        "pottery": 32,
+        "fish": 36,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 22,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 103,
+      "trade_price_bias": {
+        "grain": -0.07
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "north_africa"
+    },
+    {
+      "id": "lepcis_minor_bread",
+      "name": "Leptis Minor (Sahel grain)",
+      "map_u": 0.398,
+      "map_v": 0.552,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 130,
+        "wine": 44,
+        "salt": 36,
+        "olive_oil": 30,
+        "pottery": 30,
+        "fish": 34,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 99,
+      "trade_price_bias": {
+        "grain": -0.06
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "north_africa"
+    },
+    {
+      "id": "pupput_fields",
+      "name": "Pupput (Cap Bon grain)",
+      "map_u": 0.384,
+      "map_v": 0.562,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 134,
+        "wine": 46,
+        "salt": 32,
+        "olive_oil": 32,
+        "pottery": 32,
+        "fish": 38,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 101,
+      "trade_price_bias": {
+        "grain": -0.07,
+        "fish": -0.04
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "north_africa"
+    },
+    {
+      "id": "baitis_estuary",
+      "name": "Baetis estuary farms",
+      "map_u": 0.018,
+      "map_v": 0.718,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 140,
+        "wine": 50,
+        "salt": 40,
+        "olive_oil": 34,
+        "pottery": 34,
+        "fish": 42,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 12,
+        "wire": 9,
+        "spice": 4,
+        "slaves": 22,
+        "gold": 0,
+        "silver": 2
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 104,
+      "trade_price_bias": {
+        "grain": -0.07,
+        "fish": -0.05
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "iberia_gaul"
+    },
+    {
+      "id": "onoba_bread",
+      "name": "Onoba (Atlantic grain)",
+      "map_u": 0.042,
+      "map_v": 0.698,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 132,
+        "wine": 48,
+        "salt": 38,
+        "olive_oil": 32,
+        "pottery": 32,
+        "fish": 44,
+        "timber": 22,
+        "textiles": 22,
+        "metal": 11,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 5,
+      "initial_wealth": 100,
+      "trade_price_bias": {
+        "grain": -0.06,
+        "fish": -0.05
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "iberia_gaul"
+    },
+    {
+      "id": "carteia_coast",
+      "name": "Carteia (Bay of Cádiz grain)",
+      "map_u": 0.032,
+      "map_v": 0.728,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 128,
+        "wine": 46,
+        "salt": 40,
+        "olive_oil": 30,
+        "pottery": 30,
+        "fish": 40,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 98,
+      "trade_price_bias": {
+        "grain": -0.06,
+        "fish": -0.05
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "iberia_gaul"
+    },
+    {
+      "id": "acre_feed",
+      "name": "Acre plain (grain)",
+      "map_u": 0.882,
+      "map_v": 0.642,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 130,
+        "wine": 46,
+        "salt": 38,
+        "olive_oil": 32,
+        "pottery": 32,
+        "fish": 38,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 4,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 100,
+      "trade_price_bias": {
+        "grain": -0.07
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "levant_cyprus"
+    },
+    {
+      "id": "dor_coast_bread",
+      "name": "Dor coast (grain)",
+      "map_u": 0.898,
+      "map_v": 0.658,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 126,
+        "wine": 44,
+        "salt": 36,
+        "olive_oil": 30,
+        "pottery": 30,
+        "fish": 40,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 4,
+      "initial_wealth": 98,
+      "trade_price_bias": {
+        "grain": -0.06,
+        "fish": -0.04
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "levant_cyprus"
+    },
+    {
+      "id": "ptolemais_akkaron",
+      "name": "Ptolemais (Akko plain grain)",
+      "map_u": 0.902,
+      "map_v": 0.632,
+      "role": "breadbasket",
+      "industrial_metal_per_day": 1,
+      "industrial_wire_per_day": 1,
+      "industrial_timber_per_day": 1,
+      "industrial_textiles_per_day": 1,
+      "initial_stock": {
+        "grain": 128,
+        "wine": 44,
+        "salt": 36,
+        "olive_oil": 30,
+        "pottery": 30,
+        "fish": 36,
+        "timber": 20,
+        "textiles": 20,
+        "metal": 10,
+        "wire": 8,
+        "spice": 3,
+        "slaves": 20,
+        "gold": 0,
+        "silver": 1
+      },
+      "npc_traders": 20,
+      "population_grain_per_day": 4,
+      "population_wine_per_day": 2,
+      "population_fish_per_day": 3,
+      "initial_wealth": 99,
+      "trade_price_bias": {
+        "grain": -0.06
+      },
+      "npc_traders_base": 3,
+      "chart_area_id": "levant_cyprus"
     }
   ],
   "farms": [
@@ -3983,6 +4904,198 @@
       "grain_per_day": 4,
       "wine_per_day": 2,
       "fish_per_day": 5
+    },
+    {
+      "id": "cenchreae_bread_hinterland",
+      "name": "Cenchreae (grain road) hinterland",
+      "port_id": "cenchreae_bread",
+      "grain_per_day": 12,
+      "wine_per_day": 3,
+      "fish_per_day": 3
+    },
+    {
+      "id": "sicyon_bread_hinterland",
+      "name": "Sicyon (coastal fields) hinterland",
+      "port_id": "sicyon_bread",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 3
+    },
+    {
+      "id": "troezen_coast_hinterland",
+      "name": "Troezen (Argolid grain) hinterland",
+      "port_id": "troezen_coast",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 4
+    },
+    {
+      "id": "agde_bread_hinterland",
+      "name": "Agde (coastal granary) hinterland",
+      "port_id": "agde_bread",
+      "grain_per_day": 12,
+      "wine_per_day": 3,
+      "fish_per_day": 3
+    },
+    {
+      "id": "ager_narbonensis_hinterland",
+      "name": "Narbonensis strip (grain) hinterland",
+      "port_id": "ager_narbonensis",
+      "grain_per_day": 12,
+      "wine_per_day": 3,
+      "fish_per_day": 3
+    },
+    {
+      "id": "arelate_bread_hinterland",
+      "name": "Arelate (Rhône delta grain) hinterland",
+      "port_id": "arelate_bread",
+      "grain_per_day": 13,
+      "wine_per_day": 3,
+      "fish_per_day": 3
+    },
+    {
+      "id": "larnaca_fields_hinterland",
+      "name": "Larnaca plain (grain) hinterland",
+      "port_id": "larnaca_fields",
+      "grain_per_day": 12,
+      "wine_per_day": 3,
+      "fish_per_day": 4
+    },
+    {
+      "id": "kourion_coast_hinterland",
+      "name": "Kourion (coastal barley) hinterland",
+      "port_id": "kourion_coast",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 4
+    },
+    {
+      "id": "maroni_plain_hinterland",
+      "name": "Maroni (eastern Cyprus grain) hinterland",
+      "port_id": "maroni_plain",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 3
+    },
+    {
+      "id": "mazara_bread_hinterland",
+      "name": "Mazara (Sicilian grain) hinterland",
+      "port_id": "mazara_bread",
+      "grain_per_day": 12,
+      "wine_per_day": 3,
+      "fish_per_day": 3
+    },
+    {
+      "id": "sciacca_coast_hinterland",
+      "name": "Sciacca roadstead (grain) hinterland",
+      "port_id": "sciacca_coast",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 4
+    },
+    {
+      "id": "licata_bread_hinterland",
+      "name": "Licata (southern Sicily grain) hinterland",
+      "port_id": "licata_bread",
+      "grain_per_day": 12,
+      "wine_per_day": 3,
+      "fish_per_day": 3
+    },
+    {
+      "id": "tiber_mouth_bread_hinterland",
+      "name": "Tiber mouth farms hinterland",
+      "port_id": "tiber_mouth_bread",
+      "grain_per_day": 12,
+      "wine_per_day": 3,
+      "fish_per_day": 2
+    },
+    {
+      "id": "velletri_plain_hinterland",
+      "name": "Velletri plain (Latium grain) hinterland",
+      "port_id": "velletri_plain",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 2
+    },
+    {
+      "id": "antium_coast_hinterland",
+      "name": "Antium coast (grain) hinterland",
+      "port_id": "antium_coast",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 3
+    },
+    {
+      "id": "thapsus_bread_hinterland",
+      "name": "Thapsus strip (grain) hinterland",
+      "port_id": "thapsus_bread",
+      "grain_per_day": 12,
+      "wine_per_day": 3,
+      "fish_per_day": 4
+    },
+    {
+      "id": "lepcis_minor_bread_hinterland",
+      "name": "Leptis Minor (Sahel grain) hinterland",
+      "port_id": "lepcis_minor_bread",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 4
+    },
+    {
+      "id": "pupput_fields_hinterland",
+      "name": "Pupput (Cap Bon grain) hinterland",
+      "port_id": "pupput_fields",
+      "grain_per_day": 12,
+      "wine_per_day": 3,
+      "fish_per_day": 4
+    },
+    {
+      "id": "baitis_estuary_hinterland",
+      "name": "Baetis estuary farms hinterland",
+      "port_id": "baitis_estuary",
+      "grain_per_day": 12,
+      "wine_per_day": 3,
+      "fish_per_day": 4
+    },
+    {
+      "id": "onoba_bread_hinterland",
+      "name": "Onoba (Atlantic grain) hinterland",
+      "port_id": "onoba_bread",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 5
+    },
+    {
+      "id": "carteia_coast_hinterland",
+      "name": "Carteia (Bay of Cádiz grain) hinterland",
+      "port_id": "carteia_coast",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 4
+    },
+    {
+      "id": "acre_feed_hinterland",
+      "name": "Acre plain (grain) hinterland",
+      "port_id": "acre_feed",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 3
+    },
+    {
+      "id": "dor_coast_bread_hinterland",
+      "name": "Dor coast (grain) hinterland",
+      "port_id": "dor_coast_bread",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 4
+    },
+    {
+      "id": "ptolemais_akkaron_hinterland",
+      "name": "Ptolemais (Akko plain grain) hinterland",
+      "port_id": "ptolemais_akkaron",
+      "grain_per_day": 11,
+      "wine_per_day": 3,
+      "fish_per_day": 3
     }
   ],
   "mines": [
@@ -31856,6 +32969,211 @@
       "from": "utica",
       "to": "tyre",
       "days": 21
+    },
+    {
+      "from": "cenchreae_bread",
+      "to": "corinth",
+      "days": 1
+    },
+    {
+      "from": "sicyon_bread",
+      "to": "corinth",
+      "days": 1
+    },
+    {
+      "from": "troezen_coast",
+      "to": "corinth",
+      "days": 2
+    },
+    {
+      "from": "agde_bread",
+      "to": "massalia",
+      "days": 2
+    },
+    {
+      "from": "ager_narbonensis",
+      "to": "massalia",
+      "days": 2
+    },
+    {
+      "from": "arelate_bread",
+      "to": "massalia",
+      "days": 2
+    },
+    {
+      "from": "larnaca_fields",
+      "to": "kition",
+      "days": 1
+    },
+    {
+      "from": "kourion_coast",
+      "to": "kition",
+      "days": 1
+    },
+    {
+      "from": "maroni_plain",
+      "to": "kition",
+      "days": 1
+    },
+    {
+      "from": "maroni_plain",
+      "to": "salamis_cyprus",
+      "days": 1
+    },
+    {
+      "from": "mazara_bread",
+      "to": "selinus",
+      "days": 1
+    },
+    {
+      "from": "sciacca_coast",
+      "to": "selinus",
+      "days": 1
+    },
+    {
+      "from": "licata_bread",
+      "to": "selinus",
+      "days": 1
+    },
+    {
+      "from": "licata_bread",
+      "to": "gela",
+      "days": 1
+    },
+    {
+      "from": "tiber_mouth_bread",
+      "to": "ostia",
+      "days": 1
+    },
+    {
+      "from": "tiber_mouth_bread",
+      "to": "rome",
+      "days": 2
+    },
+    {
+      "from": "velletri_plain",
+      "to": "rome",
+      "days": 1
+    },
+    {
+      "from": "antium_coast",
+      "to": "ostia",
+      "days": 2
+    },
+    {
+      "from": "thapsus_bread",
+      "to": "carthage",
+      "days": 2
+    },
+    {
+      "from": "lepcis_minor_bread",
+      "to": "carthage",
+      "days": 3
+    },
+    {
+      "from": "pupput_fields",
+      "to": "carthage",
+      "days": 1
+    },
+    {
+      "from": "baitis_estuary",
+      "to": "gades",
+      "days": 1
+    },
+    {
+      "from": "onoba_bread",
+      "to": "gades",
+      "days": 1
+    },
+    {
+      "from": "carteia_coast",
+      "to": "gades",
+      "days": 1
+    },
+    {
+      "from": "acre_feed",
+      "to": "tyre",
+      "days": 1
+    },
+    {
+      "from": "dor_coast_bread",
+      "to": "tyre",
+      "days": 1
+    },
+    {
+      "from": "ptolemais_akkaron",
+      "to": "tyre",
+      "days": 2
+    },
+    {
+      "from": "ptolemais_akkaron",
+      "to": "sidon",
+      "days": 1
+    },
+    {
+      "from": "ostia",
+      "to": "tiber_mouth_bread",
+      "days": 1
+    },
+    {
+      "from": "rome",
+      "to": "tiber_mouth_bread",
+      "days": 2
+    },
+    {
+      "from": "rome",
+      "to": "velletri_plain",
+      "days": 1
+    },
+    {
+      "from": "ostia",
+      "to": "antium_coast",
+      "days": 2
+    },
+    {
+      "from": "carthage",
+      "to": "thapsus_bread",
+      "days": 2
+    },
+    {
+      "from": "carthage",
+      "to": "pupput_fields",
+      "days": 1
+    },
+    {
+      "from": "carthage",
+      "to": "lepcis_minor_bread",
+      "days": 2
+    },
+    {
+      "from": "gades",
+      "to": "baitis_estuary",
+      "days": 1
+    },
+    {
+      "from": "gades",
+      "to": "onoba_bread",
+      "days": 1
+    },
+    {
+      "from": "gades",
+      "to": "carteia_coast",
+      "days": 1
+    },
+    {
+      "from": "tyre",
+      "to": "acre_feed",
+      "days": 1
+    },
+    {
+      "from": "tyre",
+      "to": "dor_coast_bread",
+      "days": 1
+    },
+    {
+      "from": "tyre",
+      "to": "ptolemais_akkaron",
+      "days": 2
     }
   ],
   "npc_lanes": [
@@ -33226,13 +34544,259 @@
       "to": "hippo",
       "days": 2.0,
       "travel_type": "coastal"
+    },
+    {
+      "from": "cenchreae_bread",
+      "to": "corinth",
+      "days": 1.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "sicyon_bread",
+      "to": "corinth",
+      "days": 1.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "troezen_coast",
+      "to": "corinth",
+      "days": 2.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "agde_bread",
+      "to": "massalia",
+      "days": 2.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "ager_narbonensis",
+      "to": "massalia",
+      "days": 2.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "arelate_bread",
+      "to": "massalia",
+      "days": 2.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "larnaca_fields",
+      "to": "kition",
+      "days": 1.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "kourion_coast",
+      "to": "kition",
+      "days": 1.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "maroni_plain",
+      "to": "kition",
+      "days": 1.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "maroni_plain",
+      "to": "salamis_cyprus",
+      "days": 1.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "mazara_bread",
+      "to": "selinus",
+      "days": 1.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "sciacca_coast",
+      "to": "selinus",
+      "days": 1.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "licata_bread",
+      "to": "selinus",
+      "days": 1.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "licata_bread",
+      "to": "gela",
+      "days": 1.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "tiber_mouth_bread",
+      "to": "ostia",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "tiber_mouth_bread",
+      "to": "rome",
+      "days": 1.25,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "velletri_plain",
+      "to": "rome",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "antium_coast",
+      "to": "ostia",
+      "days": 1.25,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "thapsus_bread",
+      "to": "carthage",
+      "days": 1.65,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "lepcis_minor_bread",
+      "to": "carthage",
+      "days": 2.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "pupput_fields",
+      "to": "carthage",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "baitis_estuary",
+      "to": "gades",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "onoba_bread",
+      "to": "gades",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "carteia_coast",
+      "to": "gades",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "acre_feed",
+      "to": "tyre",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "dor_coast_bread",
+      "to": "tyre",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "ptolemais_akkaron",
+      "to": "tyre",
+      "days": 1.25,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "ptolemais_akkaron",
+      "to": "sidon",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "ostia",
+      "to": "tiber_mouth_bread",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "rome",
+      "to": "tiber_mouth_bread",
+      "days": 1.25,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "rome",
+      "to": "velletri_plain",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "ostia",
+      "to": "antium_coast",
+      "days": 1.25,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "carthage",
+      "to": "thapsus_bread",
+      "days": 1.65,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "carthage",
+      "to": "pupput_fields",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "carthage",
+      "to": "lepcis_minor_bread",
+      "days": 2.0,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "gades",
+      "to": "baitis_estuary",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "gades",
+      "to": "onoba_bread",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "gades",
+      "to": "carteia_coast",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "tyre",
+      "to": "acre_feed",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "tyre",
+      "to": "dor_coast_bread",
+      "days": 0.85,
+      "travel_type": "coastal"
+    },
+    {
+      "from": "tyre",
+      "to": "ptolemais_akkaron",
+      "days": 1.25,
+      "travel_type": "coastal"
     }
   ],
   "networked_node_map": {
     "purpose": "Sparse plausible maritime graph for NPC pathfinding. Player movement may still use the full all-to-all lanes table.",
     "design_rule": "NPCs move through neighboring ports, regional hubs, chokepoints, and culturally plausible trade corridors instead of evaluating every direct city-pair route. Gibraltar bypass (Carthage/Hippo direct to Tingis) removed from npc_lanes; route via Iberian ports.",
-    "node_count": 75,
-    "directed_edge_count": 228,
+    "node_count": 99,
+    "directed_edge_count": 269,
     "uses_port_ids_from": "ports",
     "preferred_for": [
       "npc_trade_route_search",
@@ -33247,6 +34811,27 @@
       "expedition_special_orders"
     ],
     "adjacency": {
+      "acre_feed": [
+        {
+          "to": "tyre",
+          "days": 0.85,
+          "travel_type": "coastal"
+        }
+      ],
+      "agde_bread": [
+        {
+          "to": "massalia",
+          "days": 2.0,
+          "travel_type": "coastal"
+        }
+      ],
+      "ager_narbonensis": [
+        {
+          "to": "massalia",
+          "days": 2.0,
+          "travel_type": "coastal"
+        }
+      ],
       "akragas": [
         {
           "to": "carthage",
@@ -33330,6 +34915,13 @@
           "travel_type": "coastal"
         }
       ],
+      "antium_coast": [
+        {
+          "to": "ostia",
+          "days": 1.25,
+          "travel_type": "coastal"
+        }
+      ],
       "apollonia_cyrenaica": [
         {
           "to": "alexandria",
@@ -33361,6 +34953,13 @@
         {
           "to": "tyre",
           "days": 1.5,
+          "travel_type": "coastal"
+        }
+      ],
+      "arelate_bread": [
+        {
+          "to": "massalia",
+          "days": 2.0,
           "travel_type": "coastal"
         }
       ],
@@ -33398,6 +34997,13 @@
         {
           "to": "smyrna",
           "days": 3.0,
+          "travel_type": "coastal"
+        }
+      ],
+      "baitis_estuary": [
+        {
+          "to": "gades",
+          "days": 0.85,
           "travel_type": "coastal"
         }
       ],
@@ -33484,6 +35090,13 @@
           "travel_type": "coastal"
         }
       ],
+      "carteia_coast": [
+        {
+          "to": "gades",
+          "days": 0.85,
+          "travel_type": "coastal"
+        }
+      ],
       "carthage": [
         {
           "to": "akragas",
@@ -33493,6 +35106,11 @@
         {
           "to": "caralis",
           "days": 2.5,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "lepcis_minor_bread",
+          "days": 2.0,
           "travel_type": "coastal"
         },
         {
@@ -33506,6 +35124,11 @@
           "travel_type": "coastal"
         },
         {
+          "to": "pupput_fields",
+          "days": 0.85,
+          "travel_type": "coastal"
+        },
+        {
           "to": "sabratha",
           "days": 4.5,
           "travel_type": "coastal"
@@ -33513,6 +35136,11 @@
         {
           "to": "sulci",
           "days": 2.5,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "thapsus_bread",
+          "days": 1.65,
           "travel_type": "coastal"
         },
         {
@@ -33542,6 +35170,13 @@
         {
           "to": "syracuse",
           "days": 0.5,
+          "travel_type": "coastal"
+        }
+      ],
+      "cenchreae_bread": [
+        {
+          "to": "corinth",
+          "days": 1.0,
           "travel_type": "coastal"
         }
       ],
@@ -33649,6 +35284,13 @@
           "travel_type": "coastal"
         }
       ],
+      "dor_coast_bread": [
+        {
+          "to": "tyre",
+          "days": 0.85,
+          "travel_type": "coastal"
+        }
+      ],
       "emporion": [
         {
           "to": "carthago_nova",
@@ -33687,8 +35329,23 @@
       ],
       "gades": [
         {
+          "to": "baitis_estuary",
+          "days": 0.85,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "carteia_coast",
+          "days": 0.85,
+          "travel_type": "coastal"
+        },
+        {
           "to": "malaka",
           "days": 1.5,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "onoba_bread",
+          "days": 0.85,
           "travel_type": "coastal"
         },
         {
@@ -33794,6 +35451,13 @@
           "travel_type": "coastal"
         }
       ],
+      "kourion_coast": [
+        {
+          "to": "kition",
+          "days": 1.0,
+          "travel_type": "coastal"
+        }
+      ],
       "kydonia": [
         {
           "to": "athens_piraeus",
@@ -33811,6 +35475,20 @@
           "travel_type": "coastal"
         }
       ],
+      "larnaca_fields": [
+        {
+          "to": "kition",
+          "days": 1.0,
+          "travel_type": "coastal"
+        }
+      ],
+      "lepcis_minor_bread": [
+        {
+          "to": "carthage",
+          "days": 2.0,
+          "travel_type": "coastal"
+        }
+      ],
       "leptis_magna": [
         {
           "to": "apollonia_cyrenaica",
@@ -33819,6 +35497,18 @@
         },
         {
           "to": "oea",
+          "days": 1.0,
+          "travel_type": "coastal"
+        }
+      ],
+      "licata_bread": [
+        {
+          "to": "gela",
+          "days": 1.0,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "selinus",
           "days": 1.0,
           "travel_type": "coastal"
         }
@@ -33852,6 +35542,18 @@
           "travel_type": "coastal"
         }
       ],
+      "maroni_plain": [
+        {
+          "to": "kition",
+          "days": 1.0,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "salamis_cyprus",
+          "days": 1.0,
+          "travel_type": "coastal"
+        }
+      ],
       "massalia": [
         {
           "to": "aleria",
@@ -33866,6 +35568,13 @@
         {
           "to": "rhode_iberia",
           "days": 2.0,
+          "travel_type": "coastal"
+        }
+      ],
+      "mazara_bread": [
+        {
+          "to": "selinus",
+          "days": 1.0,
           "travel_type": "coastal"
         }
       ],
@@ -34053,7 +35762,19 @@
           "travel_type": "coastal"
         }
       ],
+      "onoba_bread": [
+        {
+          "to": "gades",
+          "days": 0.85,
+          "travel_type": "coastal"
+        }
+      ],
       "ostia": [
+        {
+          "to": "antium_coast",
+          "days": 1.25,
+          "travel_type": "coastal"
+        },
         {
           "to": "caere",
           "days": 0.5,
@@ -34072,6 +35793,11 @@
         {
           "to": "rome",
           "days": 0.5,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "tiber_mouth_bread",
+          "days": 0.85,
           "travel_type": "coastal"
         }
       ],
@@ -34175,6 +35901,25 @@
           "travel_type": "coastal"
         }
       ],
+      "ptolemais_akkaron": [
+        {
+          "to": "sidon",
+          "days": 0.85,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "tyre",
+          "days": 1.25,
+          "travel_type": "coastal"
+        }
+      ],
+      "pupput_fields": [
+        {
+          "to": "carthage",
+          "days": 0.85,
+          "travel_type": "coastal"
+        }
+      ],
       "pyrgi": [
         {
           "to": "caere",
@@ -34268,6 +36013,16 @@
           "to": "ostia",
           "days": 0.5,
           "travel_type": "coastal"
+        },
+        {
+          "to": "tiber_mouth_bread",
+          "days": 1.25,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "velletri_plain",
+          "days": 0.85,
+          "travel_type": "coastal"
         }
       ],
       "sabratha": [
@@ -34299,6 +36054,13 @@
           "travel_type": "coastal"
         }
       ],
+      "sciacca_coast": [
+        {
+          "to": "selinus",
+          "days": 1.0,
+          "travel_type": "coastal"
+        }
+      ],
       "selinus": [
         {
           "to": "akragas",
@@ -34325,6 +36087,13 @@
         {
           "to": "malaka",
           "days": 0.5,
+          "travel_type": "coastal"
+        }
+      ],
+      "sicyon_bread": [
+        {
+          "to": "corinth",
+          "days": 1.0,
           "travel_type": "coastal"
         }
       ],
@@ -34457,6 +36226,13 @@
           "travel_type": "coastal"
         }
       ],
+      "thapsus_bread": [
+        {
+          "to": "carthage",
+          "days": 1.65,
+          "travel_type": "coastal"
+        }
+      ],
       "tharros": [
         {
           "to": "caralis",
@@ -34471,6 +36247,18 @@
         {
           "to": "sulci",
           "days": 1.0,
+          "travel_type": "coastal"
+        }
+      ],
+      "tiber_mouth_bread": [
+        {
+          "to": "ostia",
+          "days": 0.85,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "rome",
+          "days": 1.25,
           "travel_type": "coastal"
         }
       ],
@@ -34498,7 +36286,19 @@
           "travel_type": "coastal"
         }
       ],
+      "troezen_coast": [
+        {
+          "to": "corinth",
+          "days": 2.0,
+          "travel_type": "coastal"
+        }
+      ],
       "tyre": [
+        {
+          "to": "acre_feed",
+          "days": 0.85,
+          "travel_type": "coastal"
+        },
         {
           "to": "alexandria",
           "days": 5.0,
@@ -34510,8 +36310,18 @@
           "travel_type": "coastal"
         },
         {
+          "to": "dor_coast_bread",
+          "days": 0.85,
+          "travel_type": "coastal"
+        },
+        {
           "to": "kition",
           "days": 2.0,
+          "travel_type": "coastal"
+        },
+        {
+          "to": "ptolemais_akkaron",
+          "days": 1.25,
           "travel_type": "coastal"
         },
         {
@@ -34534,6 +36344,13 @@
         {
           "to": "hippo",
           "days": 2.0,
+          "travel_type": "coastal"
+        }
+      ],
+      "velletri_plain": [
+        {
+          "to": "rome",
+          "days": 0.85,
           "travel_type": "coastal"
         }
       ]
@@ -34614,7 +36431,31 @@
     "tingis": "mauretanian_punic",
     "trapezus": "greek",
     "tyre": "phoenician",
-    "utica": "phoenician"
+    "utica": "phoenician",
+    "cenchreae_bread": "greek",
+    "sicyon_bread": "greek",
+    "troezen_coast": "greek",
+    "agde_bread": "greek",
+    "ager_narbonensis": "greek",
+    "arelate_bread": "greek",
+    "larnaca_fields": "phoenician",
+    "kourion_coast": "phoenician",
+    "maroni_plain": "phoenician",
+    "mazara_bread": "greek",
+    "sciacca_coast": "greek",
+    "licata_bread": "greek",
+    "tiber_mouth_bread": "italic",
+    "velletri_plain": "italic",
+    "antium_coast": "italic",
+    "thapsus_bread": "phoenician",
+    "lepcis_minor_bread": "phoenician",
+    "pupput_fields": "phoenician",
+    "baitis_estuary": "greek",
+    "onoba_bread": "greek",
+    "carteia_coast": "greek",
+    "acre_feed": "phoenician",
+    "dor_coast_bread": "phoenician",
+    "ptolemais_akkaron": "phoenician"
   },
   "port_shipyards": {
     "akragas": [
@@ -34883,6 +36724,105 @@
     "utica": [
       "phoenician_deep",
       "levantine_luxury"
+    ],
+    "cenchreae_bread": [
+      "greek_merchant"
+    ],
+    "sicyon_bread": [
+      "greek_merchant"
+    ],
+    "troezen_coast": [
+      "greek_merchant"
+    ],
+    "agde_bread": [
+      "greek_merchant",
+      "phoenician_deep"
+    ],
+    "ager_narbonensis": [
+      "greek_merchant",
+      "phoenician_deep"
+    ],
+    "arelate_bread": [
+      "greek_merchant",
+      "phoenician_deep"
+    ],
+    "larnaca_fields": [
+      "phoenician_deep",
+      "levantine_luxury",
+      "greek_merchant"
+    ],
+    "kourion_coast": [
+      "phoenician_deep",
+      "levantine_luxury",
+      "greek_merchant"
+    ],
+    "maroni_plain": [
+      "phoenician_deep",
+      "levantine_luxury",
+      "greek_merchant"
+    ],
+    "mazara_bread": [
+      "greek_merchant",
+      "sicilian_grain"
+    ],
+    "sciacca_coast": [
+      "greek_merchant",
+      "sicilian_grain"
+    ],
+    "licata_bread": [
+      "greek_merchant",
+      "sicilian_grain"
+    ],
+    "tiber_mouth_bread": [
+      "italic_coastal",
+      "greek_merchant"
+    ],
+    "velletri_plain": [
+      "italic_coastal",
+      "greek_merchant"
+    ],
+    "antium_coast": [
+      "italic_coastal",
+      "greek_merchant"
+    ],
+    "thapsus_bread": [
+      "phoenician_deep",
+      "levantine_luxury"
+    ],
+    "lepcis_minor_bread": [
+      "phoenician_deep",
+      "levantine_luxury"
+    ],
+    "pupput_fields": [
+      "phoenician_deep",
+      "levantine_luxury"
+    ],
+    "baitis_estuary": [
+      "greek_merchant",
+      "phoenician_deep"
+    ],
+    "onoba_bread": [
+      "greek_merchant",
+      "phoenician_deep"
+    ],
+    "carteia_coast": [
+      "greek_merchant",
+      "phoenician_deep"
+    ],
+    "acre_feed": [
+      "phoenician_deep",
+      "levantine_luxury",
+      "greek_merchant"
+    ],
+    "dor_coast_bread": [
+      "phoenician_deep",
+      "levantine_luxury",
+      "greek_merchant"
+    ],
+    "ptolemais_akkaron": [
+      "phoenician_deep",
+      "levantine_luxury",
+      "greek_merchant"
     ]
   }
 }

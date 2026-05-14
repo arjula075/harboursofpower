@@ -1,0 +1,94 @@
+{
+  "source_tilemap": "mediterranean_recursive_tilemap_aegean_illyrian_restored.json",
+  "note": "Chart area bounds are practical rectangular cuts in the 2000x1000 tile coordinate space. Areas intentionally overlap so coastlines and seas remain playable/readable.",
+  "chart_areas": [
+    {
+      "id": "iberia_gaul",
+      "name": "Iberian coast & Ligurian sea",
+      "description": "Atlantic gateway and the Gallo-Iberian rim \u2014 Gades, Massalia, the Catalan strand.",
+      "bounds": {
+        "x0": 0,
+        "y0": 0,
+        "x1": 520,
+        "y1": 760
+      }
+    },
+    {
+      "id": "tyrrhenian",
+      "name": "Tyrrhenian sea & approaches",
+      "description": "Italian west coast, Sardinia, Corsica, Latium and Campania.",
+      "bounds": {
+        "x0": 420,
+        "y0": 120,
+        "x1": 900,
+        "y1": 640
+      }
+    },
+    {
+      "id": "sicily_ionian",
+      "name": "Sicily & Ionian basin",
+      "description": "Sicilian roadsteads and the heel-and-toe of Italy.",
+      "bounds": {
+        "x0": 560,
+        "y0": 360,
+        "x1": 1180,
+        "y1": 780
+      }
+    },
+    {
+      "id": "north_africa",
+      "name": "North African coast",
+      "description": "Carthaginian capital and the Tripolitanian and Mauretanian shores.",
+      "bounds": {
+        "x0": 260,
+        "y0": 560,
+        "x1": 1180,
+        "y1": 1000
+      }
+    },
+    {
+      "id": "egypt_cyrenaica",
+      "name": "Egypt & Cyrenaica",
+      "description": "Cyrenaican headlands and the Nile-mouth grain hubs.",
+      "bounds": {
+        "x0": 1040,
+        "y0": 600,
+        "x1": 1780,
+        "y1": 1000
+      }
+    },
+    {
+      "id": "aegean",
+      "name": "Aegean & Cretan sea",
+      "description": "Mainland Greece, the Aegean islands, western Anatolia and Crete.",
+      "bounds": {
+        "x0": 900,
+        "y0": 320,
+        "x1": 1600,
+        "y1": 840
+      }
+    },
+    {
+      "id": "levant_cyprus",
+      "name": "Levant & Cyprus",
+      "description": "Phoenician home ports and the Cypriot ring.",
+      "bounds": {
+        "x0": 1460,
+        "y0": 470,
+        "x1": 2000,
+        "y1": 900
+      }
+    },
+    {
+      "id": "propontis_pontus",
+      "name": "Propontis & Pontus Euxinus",
+      "description": "Marmara mouth and the Black Sea grain horizon.",
+      "bounds": {
+        "x0": 1180,
+        "y0": 0,
+        "x1": 2000,
+        "y1": 460
+      }
+    }
+  ]
+}

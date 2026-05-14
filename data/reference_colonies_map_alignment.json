@@ -1,869 +1,808 @@
 {
-  "reference_image": {
-    "repository_path": "docs/reference_greek_phoenician_colonies_mediterranean.png",
-    "width_px": 1024,
-    "height_px": 508,
-    "normalized_frame": "image_u and image_v are 0..1 relative to full PNG width/height (IHDR). Sea-colour bbox is nearly full bleed (~6..1019 x ~6..502 px); crop margins optional later.",
-    "attribution": "Historical reference: Greek and Phoenician colonies (educational basemap). Game data remains fictional/economic; use for chart art alignment only."
+  "schema_version": 2,
+  "policy": {
+    "single_source_of_truth_world": "data/world_full.json",
+    "map_u_map_v_frame": "Normalized logical grid 0..1 from 2000 (u) x 1000 (v) per coordinate sheet; matches reference colonies map layout.",
+    "placement_tolerance": "Close-enough acceptable; 10 anchor ports snapped exactly, others affine-transformed from previous chart then clamped.",
+    "citium_kition": "Citium on historical maps corresponds to gameplay port kition (Greek form).",
+    "coordinate_sheet_olbia": "Grid sheet label 'Olbia' is port_id olbia_pontic (northern Black Sea), not olbia_sardinia.",
+    "authoritative_grid": "Integer table on docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png defines map_u = x/2000, map_v = y/1000 for anchors; treat as authoritative.",
+    "sim_after_coordinate_only_change": "Not required when only ports[].map_u/map_v change and no economy or voyage math changes."
   },
-  "alignment_workflow": {
-    "recommended": [
-      "Pick 6\u201310 unmistakable control points on the PNG (centre of settlement dot) and record image_u/image_v (0..1).",
-      "Record matching game port_id and current world map_u/map_v.",
-      "Fit an affine or homography from (map_u,map_v) game space \u2192 (image_u,image_v) reference space (or the inverse for UV sampling).",
-      "Apply to all ports OR replace map_u/map_v with reference image positions after validating a handful of neighbours (Sicily, Levant)."
+  "coordinate_sheet_png": {
+    "path": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png",
+    "png_dimensions_px": [
+      1600,
+      983
     ],
-    "not_recommended": [
-      "Snapping each port to the darkest pixel near the old coordinate \u2014 fails in Tunisia/Sicily clusters and near the legend/title ink."
-    ]
+    "logical_grid": {
+      "width": 2000,
+      "height": 1000,
+      "origin": "top_left"
+    },
+    "caption": "Table in image lists grid integer coordinates; map_u = x/2000, map_v = y/1000."
   },
-  "control_points": [],
+  "reference_basemap_png": {
+    "path": "docs/reference_greek_phoenician_colonies_mediterranean.png",
+    "dimensions_px": [
+      1024,
+      508
+    ],
+    "note": "Texture for Godot chart; map_u/map_v are in the logical grid frame above until a separate UV warp from grid to this PNG is authored."
+  },
+  "affine_propagation_previous_to_grid": {
+    "description": "For ports not in the 10-point list: map_u_new = a*map_u_old + b*map_v_old + c (then clamp); same for v with d,e,f; then 10 anchors overwritten to exact grid.",
+    "coefficients": {
+      "u": [
+        1.2351438848248653,
+        -0.02391004389973081,
+        -0.19189367303004023
+      ],
+      "v": [
+        -0.1792244503317818,
+        0.963560465070922,
+        0.1542396848055779
+      ]
+    }
+  },
+  "control_points": [
+    {
+      "port_id": "olbia_pontic",
+      "sheet_label": "Olbia",
+      "grid_x": 1650,
+      "grid_y": 80,
+      "grid_u": 0.825,
+      "grid_v": 0.08,
+      "source": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png table (logical grid 2000x1000, origin top-left)"
+    },
+    {
+      "port_id": "tyre",
+      "grid_x": 1820,
+      "grid_y": 650,
+      "grid_u": 0.91,
+      "grid_v": 0.65,
+      "source": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png table (logical grid 2000x1000, origin top-left)"
+    },
+    {
+      "port_id": "knossos",
+      "grid_x": 1350,
+      "grid_y": 720,
+      "grid_u": 0.675,
+      "grid_v": 0.72,
+      "source": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png table (logical grid 2000x1000, origin top-left)"
+    },
+    {
+      "port_id": "messana",
+      "grid_x": 850,
+      "grid_y": 480,
+      "grid_u": 0.425,
+      "grid_v": 0.48,
+      "source": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png table (logical grid 2000x1000, origin top-left)"
+    },
+    {
+      "port_id": "massalia",
+      "grid_x": 400,
+      "grid_y": 180,
+      "grid_u": 0.2,
+      "grid_v": 0.18,
+      "source": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png table (logical grid 2000x1000, origin top-left)"
+    },
+    {
+      "port_id": "tingis",
+      "grid_x": 80,
+      "grid_y": 600,
+      "grid_u": 0.04,
+      "grid_v": 0.6,
+      "source": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png table (logical grid 2000x1000, origin top-left)"
+    },
+    {
+      "port_id": "aleria",
+      "grid_x": 600,
+      "grid_y": 300,
+      "grid_u": 0.3,
+      "grid_v": 0.3,
+      "source": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png table (logical grid 2000x1000, origin top-left)"
+    },
+    {
+      "port_id": "athens_piraeus",
+      "grid_x": 1180,
+      "grid_y": 500,
+      "grid_u": 0.59,
+      "grid_v": 0.5,
+      "source": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png table (logical grid 2000x1000, origin top-left)"
+    },
+    {
+      "port_id": "ephesus",
+      "grid_x": 1500,
+      "grid_y": 520,
+      "grid_u": 0.75,
+      "grid_v": 0.52,
+      "source": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png table (logical grid 2000x1000, origin top-left)"
+    },
+    {
+      "port_id": "cyrene",
+      "grid_x": 1100,
+      "grid_y": 820,
+      "grid_u": 0.55,
+      "grid_v": 0.82,
+      "source": "docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png table (logical grid 2000x1000, origin top-left)"
+    }
+  ],
   "ports": [
     {
       "port_id": "akragas",
       "name": "Akragas",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.435,
-      "world_map_v": 0.538,
+      "map_u": 0.33253,
+      "map_v": 0.594673,
       "reference_map_label_hint": "Akragas",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "aleria",
       "name": "Alalia/Aleria",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.35,
-      "world_map_v": 0.272,
+      "map_u": 0.3,
+      "map_v": 0.3,
       "reference_map_label_hint": "Alalia",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "aligned_to_grid_sheet"
     },
     {
       "port_id": "alexandria",
       "name": "Alexandria",
       "chart_area_id": "egypt_cyrenaica",
-      "world_map_u": 0.772,
-      "world_map_v": 0.878,
+      "map_u": 0.740644,
+      "map_v": 0.861884,
       "reference_map_label_hint": "Alexandria",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "antipolis",
       "name": "Antipolis",
       "chart_area_id": "iberia_gaul",
-      "world_map_u": 0.301,
-      "world_map_v": 0.19,
+      "map_u": 0.175342,
+      "map_v": 0.28337,
       "reference_map_label_hint": "Antipolis",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "apollonia_cyrenaica",
       "name": "Apollonia",
       "chart_area_id": "egypt_cyrenaica",
-      "world_map_u": 0.605,
-      "world_map_v": 0.783,
+      "map_u": 0.536647,
+      "map_v": 0.800277,
       "reference_map_label_hint": "Apollonia",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "arados",
       "name": "Arados",
       "chart_area_id": "levant_cyprus",
-      "world_map_u": 0.894,
-      "world_map_v": 0.675,
+      "map_u": 0.896186,
+      "map_v": 0.644416,
       "reference_map_label_hint": "Arados",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "athens_piraeus",
       "name": "Athens / Piraeus",
       "chart_area_id": "aegean",
-      "world_map_u": 0.642,
-      "world_map_v": 0.503,
+      "map_u": 0.59,
+      "map_v": 0.5,
       "reference_map_label_hint": "Athens",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "aligned_to_grid_sheet"
     },
     {
       "port_id": "byblos",
       "name": "Byblos",
       "chart_area_id": "levant_cyprus",
-      "world_map_u": 0.89,
-      "world_map_v": 0.716,
+      "map_u": 0.890265,
+      "map_v": 0.684639,
       "reference_map_label_hint": "Byblos",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "byzantion",
       "name": "Byzantion",
       "chart_area_id": "propontis_pontus",
-      "world_map_u": 0.753,
-      "world_map_v": 0.333,
+      "map_u": 0.730208,
+      "map_v": 0.340149,
       "reference_map_label_hint": "Byzantion",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "caere",
       "name": "Caere",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.404,
-      "world_map_v": 0.278,
+      "map_u": 0.300457,
+      "map_v": 0.349703,
       "reference_map_label_hint": "Caere",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "caralis",
       "name": "Caralis",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.343,
-      "world_map_v": 0.432,
+      "map_u": 0.221432,
+      "map_v": 0.509024,
       "reference_map_label_hint": "Caralis",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "carthage",
       "name": "Carthage",
       "chart_area_id": "north_africa",
-      "world_map_u": 0.47,
-      "world_map_v": 0.52,
+      "map_u": 0.376191,
+      "map_v": 0.571056,
       "reference_map_label_hint": "Carthage",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "carthago_nova",
       "name": "Carthago Nova",
       "chart_area_id": "iberia_gaul",
-      "world_map_u": 0.134,
-      "world_map_v": 0.522,
+      "map_u": 0.0,
+      "map_v": 0.633202,
       "reference_map_label_hint": "Carthago Nova",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "catane",
       "name": "Catane",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.466,
-      "world_map_v": 0.528,
+      "map_u": 0.371059,
+      "map_v": 0.579481,
       "reference_map_label_hint": "Catane",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "chalcedon",
       "name": "Chalcedon",
       "chart_area_id": "propontis_pontus",
-      "world_map_u": 0.753,
-      "world_map_v": 0.334,
+      "map_u": 0.730184,
+      "map_v": 0.341113,
       "reference_map_label_hint": "Chalcedon",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "chalcis",
       "name": "Chalcis",
       "chart_area_id": "aegean",
-      "world_map_u": 0.641,
-      "world_map_v": 0.474,
+      "map_u": 0.5885,
+      "map_v": 0.496084,
       "reference_map_label_hint": "Chalcis",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "chersonesos",
       "name": "Chersonesos",
       "chart_area_id": "propontis_pontus",
-      "world_map_u": 0.845,
-      "world_map_v": 0.133,
+      "map_u": 0.848623,
+      "map_v": 0.130949,
       "reference_map_label_hint": "Chersonesos",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "corinth",
       "name": "Corinth",
       "chart_area_id": "aegean",
-      "world_map_u": 0.627,
-      "world_map_v": 0.503,
+      "map_u": 0.570515,
+      "map_v": 0.526537,
       "reference_map_label_hint": "Corinth",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "croton",
       "name": "Croton",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.508,
-      "world_map_v": 0.44,
+      "map_u": 0.425039,
+      "map_v": 0.48716,
       "reference_map_label_hint": "Croton",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "cumae",
       "name": "Cumae",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.444,
-      "world_map_v": 0.342,
+      "map_u": 0.348333,
+      "map_v": 0.404202,
       "reference_map_label_hint": "Cumae",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "cyrene",
       "name": "Cyrene",
       "chart_area_id": "egypt_cyrenaica",
-      "world_map_u": 0.605,
-      "world_map_v": 0.788,
+      "map_u": 0.55,
+      "map_v": 0.82,
       "reference_map_label_hint": "Cyrene",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "aligned_to_grid_sheet"
     },
     {
       "port_id": "emporion",
       "name": "Emporion",
       "chart_area_id": "iberia_gaul",
-      "world_map_u": 0.219,
-      "world_map_v": 0.271,
+      "map_u": 0.072123,
+      "map_v": 0.376114,
       "reference_map_label_hint": "Emporion",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "ephesus",
       "name": "Ephesus",
       "chart_area_id": "aegean",
-      "world_map_u": 0.718,
-      "world_map_v": 0.503,
+      "map_u": 0.75,
+      "map_v": 0.52,
       "reference_map_label_hint": "Ephesus",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "aligned_to_grid_sheet"
     },
     {
       "port_id": "eretria",
       "name": "Eretria",
       "chart_area_id": "aegean",
-      "world_map_u": 0.645,
-      "world_map_v": 0.478,
+      "map_u": 0.593345,
+      "map_v": 0.499222,
       "reference_map_label_hint": "Eretria",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "gades",
       "name": "Gades",
       "chart_area_id": "iberia_gaul",
-      "world_map_u": 0.03,
-      "world_map_v": 0.582,
+      "map_u": 0.0,
+      "map_v": 0.709655,
       "reference_map_label_hint": "Gades",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "gela",
       "name": "Gela",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.448,
-      "world_map_v": 0.552,
+      "map_u": 0.348252,
+      "map_v": 0.605833,
       "reference_map_label_hint": "Gela",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "gythion",
       "name": "Gythion",
       "chart_area_id": "aegean",
-      "world_map_u": 0.62,
-      "world_map_v": 0.569,
+      "map_u": 0.560291,
+      "map_v": 0.591386,
       "reference_map_label_hint": "Gythion",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "halicarnassus",
       "name": "Halicarnassus",
       "chart_area_id": "aegean",
-      "world_map_u": 0.72,
-      "world_map_v": 0.553,
+      "map_u": 0.684188,
+      "map_v": 0.558047,
       "reference_map_label_hint": "Halicarnassus",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "hippo",
       "name": "Hippo Regius",
       "chart_area_id": "north_africa",
-      "world_map_u": 0.44,
-      "world_map_v": 0.56,
+      "map_u": 0.33818,
+      "map_v": 0.614975,
       "reference_map_label_hint": "Hippo Regius",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "kition",
       "name": "Kition",
       "chart_area_id": "levant_cyprus",
-      "world_map_u": 0.848,
-      "world_map_v": 0.671,
+      "map_u": 0.839465,
+      "map_v": 0.648806,
       "reference_map_label_hint": "Kition",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "knossos",
       "name": "Knossos",
       "chart_area_id": "aegean",
-      "world_map_u": 0.673,
-      "world_map_v": 0.65,
+      "map_u": 0.675,
+      "map_v": 0.72,
       "reference_map_label_hint": "Knossos",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "aligned_to_grid_sheet"
     },
     {
       "port_id": "kydonia",
       "name": "Kydonia",
       "chart_area_id": "aegean",
-      "world_map_u": 0.65,
-      "world_map_v": 0.638,
+      "map_u": 0.595695,
+      "map_v": 0.652495,
       "reference_map_label_hint": "Kydonia",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "leptis_magna",
       "name": "Leptis Magna",
       "chart_area_id": "north_africa",
-      "world_map_u": 0.449,
-      "world_map_v": 0.798,
+      "map_u": 0.343606,
+      "map_v": 0.842689,
       "reference_map_label_hint": "Leptis Magna",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "locri",
       "name": "Locri",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.49,
-      "world_map_v": 0.487,
+      "map_u": 0.401683,
+      "map_v": 0.535674,
       "reference_map_label_hint": "Locri",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "malaka",
       "name": "Malaka",
       "chart_area_id": "iberia_gaul",
-      "world_map_u": 0.064,
-      "world_map_v": 0.571,
+      "map_u": 0.0,
+      "map_v": 0.692962,
       "reference_map_label_hint": "Malaka",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "massalia",
       "name": "Massalia",
       "chart_area_id": "iberia_gaul",
-      "world_map_u": 0.265,
-      "world_map_v": 0.206,
+      "map_u": 0.2,
+      "map_v": 0.18,
       "reference_map_label_hint": "Massalia",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "aligned_to_grid_sheet"
     },
     {
       "port_id": "megara",
       "name": "Megara",
       "chart_area_id": "aegean",
-      "world_map_u": 0.636,
-      "world_map_v": 0.501,
+      "map_u": 0.581679,
+      "map_v": 0.522997,
       "reference_map_label_hint": "Megara",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "memphis",
       "name": "Memphis",
       "chart_area_id": "egypt_cyrenaica",
-      "world_map_u": 0.799,
-      "world_map_v": 0.94,
+      "map_u": 0.772511,
+      "map_v": 0.916786,
       "reference_map_label_hint": "Memphis",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "messana",
       "name": "Messana",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.68,
-      "world_map_v": 0.41,
+      "map_u": 0.425,
+      "map_v": 0.48,
       "reference_map_label_hint": "Messana",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "aligned_to_grid_sheet"
     },
     {
       "port_id": "miletus",
       "name": "Miletus",
       "chart_area_id": "aegean",
-      "world_map_u": 0.717,
-      "world_map_v": 0.526,
+      "map_u": 0.681128,
+      "map_v": 0.532569,
       "reference_map_label_hint": "Miletus",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "motya",
       "name": "Motya",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.412,
-      "world_map_v": 0.507,
+      "map_u": 0.304863,
+      "map_v": 0.568924,
       "reference_map_label_hint": "Motya",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "naucratis",
       "name": "Naucratis",
       "chart_area_id": "egypt_cyrenaica",
-      "world_map_u": 0.786,
-      "world_map_v": 0.894,
+      "map_u": 0.757554,
+      "map_v": 0.874792,
       "reference_map_label_hint": "Naucratis",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "naxos_sicily",
       "name": "Naxos",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.47,
-      "world_map_v": 0.509,
+      "map_u": 0.376454,
+      "map_v": 0.560456,
       "reference_map_label_hint": "Naxos",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "neapolis",
       "name": "Neapolis",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.58,
-      "world_map_v": 0.26,
+      "map_u": 0.518273,
+      "map_v": 0.300815,
       "reference_map_label_hint": "Neapolis",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "nikaia",
       "name": "Nikaia",
       "chart_area_id": "iberia_gaul",
-      "world_map_u": 0.305,
-      "world_map_v": 0.183,
+      "map_u": 0.18045,
+      "map_v": 0.275908,
       "reference_map_label_hint": "Nikaia",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "oea",
       "name": "Oea",
       "chart_area_id": "north_africa",
-      "world_map_u": 0.427,
-      "world_map_v": 0.784,
+      "map_u": 0.316767,
+      "map_v": 0.833142,
       "reference_map_label_hint": "Oea",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "olbia_pontic",
       "name": "Olbia Pontica",
       "chart_area_id": "propontis_pontus",
-      "world_map_u": 0.813,
-      "world_map_v": 0.06,
+      "map_u": 0.825,
+      "map_v": 0.08,
       "reference_map_label_hint": "Olbia Pontica",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "aligned_to_grid_sheet"
     },
     {
       "port_id": "olbia_sardinia",
       "name": "Olbia",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.351,
-      "world_map_v": 0.338,
+      "map_u": 0.23356,
+      "map_v": 0.417015,
       "reference_map_label_hint": "Olbia",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "ostia",
       "name": "Ostia",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.52,
-      "world_map_v": 0.2,
+      "map_u": 0.445599,
+      "map_v": 0.253755,
       "reference_map_label_hint": "Ostia",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "panormus",
       "name": "Panormus",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.6,
-      "world_map_v": 0.45,
+      "map_u": 0.538433,
+      "map_v": 0.480307,
       "reference_map_label_hint": "Panormus",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "pantikapaion",
       "name": "Pantikapaion",
       "chart_area_id": "propontis_pontus",
-      "world_map_u": 0.907,
-      "world_map_v": 0.092,
+      "map_u": 0.926182,
+      "map_v": 0.080331,
       "reference_map_label_hint": "Pantikapaion",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "paphos",
       "name": "Paphos",
       "chart_area_id": "levant_cyprus",
-      "world_map_u": 0.823,
-      "world_map_v": 0.679,
+      "map_u": 0.808395,
+      "map_v": 0.660996,
       "reference_map_label_hint": "Paphos",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "populonia",
       "name": "Populonia",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.371,
-      "world_map_v": 0.223,
+      "map_u": 0.261013,
+      "map_v": 0.302621,
       "reference_map_label_hint": "Populonia",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "poseidonia",
       "name": "Poseidonia",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.464,
-      "world_map_v": 0.366,
+      "map_u": 0.372462,
+      "map_v": 0.423743,
       "reference_map_label_hint": "Poseidonia",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "pyrgi",
       "name": "Pyrgi",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.401,
-      "world_map_v": 0.277,
+      "map_u": 0.296776,
+      "map_v": 0.349277,
       "reference_map_label_hint": "Pyrgi",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "rhegium",
       "name": "Rhegium",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.63,
-      "world_map_v": 0.36,
+      "map_u": 0.577639,
+      "map_v": 0.38821,
       "reference_map_label_hint": "Rhegium",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "rhode_iberia",
       "name": "Rhode",
       "chart_area_id": "iberia_gaul",
-      "world_map_u": 0.22,
-      "world_map_v": 0.263,
+      "map_u": 0.07355,
+      "map_v": 0.368227,
       "reference_map_label_hint": "Rhode",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "rhodes",
       "name": "Rhodes",
       "chart_area_id": "aegean",
-      "world_map_u": 0.736,
-      "world_map_v": 0.587,
+      "map_u": 0.703137,
+      "map_v": 0.58794,
       "reference_map_label_hint": "Rhodes",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "rome",
       "name": "Rome",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.412,
-      "world_map_v": 0.283,
+      "map_u": 0.310219,
+      "map_v": 0.353087,
       "reference_map_label_hint": "Rome",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "sabratha",
       "name": "Sabratha",
       "chart_area_id": "north_africa",
-      "world_map_u": 0.412,
-      "world_map_v": 0.789,
+      "map_u": 0.298121,
+      "map_v": 0.840648,
       "reference_map_label_hint": "Sabratha",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "salamis_cyprus",
       "name": "Salamis",
       "chart_area_id": "levant_cyprus",
-      "world_map_u": 0.854,
-      "world_map_v": 0.657,
+      "map_u": 0.84721,
+      "map_v": 0.634241,
       "reference_map_label_hint": "Salamis",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "selinus",
       "name": "Selinus",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.419,
-      "world_map_v": 0.523,
+      "map_u": 0.313127,
+      "map_v": 0.583087,
       "reference_map_label_hint": "Selinus",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "sexi",
       "name": "Sexi",
       "chart_area_id": "iberia_gaul",
-      "world_map_u": 0.079,
-      "world_map_v": 0.571,
+      "map_u": 0.0,
+      "map_v": 0.690274,
       "reference_map_label_hint": "Sexi",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "sidon",
       "name": "Sidon",
       "chart_area_id": "levant_cyprus",
-      "world_map_u": 0.884,
-      "world_map_v": 0.747,
+      "map_u": 0.882113,
+      "map_v": 0.715585,
       "reference_map_label_hint": "Sidon",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "sinope",
       "name": "Sinope",
       "chart_area_id": "propontis_pontus",
-      "world_map_u": 0.879,
-      "world_map_v": 0.276,
+      "map_u": 0.887199,
+      "map_v": 0.262644,
       "reference_map_label_hint": "Sinope",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "smyrna",
       "name": "Smyrna",
       "chart_area_id": "aegean",
-      "world_map_u": 0.714,
-      "world_map_v": 0.477,
+      "map_u": 0.678594,
+      "map_v": 0.485892,
       "reference_map_label_hint": "Smyrna",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "solus",
       "name": "Solus",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.434,
-      "world_map_v": 0.494,
+      "map_u": 0.332347,
+      "map_v": 0.552455,
       "reference_map_label_hint": "Solus",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "sulci",
       "name": "Sulci",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.328,
-      "world_map_v": 0.441,
+      "map_u": 0.202689,
+      "map_v": 0.520384,
       "reference_map_label_hint": "Sulci",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "syracuse",
       "name": "Syracuse",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.47,
-      "world_map_v": 0.552,
+      "map_u": 0.375426,
+      "map_v": 0.60189,
       "reference_map_label_hint": "Syracuse",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "taras",
       "name": "Taras",
       "chart_area_id": "sicily_ionian",
-      "world_map_u": 0.51,
-      "world_map_v": 0.363,
+      "map_u": 0.42935,
+      "map_v": 0.412608,
       "reference_map_label_hint": "Taras",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "tharros",
       "name": "Tharros",
       "chart_area_id": "tyrrhenian",
-      "world_map_u": 0.329,
-      "world_map_v": 0.396,
+      "map_u": 0.205,
+      "map_v": 0.476845,
       "reference_map_label_hint": "Tharros",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "tingis",
       "name": "Tingis",
       "chart_area_id": "north_africa",
-      "world_map_u": 0.28,
-      "world_map_v": 0.48,
+      "map_u": 0.04,
+      "map_v": 0.6,
       "reference_map_label_hint": "Tingis",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "aligned_to_grid_sheet"
     },
     {
       "port_id": "trapezus",
       "name": "Trapezus",
       "chart_area_id": "propontis_pontus",
-      "world_map_u": 0.97,
-      "world_map_v": 0.333,
+      "map_u": 0.998234,
+      "map_v": 0.301258,
       "reference_map_label_hint": "Trapezus",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "affine_from_control_ports"
     },
     {
       "port_id": "tyre",
       "name": "Tyre",
       "chart_area_id": "levant_cyprus",
-      "world_map_u": 0.88,
-      "world_map_v": 0.763,
+      "map_u": 0.91,
+      "map_v": 0.65,
       "reference_map_label_hint": "Tyre",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
+      "alignment_status": "aligned_to_grid_sheet"
     },
     {
       "port_id": "utica",
       "name": "Utica",
       "chart_area_id": "north_africa",
-      "world_map_u": 0.362,
-      "world_map_v": 0.553,
+      "map_u": 0.242006,
+      "map_v": 0.622209,
       "reference_map_label_hint": "Utica",
-      "image_u": null,
-      "image_v": null,
-      "alignment_status": "pending_control_points"
-    }
-  ],
-  "map_labels_without_dedicated_game_port": [
-    "Many minor colonies on the reference (e.g. Adria, Spina, Ancona, Sybaris, Metapontum, Caulonia, Himera, Camarina, Lilybaeum, Nora, Mende, Torone, Scione, Amphipolis, Abdera-Thrace, Maroneia, Aenus, Thasos, Heraclea Pontica, Amisus, Cotyora, Cerasus, Phasis, Dioscurias, Phanagoria, Tanais, Tyras, Ebusus, Melita, Marion, Soli, Hemeroskopeion, Iol, Icosium, Rusaddir, Siga, Igilgili, Saldae, Hadrumetum, Thapsus, Euhesperides, Taucheira, Ptolemais-Cyrene-area, Brundisium, Hydruntum, Potidaea, Stageira, Akanthos) are not separate ports in world_full.json (75 ports). They can be ignored for gameplay markers or added in a future world expansion."
-  ],
-  "name_ambiguities": [
-    {
-      "topic": "Apollonia",
-      "detail": "Several ancient Apollonias exist. Game port apollonia_cyrenaica is Cyrenaica. Illyrian Apollonia (near Epidamnus) is not a separate port id."
-    },
-    {
-      "topic": "Olbia",
-      "detail": "Game distinguishes olbia_pontic (Black Sea) vs olbia_sardinia (Sardinia). Map shows both; assign control points separately."
-    },
-    {
-      "topic": "Abdera",
-      "detail": "Historical map may label Iberian Abdera and Thracian Abdera. Game has neither as its own port; closest gameplay anchors are gades/malaka/sexi vs thracian chalcid area \u2014 needs design call if ever added."
-    },
-    {
-      "topic": "Citium vs Kition",
-      "detail": "Game uses port id kition with name Kition; map may read Citium \u2014 same settlement."
+      "alignment_status": "affine_from_control_ports"
     }
   ]
 }

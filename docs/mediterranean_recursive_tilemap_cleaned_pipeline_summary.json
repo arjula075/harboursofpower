@@ -1,0 +1,15 @@
+{
+  "tile_counts": {
+    "totally_land": 147987,
+    "horizontal_top_land": 636,
+    "diagonal_rising_left_land": 821,
+    "totally_sea": 71202,
+    "diagonal_descending_right_land": 511,
+    "horizontal_bottom_land": 995,
+    "diagonal_rising_right_land": 41,
+    "vertical_left_land": 280,
+    "vertical_right_land": 266,
+    "diagonal_descending_left_land": 39
+  },
+  "total_tiles": 222778
+}

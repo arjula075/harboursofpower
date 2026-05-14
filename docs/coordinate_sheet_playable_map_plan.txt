@@ -1,0 +1,25 @@
+Convert docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.png into a playable Pirates!-style map (Godot 4)
+
+Context (already in repo)
+- Logical grid 2000 x 1000, origin top-left; map_u = x/2000, map_v = y/1000 in data/world_full.json
+- Ten anchor cities in the image table; manifest: data/reference_colonies_map_alignment.json
+- Optional prettier sea art: docs/reference_greek_phoenician_colonies_mediterranean.png
+- Extra non-sim settlements: data/extra_colony_ports.json
+
+Pipeline stages
+1) Asset in engine — Import PNG; constants GRID_W=2000, GRID_H=1000; optional second texture for art PNG
+2) Map mode scene — ChartRoot Control, clip, enter/exit from ui/main.gd; z-order layers
+3) Projection — logical (u,v) to pixel (x,y) inside chart rect; inverse for hit-tests; apply pan/zoom transform as matrix
+4) Basemap — TextureRect full bleed (sheet alone) OR art under sheet / homography grid to art UV if they diverge
+5) Camera — Drag pan (clamp), wheel zoom to cursor, min/max scale, HiDPI test
+6) Ports layer — Spawn markers from world_full ports; hover; click emits port_id into existing voyage/intel flows
+7) Dynamic sea — Ship tokens + lane polylines from voyage graph; progress 0..1; see pirates travel roadmap for sim wiring
+8) Interaction — Hail range, merchant select, encounter stubs; keep ledger changes parity-aware
+9) Chrome — Legend (optional Greek/Phoenician tint), chart_area filter, header, back to city UI
+10) Polish — Minimap, LOD labels, pooling, SFX
+
+Order: 1 -> 2 -> 3 -> 5 -> 4 -> 6 -> 7 -> 8 -> 9 -> 10
+(Solid pan + port picks before ship polish.)
+
+Cursor canvas (if present beside chat)
+- harbours-coordinate-sheet-to-playable-map.canvas.tsx — checklist + tables (same content as this file)

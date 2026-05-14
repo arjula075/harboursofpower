@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Summarize reference colonies basemap alignment metadata (no extra deps)."""
+"""Summarize reference colonies chart alignment (schema v2 in data/)."""
 
 from __future__ import annotations
 
@@ -8,21 +8,31 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ALIGN = ROOT / "data" / "reference_colonies_map_alignment.json"
+EXTRA = ROOT / "data" / "extra_colony_ports.json"
 
 
 def main() -> None:
     data = json.loads(ALIGN.read_text(encoding="utf-8"))
-    img = data["reference_image"]
-    ports = data["ports"]
-    filled = sum(1 for p in ports if p.get("image_u") is not None and p.get("image_v") is not None)
     print("reference_colonies_map_alignment.json")
-    print("  image:", img["repository_path"], f'{img["width_px"]}x{img["height_px"]}')
-    print("  ports:", len(ports), "| image coords filled:", filled)
-    print("  control_points:", len(data.get("control_points") or []))
-    if data.get("name_ambiguities"):
-        print("  ambiguities:", len(data["name_ambiguities"]))
-    if filled == 0:
-        print("\nNext: add entries to control_points (port_id + image_u + image_v), then fit transform and write image_u/image_v per port.")
+    print("  schema_version:", data.get("schema_version"))
+    cs = data.get("coordinate_sheet_png") or {}
+    print("  coordinate sheet:", cs.get("path"), cs.get("png_dimensions_px"), "grid", cs.get("logical_grid"))
+    rm = data.get("reference_basemap_png") or {}
+    print("  basemap texture:", rm.get("path"), rm.get("dimensions_px"))
+    cps = data.get("control_points") or []
+    print("  control_points:", len(cps))
+    ports = data.get("ports") or []
+    anchored = sum(1 for p in ports if p.get("alignment_status") == "aligned_to_grid_sheet")
+    print("  ports:", len(ports), "| snapped to grid sheet:", anchored)
+    aff = data.get("affine_propagation_previous_to_grid") or {}
+    if aff.get("coefficients"):
+        print("  affine u coeffs:", aff["coefficients"].get("u"))
+        print("  affine v coeffs:", aff["coefficients"].get("v"))
+
+    if EXTRA.exists():
+        ex = json.loads(EXTRA.read_text(encoding="utf-8"))
+        n = len(ex.get("entries") or [])
+        print("\nextra_colony_ports.json entries:", n)
 
 
 if __name__ == "__main__":

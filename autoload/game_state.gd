@@ -234,6 +234,7 @@ const _COMMERCE_POOR_PULSE := 0.10
 const _POP_OUTPUT_SCALE_MIN := 0.72
 const _POP_OUTPUT_SCALE_MAX := 1.28
 ## Civic grain rationing (resilience helper A): when granary runway drops under the trigger, officials cut the per-day grain bite to `_RATION_BITE_FRAC` (min `_RATION_BITE_MIN`). Granary stretches ~40% further; demographics tick sees a partial-ration day (neither full nor zero), so the famine streak holds steady instead of climbing. Auto-ends when runway recovers or after `_RATION_MAX_DAYS`. Triggers visible civic rationing (food worry in finalize). Sync tools/sim_100_days.py.
+## Stress vs biology: `_finalize_daily_grain_food_days_and_unrest` uses `fed_stress` (full ration OR rationing day where the planned granary bite was delivered) for starvation streak + panic decay; grain riots still require biological shortfall (`bio_fed` false) so rationing does not read as mass famine.
 const _RATION_TRIGGER_FOOD_DAYS := 10.0
 const _RATION_END_FOOD_DAYS := 22.0
 const _RATION_BITE_FRAC := 0.62
@@ -684,6 +685,8 @@ var _pirate_metrics_loot_coins: int = 0
 var _escort_player_coins_paid: int = 0
 ## Last riot line(s) from the most recent sim tick (for admin / debugging).
 var _last_food_riot_summary: String = ""
+## Cumulative grain food riots per port (incremented in `_apply_one_food_riot`; saved on campaign save).
+var _port_food_riot_events: Dictionary = {}
 ## Traveling NPC merchants: cargo + docked_port or at-sea voyage (same day-tick model as player).
 var _npc_agents: Array = []
 var _npc_next_agent_id: int = 0
@@ -886,6 +889,8 @@ func _maybe_run_world_autonomy_warmup() -> void:
 	for _i in n:
 		_run_daily_population_and_npcs()
 		current_day += 1
+		# Long warmups run on the main thread; yield so the OS/editor stay responsive (avoids macOS beachball).
+		await get_tree().process_frame
 	if n > 0:
 		market_changed.emit()
 		day_advanced.emit(current_day)
@@ -2527,7 +2532,13 @@ func get_port_market_line() -> String:
 	var bits: PackedStringArray = []
 	for good_id in _goods.keys():
 		var gid := str(good_id)
-		bits.append("%s %d" % [get_good_name(gid), _port_stock_qty(pid, gid)])
+		var q0: int = _port_stock_qty(pid, gid)
+		if gid == "grain" or gid == "fish":
+			var qs: int = _port_quay_surplus_units_for_sale(pid, gid)
+			if qs < q0:
+				bits.append("%s %d (≤%d shippable)" % [get_good_name(gid), q0, qs])
+				continue
+		bits.append("%s %d" % [get_good_name(gid), q0])
 	if bits.is_empty():
 		return "Port stock: —"
 	return "Port stock: " + ", ".join(bits)
@@ -2618,6 +2629,8 @@ func get_port_city_supply_digest() -> String:
 		pop_line += ", ~%d fish/day (ration %d)" % [f_shown, f_base]
 	pop_line += ". " + farm_s + mine_s + spoil_s + ind_s + war_s + pop_scale_s
 	pop_line += "NPCs: %d docked, ~%d inbound by sea." % [n_docked, n_in]
+	var riots_n: int = clampi(int(_port_food_riot_events.get(pid, 0)), 0, 9999999)
+	pop_line += " Food riots recorded (all time): %d." % riots_n
 	var doy0: int = get_calendar_day_of_year()
 	var cal_head: String = (
 		"%s Y%d (calendar day %d/%d). "
@@ -4512,6 +4525,7 @@ func save_campaign() -> bool:
 		"used_hull_listings": _serialize_used_hull_listings(),
 		"used_hull_listing_next_id": _next_used_hull_listing_id,
 		"port_commerce_pulse": _serialize_port_float_map(_port_commerce_pulse),
+		"port_food_riot_events": _serialize_port_int_map(_port_food_riot_events),
 		"port_cartel_strength": _serialize_port_float_map(_port_cartel_strength),
 		"port_war_rumor": _serialize_port_float_map(_port_war_rumor),
 		"port_plague_days": _serialize_port_int_map(_port_plague_days),
@@ -4549,6 +4563,7 @@ func load_campaign() -> bool:
 		return false
 	var d: Dictionary = data
 	_port_peace_riot_grace_days.clear()
+	_port_food_riot_events.clear()
 	var ver: int = int(d.get("save_version", 0))
 	if ver < 1 or ver > SAVE_VERSION:
 		game_load_failed.emit("Save is from a different version.")
@@ -4913,6 +4928,9 @@ func load_campaign() -> bool:
 		_player_market_buy_prev.clear()
 		_player_good_last_trade_day.clear()
 		_player_route_intel_refresh_day = 0
+	var pfre_sv: Variant = d.get("port_food_riot_events", null)
+	if typeof(pfre_sv) == TYPE_DICTIONARY:
+		_deserialize_port_int_map_into(_port_food_riot_events, pfre_sv as Dictionary, 0, 9999999)
 	_player_seed_opening_ledger_hearsay_if_empty()
 	_ensure_player_ship_identity_post_load()
 	_bootstrap_recurring_war_timers()
@@ -5532,6 +5550,7 @@ func _load_world(path: String) -> void:
 	_port_peace_riot_grace_days.clear()
 	_port_commerce_tick.clear()
 	_port_commerce_pulse.clear()
+	_port_food_riot_events.clear()
 	_port_harbour_due_coins_tick.clear()
 	_port_cartel_strength.clear()
 	_port_war_rumor.clear()
@@ -10266,6 +10285,7 @@ func _run_daily_population_and_npcs() -> void:
 			"preserved": preserved_used,
 			"forage": forage_today,
 			"rationing": 1 if rationing else 0,
+			"eat_today": eat_today,
 		}
 	_agent_industry_and_war_materiel_tick()
 	_replenish_wine_vineyards_after_bites()
@@ -11190,17 +11210,20 @@ func _finalize_daily_grain_food_days_and_unrest() -> void:
 		var preserved: int = int(dig.get("preserved", 0))
 		var forage: int = int(dig.get("forage", 0))
 		var rationing: bool = int(dig.get("rationing", 0)) != 0
+		var eat_today_d: int = clampi(int(dig.get("eat_today", eat)), 0, 120)
 		var eaten_eff: int = eaten_g + preserved + forage
-		var fed_ok: bool = eaten_eff >= eat
+		var bio_fed: bool = eaten_eff >= eat
+		var grain_plan_ok: bool = rationing and eat_today_d > 0 and eaten_g >= eat_today_d
+		var fed_stress: bool = bio_fed or grain_plan_ok
 		var shortfall: int = maxi(0, eat - eaten_eff)
 		var streak_prev: int = clampi(int(_port_starvation_streak_days.get(ps, 0)), 0, 999)
 		var streak: int = 0
-		if fed_ok:
+		if fed_stress:
 			streak = 0
 		else:
 			streak = mini(999, streak_prev + 1)
 		_port_starvation_streak_days[ps] = streak
-		if fed_ok:
+		if fed_stress:
 			var plentiful: bool = days_r >= _FOOD_UNREST_PLENTIFUL_FOOD_DAYS
 			var dec: int = _FOOD_UNREST_DECAY_WHEN_PLENTIFUL if plentiful else _FOOD_UNREST_DECAY
 			var wp_ok: Vector2i = _food_unrest_decay_panic_first(dec, worry, panic)
@@ -11221,7 +11244,7 @@ func _finalize_daily_grain_food_days_and_unrest() -> void:
 			worry = clampi(worry + _FOOD_UNREST_WORRY_RATIONING_DAILY, 0, 100)
 		var comp: int = clampi(worry + panic, 0, 200)
 		var riot_thr: int = _food_riot_threshold_for_port(ps)
-		var famine_riot_eligible: bool = (not fed_ok) and streak >= _FOOD_UNREST_STARVATION_STREAK_THRESHOLD
+		var famine_riot_eligible: bool = (not bio_fed) and streak >= _FOOD_UNREST_STARVATION_STREAK_THRESHOLD
 		if comp >= riot_thr:
 			if famine_riot_eligible:
 				var p_riot: float = minf(1.0, _FOOD_RIOT_ROLL_BASE + float(comp - riot_thr) / _FOOD_RIOT_ROLL_PER_OVER)
@@ -11268,6 +11291,7 @@ func _apply_one_food_riot(port_id: String, eat: int, unrest: int, out_lines: Pac
 		line += ", %d wine" % wine_l
 	line += " seized; prosperity −%d." % smash
 	out_lines.append(line)
+	_port_food_riot_events[ps] = int(_port_food_riot_events.get(ps, 0)) + 1
 	market_changed.emit()
 	return clampi(int(round(float(unrest) * _FOOD_RIOT_UNREST_SCALE)), 10, 62)
 
@@ -12932,6 +12956,7 @@ func get_simulation_metrics() -> Dictionary:
 			"war_peace_days": int(_port_war_peace_remaining.get(ps, 0)),
 			"npc_docked": _count_npc_docked_at(ps),
 			"commerce_pulse": clampf(float(_port_commerce_pulse.get(ps, 0.0)), 0.0, 1.0),
+			"food_riot_events": clampi(int(_port_food_riot_events.get(ps, 0)), 0, 9999999),
 			"cartel_strength": clampf(float(_port_cartel_strength.get(ps, 0.0)), 0.0, 1.0),
 			"war_rumor": clampf(float(_port_war_rumor.get(ps, 0.0)), 0.0, 1.0),
 			"plague_days": clampi(int(_port_plague_days.get(ps, 0)), 0, 999),

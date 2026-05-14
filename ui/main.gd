@@ -16,7 +16,6 @@ const _CITY_PLACE_LABELS: PackedStringArray = [
 	"Routes",
 ]
 
-const _SEA_CHART_PATH := "res://assets/ui/sea_chart.svg"
 const _STATUS_LOG_MAX_CHARS := 12000
 const _NarrowTooltipButton := preload("res://ui/narrow_tooltip_button.gd")
 ## Fallback wrap for engine `TooltipLabel` (ItemList, etc.): capped so it never tracks full panel width.
@@ -43,16 +42,18 @@ const _TOOLTIP_WRAP_WIDTH_FRAC := 0.22
 var _city_place_index: int = _PLACE_MARKET
 var _city_place_group: ButtonGroup = ButtonGroup.new()
 var _city_place_buttons_built: bool = false
-var _captains_chart: Control = null
 var _ledger_area_list: ItemList = null
 var _ledger_port_list: ItemList = null
 var _ledger_goods_host: VBoxContainer = null
 var _ledger_last_area_id: String = ""
 var _ledger_last_port_id: String = ""
+var _routes_fullscreen_layer: Control = null
 
 
 func _ready() -> void:
 	status_log.focus_mode = Control.FOCUS_NONE
+	trade_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	trade_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	advance_button.pressed.connect(_on_advance_pressed)
 	save_button.pressed.connect(_on_save_pressed)
 	load_button.pressed.connect(_on_load_pressed)
@@ -302,10 +303,10 @@ func _on_city_place_pressed(place_idx: int) -> void:
 
 
 func _rebuild_trade() -> void:
+	_clear_routes_fullscreen_layer()
 	for c in trade_box.get_children():
 		trade_box.remove_child(c)
 		c.free()
-	_captains_chart = null
 	city_places_vbox.show()
 	city_title.text = "City"
 	if _gs.is_at_sea():
@@ -323,6 +324,8 @@ func _rebuild_trade() -> void:
 
 
 func _rebuild_city_place_content() -> void:
+	if _city_place_index != _PLACE_ROUTES:
+		_clear_routes_fullscreen_layer()
 	for c in trade_box.get_children():
 		trade_box.remove_child(c)
 		c.free()
@@ -891,6 +894,19 @@ func _refresh_ledger_goods_panel(port_id: String) -> void:
 	_ledger_goods_host.add_child(grid)
 
 
+func _clear_routes_fullscreen_layer() -> void:
+	if _routes_fullscreen_layer != null and is_instance_valid(_routes_fullscreen_layer):
+		_routes_fullscreen_layer.queue_free()
+	_routes_fullscreen_layer = null
+
+
+func _on_routes_chart_close_pressed() -> void:
+	_clear_routes_fullscreen_layer()
+	_city_place_index = _PLACE_MARKET
+	_sync_city_place_buttons()
+	_rebuild_city_place_content()
+
+
 func _build_routes_panel(parent: VBoxContainer) -> void:
 	if str(_gs.player_voyage_role) == "escort":
 		_append_wrapped(
@@ -905,49 +921,13 @@ func _build_routes_panel(parent: VBoxContainer) -> void:
 			"No open routes from this roadstead — check `npc_lanes` / coastal graph in world data or your hull’s limits."
 		)
 		return
-	_append_wrapped(
-		parent,
-		"Table-first route planner — map is context only. Paying clerks (Tavern → refresh) tightens declared reliability for a tide."
-	)
-	var pay_refresh := Button.new()
-	pay_refresh.text = "Pay clerks to refresh route tables (%dc)" % _gs.get_player_intel_verify_coin_cost("routes")
-	pay_refresh.disabled = _gs.get_money() < _gs.get_player_intel_verify_coin_cost("routes")
-	pay_refresh.pressed.connect(_on_pay_route_refresh_pressed)
-	parent.add_child(pay_refresh)
-	var chart := Control.new()
-	chart.name = "CaptainsChart"
-	chart.custom_minimum_size = Vector2(320, 200)
-	chart.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	chart.clip_contents = true
-	chart.add_child(_sea_chart_background())
-	parent.add_child(chart)
-	_captains_chart = chart
-	chart.resized.connect(_on_captains_chart_resized)
-	_captains_chart_relayout()
-	var grid := GridContainer.new()
-	grid.columns = 8
-	for h in ["Destination", "Days", "Route", "Risk read", "Data age", "Rel.", "Sail", "Why"]:
-		grid.add_child(_tbl_cell(h, 20.0))
-	for row in rows:
-		var d: Dictionary = row
-		var pid := str(d.get("id", ""))
-		grid.add_child(_tbl_cell(str(d.get("name", pid)), 96.0))
-		grid.add_child(_tbl_cell(str(int(d.get("days", 0))), 28.0))
-		grid.add_child(_tbl_cell(_truncate(str(d.get("route", "")), 20), 72.0))
-		grid.add_child(_tbl_cell(str(d.get("risk", "")), 88.0))
-		grid.add_child(_tbl_cell("%dd" % int(d.get("data_age_days", 0)), 32.0))
-		grid.add_child(_tbl_cell("%d%%" % int(d.get("reliability_pct", 0)), 32.0))
-		var sail := Button.new()
-		sail.text = "Sail"
-		sail.pressed.connect(_on_destination_chosen.bind(pid))
-		grid.add_child(sail)
-		var wr := _NarrowTooltipButton.new()
-		wr.text = "?"
-		wr.tooltip_text = _gs.get_player_data_provenance("route", pid)
-		wr.focus_mode = Control.FOCUS_NONE
-		wr.pressed.connect(_append_log.bind(_gs.get_player_data_provenance("route", pid)))
-		grid.add_child(wr)
-	parent.add_child(grid)
+	var tip := Label.new()
+	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	tip.add_theme_font_size_override("font_size", 10)
+	tip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tip.text = "Sea chart is open full screen over the window. Close chart, Esc, or another city tab to return."
+	parent.add_child(tip)
+	_show_routes_fullscreen_overlay(rows)
 	var any_missing_uv := false
 	for row2 in rows:
 		var d2: Dictionary = row2
@@ -955,7 +935,64 @@ func _build_routes_panel(parent: VBoxContainer) -> void:
 			any_missing_uv = true
 			break
 	if any_missing_uv:
-		_append_wrapped(parent, "Some ports lack chart pins — use the table above.")
+		_append_wrapped(parent, "Some destinations lack chart coordinates — they will not appear on the map.")
+
+
+func _show_routes_fullscreen_overlay(rows: Array) -> void:
+	_clear_routes_fullscreen_layer()
+	var layer := Control.new()
+	layer.name = "RoutesFullscreenLayer"
+	layer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.offset_left = 0.0
+	layer.offset_top = 0.0
+	layer.offset_right = 0.0
+	layer.offset_bottom = 0.0
+	layer.z_index = 80
+	layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(layer)
+	_routes_fullscreen_layer = layer
+	var v := VBoxContainer.new()
+	v.set_anchors_preset(Control.PRESET_FULL_RECT)
+	v.offset_left = 10.0
+	v.offset_top = 10.0
+	v.offset_right = -10.0
+	v.offset_bottom = -10.0
+	v.add_theme_constant_override("separation", 8)
+	layer.add_child(v)
+	var bar := HBoxContainer.new()
+	bar.add_theme_constant_override("separation", 12)
+	var close_btn := Button.new()
+	close_btn.text = "Close chart"
+	close_btn.focus_mode = Control.FOCUS_ALL
+	close_btn.pressed.connect(_on_routes_chart_close_pressed)
+	bar.add_child(close_btn)
+	var pay_refresh := Button.new()
+	pay_refresh.text = "Pay clerks to refresh route tables (%dc)" % _gs.get_player_intel_verify_coin_cost("routes")
+	pay_refresh.disabled = _gs.get_money() < _gs.get_player_intel_verify_coin_cost("routes")
+	pay_refresh.pressed.connect(_on_pay_route_refresh_pressed)
+	bar.add_child(pay_refresh)
+	var hint := Label.new()
+	hint.text = (
+		"Drag pan · wheel zoom · click port to sail · default width %d map units (of %d). Risk: marker color + hover line."
+		% [int(HarboursChartGrid.ROUTES_LOCAL_VIEW_WIDTH_MAP), HarboursChartGrid.LOGICAL_GRID_WIDTH]
+	)
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hint.add_theme_font_size_override("font_size", 10)
+	bar.add_child(hint)
+	v.add_child(bar)
+	var map_chart := RoutesMapChart.new()
+	map_chart.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	map_chart.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	map_chart.setup(_gs, rows)
+	map_chart.sail_requested.connect(_on_destination_chosen)
+	v.add_child(map_chart)
+	call_deferred("_routes_overlay_focus_close", close_btn)
+
+
+func _routes_overlay_focus_close(close_btn: Button) -> void:
+	if close_btn != null and is_instance_valid(close_btn):
+		close_btn.grab_focus()
 
 
 func _on_pay_route_refresh_pressed() -> void:
@@ -965,93 +1002,6 @@ func _on_pay_route_refresh_pressed() -> void:
 	_append_log("Clerks re-measured open-sea legs on your charts.")
 	_rebuild_trade()
 	_refresh_header()
-
-
-func _sea_chart_background() -> Control:
-	if ResourceLoader.exists(_SEA_CHART_PATH):
-		var tex: Texture2D = load(_SEA_CHART_PATH) as Texture2D
-		if tex != null:
-			var tr := TextureRect.new()
-			tr.name = "ChartSea"
-			tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			tr.set_anchors_preset(Control.PRESET_FULL_RECT)
-			tr.offset_right = 0.0
-			tr.offset_bottom = 0.0
-			tr.texture = tex
-			tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-			return tr
-	var cr := ColorRect.new()
-	cr.name = "ChartSea"
-	cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	cr.set_anchors_preset(Control.PRESET_FULL_RECT)
-	cr.color = Color(0.07, 0.12, 0.2)
-	return cr
-
-
-func _style_port_chart_button(btn: Button) -> void:
-	var normal := StyleBoxFlat.new()
-	normal.bg_color = Color(0.82, 0.62, 0.28, 0.94)
-	normal.border_color = Color(0.32, 0.22, 0.12, 1.0)
-	normal.set_border_width_all(1)
-	normal.set_corner_radius_all(15)
-	normal.content_margin_left = 8.0
-	normal.content_margin_right = 8.0
-	normal.content_margin_top = 5.0
-	normal.content_margin_bottom = 5.0
-	var hover := normal.duplicate() as StyleBoxFlat
-	hover.bg_color = Color(0.93, 0.74, 0.38, 0.98)
-	var pressed := normal.duplicate() as StyleBoxFlat
-	pressed.bg_color = Color(0.62, 0.44, 0.18, 1.0)
-	btn.add_theme_stylebox_override("normal", normal)
-	btn.add_theme_stylebox_override("hover", hover)
-	btn.add_theme_stylebox_override("pressed", pressed)
-	btn.add_theme_stylebox_override("focus", hover)
-	btn.add_theme_color_override("font_color", Color(0.1, 0.06, 0.04))
-	btn.add_theme_color_override("font_pressed_color", Color(0.98, 0.94, 0.88))
-	btn.add_theme_color_override("font_hover_color", Color(0.06, 0.04, 0.02))
-	btn.add_theme_font_size_override("font_size", 12)
-
-
-func _on_captains_chart_resized() -> void:
-	call_deferred("_captains_chart_relayout")
-
-
-func _captains_chart_relayout() -> void:
-	var chart := _captains_chart
-	if chart == null or not is_instance_valid(chart):
-		return
-	for ch in chart.get_children():
-		if str(ch.name).begins_with("PortMarker_"):
-			chart.remove_child(ch)
-			ch.free()
-	var sz: Vector2 = chart.size
-	if sz.x < 24.0 or sz.y < 24.0:
-		return
-	for row in _gs.get_player_route_table():
-		var d: Dictionary = row
-		var pid := str(d.get("id", ""))
-		var uv: Vector2 = _gs.get_port_map_uv(pid)
-		if uv.x < 0.0:
-			continue
-		var btn := Button.new()
-		btn.name = "PortMarker_%s" % pid
-		btn.flat = true
-		btn.focus_mode = Control.FOCUS_ALL
-		var pname: String = str(d.get("name", pid))
-		var days: int = int(d.get("days", 0))
-		var rlabel: String = str(d.get("route", ""))
-		btn.text = pname if pname.length() <= 16 else pname.substr(0, 14) + "…"
-		if rlabel.is_empty():
-			btn.tooltip_text = "%s — %d days at sea" % [pname, days]
-		else:
-			btn.tooltip_text = "%s — %d days (%s)" % [pname, days, rlabel]
-		btn.custom_minimum_size = Vector2(108, 30)
-		_style_port_chart_button(btn)
-		btn.pressed.connect(_on_destination_chosen.bind(pid))
-		chart.add_child(btn)
-		var half := btn.custom_minimum_size * 0.5
-		btn.position = Vector2(uv.x * sz.x - half.x, uv.y * sz.y - half.y)
 
 
 func _build_dock_fleet_section(parent: VBoxContainer) -> void:
@@ -1237,6 +1187,11 @@ func _on_load_pressed() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		if _routes_fullscreen_layer != null and is_instance_valid(_routes_fullscreen_layer):
+			_on_routes_chart_close_pressed()
+			get_viewport().set_input_as_handled()
+			return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_F12:
 			if admin_window.visible:

@@ -47,7 +47,7 @@ The `latest.json` schema mirrors a trimmed `Sim.metrics()` so it stays small:
     "price_metal_mean": float,  # same for metal when good exists; else 0
     "food_unrest_mean": float,  # unweighted mean composite food_unrest (0–200) across ports in snapshot
     "ports": { pid: { wealth, attractor, grain_food_days, food_unrest, food_worry, food_panic,
-                       population_grain, population_initial, role, at_war, war_days_left, ... } }
+                       famine_streak_days, starvation_streak_days, population_grain, population_initial, role, at_war, war_days_left, ... } }
   }
 """
 
@@ -124,6 +124,7 @@ def _port_row(metrics_port: dict, initial_pop: int = 0, role: str = "") -> dict:
         "food_worry": int(metrics_port.get("food_worry", 0)),
         "food_panic": int(metrics_port.get("food_panic", 0)),
         "food_unrest_mood": str(metrics_port.get("food_unrest_mood", "")),
+        "food_riot_events": int(metrics_port.get("food_riot_events", 0)),
         "population_grain": int(metrics_port.get("population_grain", 0)),
         "population_grain_cap": int(metrics_port.get("population_grain_cap", 0)),
         "population_initial": int(initial_pop),
@@ -137,6 +138,7 @@ def _port_row(metrics_port: dict, initial_pop: int = 0, role: str = "") -> dict:
         "stock_wire": int(metrics_port.get("stock_wire", 0)),
         "plague_days": int(metrics_port.get("plague_days", 0)),
         "famine_streak_days": int(metrics_port.get("famine_streak_days", 0)),
+        "starvation_streak_days": int(metrics_port.get("starvation_streak_days", 0)),
     }
 
 
