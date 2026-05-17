@@ -46,7 +46,7 @@ PORT_TO_AREA: dict[str, str] = {
     "rhegium": "sicily_ionian", "locri": "sicily_ionian",
     "croton": "sicily_ionian", "taras": "sicily_ionian",
     # north_africa
-    "tingis": "north_africa", "hippo": "north_africa", "utica": "north_africa",
+    "tingis": "iberia_gaul", "hippo": "north_africa", "utica": "north_africa",
     "carthage": "north_africa", "oea": "north_africa",
     "sabratha": "north_africa", "leptis_magna": "north_africa",
     # egypt_cyrenaica
