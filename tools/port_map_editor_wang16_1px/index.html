@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Harbours — port map editor (Wang-16 · 1px)</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>Port map editor <span class="badge">Wang-16 · 1px</span></h1>
+        <p class="hint">
+          Basemap = land/sea mask (3×3 tilemap upscaled) · snap = corner-Wang coast tiles. Rome &amp;
+          Nile: inland exception. Loads <code>data/world_full.json</code> · export →
+          <code>data/port_map_editor_wang16_1px_export.json</code>
+        </p>
+        <div class="legend">
+          <span><i class="swatch" style="background: #1e5a82"></i> sea</span>
+          <span><i class="swatch" style="background: #bea882"></i> land</span>
+          <span><i class="swatch" style="background: #f0c040"></i> port</span>
+        </div>
+        <p class="hint build-stamp" id="build-stamp"></p>
+      </header>
+
+      <aside id="sidebar">
+        <div>
+          <label for="area-select">Chart area</label>
+          <select id="area-select">
+            <option value="">— load —</option>
+          </select>
+        </div>
+        <div>
+          <label for="port-select">Port (this area only)</label>
+          <select id="port-select" disabled>
+            <option value="">— select area first —</option>
+          </select>
+        </div>
+        <ul id="port-list"></ul>
+        <div id="port-meta">Select a chart area.</div>
+        <label class="checkbox-row">
+          <input type="checkbox" id="inland-exception" disabled />
+          <span>Inland exception (snap to nearest solid land)</span>
+        </label>
+        <button type="button" id="center-port" disabled>Center port on map</button>
+        <button type="button" id="export-btn" class="primary" disabled>Save export JSON</button>
+      </aside>
+
+      <main id="map-wrap">
+        <canvas id="map-canvas"></canvas>
+        <div id="map-overlay">Loading…</div>
+      </main>
+
+      <footer id="status-bar">
+        <span id="status-text">Starting…</span>
+        <span id="coords-text"></span>
+      </footer>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
