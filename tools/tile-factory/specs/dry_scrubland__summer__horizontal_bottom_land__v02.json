@@ -1,0 +1,17 @@
+{
+  "id": "dry_scrubland/summer/horizontal_bottom_land/v02",
+  "kind": "terrain",
+  "biome": "dry_scrubland",
+  "season": "summer",
+  "topology": "horizontal_bottom_land",
+  "legacy_id": "horizontal_bottom_land",
+  "wang_mask": 2,
+  "terrain_class": "shore",
+  "variation": 2,
+  "status": "pending",
+  "raw_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\tools\\tile-factory\\raw\\dry_scrubland\\summer\\horizontal_bottom_land\\v02.png",
+  "pending_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\assets\\tiles\\pending\\dry_scrubland\\summer\\horizontal_bottom_land\\v02.webp",
+  "approved_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\assets\\tiles\\approved\\dry_scrubland\\summer\\horizontal_bottom_land\\v02.webp",
+  "autotile_contract": true,
+  "autotile_fallback": false
+}

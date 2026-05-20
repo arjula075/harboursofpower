@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Lake mosaic — 10 tile set</title>
+<style>
+body { font-family: system-ui; background: #1a1a1a; color: #eee; margin: 16px; }
+h1 { margin-bottom: 4px; }
+.sub { color: #aaa; margin-bottom: 16px; }
+.mosaic-wrap { margin-bottom: 24px; }
+.mosaic-wrap img { border: 1px solid #444; image-rendering: auto; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 128px);
+  gap: 4px;
+  width: fit-content;
+}
+.cell { background: #2a2a2a; padding: 4px; border-radius: 4px; text-align: center; }
+.cell p { font-size: 9px; margin: 4px 0 0; line-height: 1.2; color: #bbb; }
+.cell.missing .ph { width:128px; height:128px; background:#522; display:flex; align-items:center; justify-content:center; font-size:32px; }
+code { font-size: 11px; }
+</style></head><body>
+<h1>Lake mosaic (5×5)</h1>
+<p class="sub">Center = open sea · inner ring = shores · outer ring = land · 25 tiles total</p>
+<div class="mosaic-wrap">
+  <p><strong>Stitched preview</strong></p>
+  <img src="../../../tools/tile-factory/reports/lake_mosaic_5x5.png" width="640" height="640" />
+</div>
+<div class="grid"><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/diagonal_rising_left_land/v01.webp" width="128" height="128" /><p>diagonal rising left land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/horizontal_top_land/v01.webp" width="128" height="128" /><p>horizontal top land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/diagonal_rising_right_land/v01.webp" width="128" height="128" /><p>diagonal rising right land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/vertical_left_land/v01.webp" width="128" height="128" /><p>vertical left land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_sea/v01.webp" width="128" height="128" /><p>totally sea</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/vertical_right_land/v01.webp" width="128" height="128" /><p>vertical right land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/diagonal_descending_left_land/v01.webp" width="128" height="128" /><p>diagonal descending left land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/horizontal_bottom_land/v01.webp" width="128" height="128" /><p>horizontal bottom land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/diagonal_descending_right_land/v01.webp" width="128" height="128" /><p>diagonal descending right land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div></div>
+
+<p style="margin-top:20px"><code>orchestrator.py approve dry_scrubland/summer/TOPOLOGY/v01</code></p>
+</body></html>

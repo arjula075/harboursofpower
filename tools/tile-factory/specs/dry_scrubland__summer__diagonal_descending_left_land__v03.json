@@ -1,0 +1,17 @@
+{
+  "id": "dry_scrubland/summer/diagonal_descending_left_land/v03",
+  "kind": "terrain",
+  "biome": "dry_scrubland",
+  "season": "summer",
+  "topology": "diagonal_descending_left_land",
+  "legacy_id": "diagonal_descending_left_land",
+  "wang_mask": 3,
+  "terrain_class": "shore",
+  "variation": 3,
+  "status": "pending",
+  "raw_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\tools\\tile-factory\\raw\\dry_scrubland\\summer\\diagonal_descending_left_land\\v03.png",
+  "pending_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\assets\\tiles\\pending\\dry_scrubland\\summer\\diagonal_descending_left_land\\v03.webp",
+  "approved_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\assets\\tiles\\approved\\dry_scrubland\\summer\\diagonal_descending_left_land\\v03.webp",
+  "autotile_contract": true,
+  "autotile_fallback": false
+}

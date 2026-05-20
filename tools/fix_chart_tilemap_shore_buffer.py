@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
-"""Insert shore (partial coast) tiles between full land and full sea on chart-area tilemaps.
+"""DEPRECATED: use tools/convert_chart_tilemaps_strict_wang16.py instead.
 
-Reads docs/chart_area_tilemaps_and_maps/*_tilemap.json and writes copies to
-docs/chart_area_tilemaps_and_maps/shore_fixed/ with the same filenames.
-
-Rule: any totally_land cell that 4- or 8-neighbours totally_sea becomes a coast
-tile oriented from which sides touch open sea (cardinal neighbours first, then
-diagonal-only contacts use the dominant pattern from the full Mediterranean map).
+Legacy land-centric shore buffer. Strict Wang16 conversion replaces this pipeline.
 """
 
 from __future__ import annotations

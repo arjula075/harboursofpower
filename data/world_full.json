@@ -377,7 +377,7 @@
     {
       "id": "athens_piraeus",
       "name": "Athens / Piraeus",
-      "map_u": 0.61425,
+      "map_u": 0.61275,
       "map_v": 0.5445,
       "role": "metropole",
       "industrial_metal_per_day": 3,
@@ -433,7 +433,7 @@
     {
       "id": "byblos",
       "name": "Byblos",
-      "map_u": 0.86025,
+      "map_u": 0.85875,
       "map_v": 0.7215,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
@@ -755,7 +755,7 @@
     {
       "id": "chalcedon",
       "name": "Chalcedon",
-      "map_u": 0.72675,
+      "map_u": 0.72525,
       "map_v": 0.3915,
       "role": "maritime_town",
       "industrial_metal_per_day": 1,
@@ -1052,7 +1052,7 @@
       "id": "emporion",
       "name": "Emporion",
       "map_u": 0.20025,
-      "map_v": 0.3105,
+      "map_v": 0.3075,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1745,8 +1745,8 @@
     {
       "id": "memphis",
       "name": "Memphis",
-      "map_u": 0.772511,
-      "map_v": 0.916786,
+      "map_u": 0.79275,
+      "map_v": 0.9375,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -1920,8 +1920,8 @@
     {
       "id": "naucratis",
       "name": "Naucratis",
-      "map_u": 0.757554,
-      "map_v": 0.874792,
+      "map_u": 0.75525,
+      "map_v": 0.8655,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -2215,7 +2215,7 @@
     {
       "id": "ostia",
       "name": "Ostia",
-      "map_u": 0.38475,
+      "map_u": 0.38325,
       "map_v": 0.3435,
       "role": "imperial_port",
       "industrial_metal_per_day": 4,
@@ -2444,7 +2444,7 @@
     {
       "id": "poseidonia",
       "name": "Poseidonia",
-      "map_u": 0.44325,
+      "map_u": 0.44175,
       "map_v": 0.4305,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
@@ -2651,7 +2651,7 @@
     {
       "id": "rome",
       "name": "Rome",
-      "map_u": 0.38475,
+      "map_u": 0.38325,
       "map_v": 0.3435,
       "role": "great_city",
       "industrial_metal_per_day": 3,
@@ -2953,7 +2953,7 @@
       "id": "smyrna",
       "name": "Smyrna",
       "map_u": 0.67425,
-      "map_v": 0.5325,
+      "map_v": 0.5355,
       "role": "regional_capital",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -3595,8 +3595,8 @@
     {
       "id": "arelate_bread",
       "name": "Arelate (Rhône delta grain)",
-      "map_u": 0.23475,
-      "map_v": 0.2445,
+      "map_u": 0.23625,
+      "map_v": 0.2505,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
       "industrial_wire_per_day": 1,
@@ -3744,7 +3744,7 @@
     {
       "id": "mazara_bread",
       "name": "Mazara (Sicilian grain)",
-      "map_u": 0.38925,
+      "map_u": 0.38775,
       "map_v": 0.5595,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,
@@ -3930,7 +3930,7 @@
     {
       "id": "antium_coast",
       "name": "Antium coast (grain)",
-      "map_u": 0.39675,
+      "map_u": 0.39525,
       "map_v": 0.3615,
       "role": "breadbasket",
       "industrial_metal_per_day": 1,

@@ -1,0 +1,212 @@
+{
+  "world_file": "data\\world_full.json",
+  "tilemap_dir": "docs\\chart_area_tilemaps_and_maps",
+  "global_grid_width": 2000,
+  "global_grid_height": 1000,
+  "inland_keep_list": [],
+  "totals": {
+    "inspected": 99,
+    "moved": 13,
+    "unchanged": 86,
+    "inland_kept": 0,
+    "skipped": 0
+  },
+  "moves": [
+    {
+      "id": "memphis",
+      "name": "Memphis",
+      "chart_area_id": "egypt_cyrenaica",
+      "tile": "cape_east_land",
+      "distance_global": 45.47,
+      "old": {
+        "map_u": 0.772511,
+        "map_v": 0.916786
+      },
+      "new": {
+        "map_u": 0.79275,
+        "map_v": 0.9375
+      }
+    },
+    {
+      "id": "naucratis",
+      "name": "Naucratis",
+      "chart_area_id": "egypt_cyrenaica",
+      "tile": "cape_north_land",
+      "distance_global": 10.37,
+      "old": {
+        "map_u": 0.757554,
+        "map_v": 0.874792
+      },
+      "new": {
+        "map_u": 0.75525,
+        "map_v": 0.8655
+      }
+    },
+    {
+      "id": "arelate_bread",
+      "name": "Arelate (Rhône delta grain)",
+      "chart_area_id": "iberia_gaul",
+      "tile": "cape_south_land",
+      "distance_global": 6.71,
+      "old": {
+        "map_u": 0.23475,
+        "map_v": 0.2445
+      },
+      "new": {
+        "map_u": 0.23625,
+        "map_v": 0.2505
+      }
+    },
+    {
+      "id": "athens_piraeus",
+      "name": "Athens / Piraeus",
+      "chart_area_id": "aegean",
+      "tile": "diagonal_rising_right_land",
+      "distance_global": 3.0,
+      "old": {
+        "map_u": 0.61425,
+        "map_v": 0.5445
+      },
+      "new": {
+        "map_u": 0.61275,
+        "map_v": 0.5445
+      }
+    },
+    {
+      "id": "byblos",
+      "name": "Byblos",
+      "chart_area_id": "levant_cyprus",
+      "tile": "diagonal_descending_right_land",
+      "distance_global": 3.0,
+      "old": {
+        "map_u": 0.86025,
+        "map_v": 0.7215
+      },
+      "new": {
+        "map_u": 0.85875,
+        "map_v": 0.7215
+      }
+    },
+    {
+      "id": "chalcedon",
+      "name": "Chalcedon",
+      "chart_area_id": "propontis_pontus",
+      "tile": "diagonal_rising_right_land",
+      "distance_global": 3.0,
+      "old": {
+        "map_u": 0.72675,
+        "map_v": 0.3915
+      },
+      "new": {
+        "map_u": 0.72525,
+        "map_v": 0.3915
+      }
+    },
+    {
+      "id": "emporion",
+      "name": "Emporion",
+      "chart_area_id": "iberia_gaul",
+      "tile": "diagonal_descending_left_land",
+      "distance_global": 3.0,
+      "old": {
+        "map_u": 0.20025,
+        "map_v": 0.3105
+      },
+      "new": {
+        "map_u": 0.20025,
+        "map_v": 0.3075
+      }
+    },
+    {
+      "id": "ostia",
+      "name": "Ostia",
+      "chart_area_id": "tyrrhenian",
+      "tile": "diagonal_rising_right_land",
+      "distance_global": 3.0,
+      "old": {
+        "map_u": 0.38475,
+        "map_v": 0.3435
+      },
+      "new": {
+        "map_u": 0.38325,
+        "map_v": 0.3435
+      }
+    },
+    {
+      "id": "poseidonia",
+      "name": "Poseidonia",
+      "chart_area_id": "tyrrhenian",
+      "tile": "diagonal_rising_right_land",
+      "distance_global": 3.0,
+      "old": {
+        "map_u": 0.44325,
+        "map_v": 0.4305
+      },
+      "new": {
+        "map_u": 0.44175,
+        "map_v": 0.4305
+      }
+    },
+    {
+      "id": "rome",
+      "name": "Rome",
+      "chart_area_id": "tyrrhenian",
+      "tile": "diagonal_rising_right_land",
+      "distance_global": 3.0,
+      "old": {
+        "map_u": 0.38475,
+        "map_v": 0.3435
+      },
+      "new": {
+        "map_u": 0.38325,
+        "map_v": 0.3435
+      }
+    },
+    {
+      "id": "smyrna",
+      "name": "Smyrna",
+      "chart_area_id": "aegean",
+      "tile": "diagonal_rising_left_land",
+      "distance_global": 3.0,
+      "old": {
+        "map_u": 0.67425,
+        "map_v": 0.5325
+      },
+      "new": {
+        "map_u": 0.67425,
+        "map_v": 0.5355
+      }
+    },
+    {
+      "id": "mazara_bread",
+      "name": "Mazara (Sicilian grain)",
+      "chart_area_id": "sicily_ionian",
+      "tile": "diagonal_rising_right_land",
+      "distance_global": 3.0,
+      "old": {
+        "map_u": 0.38925,
+        "map_v": 0.5595
+      },
+      "new": {
+        "map_u": 0.38775,
+        "map_v": 0.5595
+      }
+    },
+    {
+      "id": "antium_coast",
+      "name": "Antium coast (grain)",
+      "chart_area_id": "tyrrhenian",
+      "tile": "diagonal_rising_right_land",
+      "distance_global": 3.0,
+      "old": {
+        "map_u": 0.39675,
+        "map_v": 0.3615
+      },
+      "new": {
+        "map_u": 0.39525,
+        "map_v": 0.3615
+      }
+    }
+  ],
+  "skipped": []
+}

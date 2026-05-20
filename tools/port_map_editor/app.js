@@ -10,9 +10,20 @@
     totally_land: "#6b5a45",
   };
   const COAST_COLOR = "#c9a86c";
+  const SEA_RGBA = [26, 74, 110, 255];
+  const LAND_RGBA = [107, 90, 69, 255];
 
   /** Wheel zoom per tick (~4%; previously 10% with 1.1 / 0.9). */
   const WHEEL_ZOOM_FACTOR = 1.04;
+  /** Max wheel zoom (was 12). Higher reveals individual half-tile diagonals. */
+  const MAX_ZOOM = 64;
+  const MIN_ZOOM = 0.15;
+  /**
+   * Sub-pixel multiplier for the offscreen tilemap canvas. Each global tile
+   * coord becomes RENDER_SCALE canvas pixels, so a 3-unit tile is rendered at
+   * 12 px and diagonal/corner shapes stay crisp under high CSS zoom.
+   */
+  const RENDER_SCALE = 4;
 
   const $ = (id) => document.getElementById(id);
   const areaSelect = $("area-select");
@@ -41,6 +52,9 @@
   let landTiles = [];
   let areaPorts = [];
   let selectedPortId = "";
+
+  /** Offscreen bitmap holding the precomposed sea+land fills (passes 1+2). */
+  let tilemapCache = null;
 
   let viewScale = 1;
   let viewPanX = 0;
@@ -151,10 +165,16 @@
   }
 
   function screenToLocal(clientX, clientY) {
+    // Return local coords in CSS / global-tile units (not canvas pixels),
+    // so hit-tests, dragging and localFromGlobal share the same coord space.
+    // The canvas's internal bitmap is RENDER_SCALE times larger than its CSS
+    // size, so we divide out that factor here.
     const rect = canvas.getBoundingClientRect();
     if (rect.width < 1 || rect.height < 1) return { lx: 0, ly: 0 };
-    const lx = ((clientX - rect.left) / rect.width) * canvas.width;
-    const ly = ((clientY - rect.top) / rect.height) * canvas.height;
+    const w = bounds ? bounds.x1 - bounds.x0 : canvas.width / RENDER_SCALE;
+    const h = bounds ? bounds.y1 - bounds.y0 : canvas.height / RENDER_SCALE;
+    const lx = ((clientX - rect.left) / rect.width) * w;
+    const ly = ((clientY - rect.top) / rect.height) * h;
     return { lx, ly };
   }
 
@@ -175,29 +195,320 @@
     applyViewTransform();
   }
 
-  function drawTilemap() {
-    const w = bounds.x1 - bounds.x0;
-    const h = bounds.y1 - bounds.y0;
-    canvas.width = w;
-    canvas.height = h;
-    ctx.fillStyle = "#0a0e12";
-    ctx.fillRect(0, 0, w, h);
-
-    const tiles = window._areaTiles || [];
-    for (const t of tiles) {
-      const lx = t.x - bounds.x0;
-      const ly = t.y - bounds.y0;
-      if (lx < -tileSize || ly < -tileSize || lx > w || ly > h) continue;
-      let col = COAST_COLOR;
-      if (t.tile === "totally_sea") col = TILE_COLORS.totally_sea;
-      else if (t.tile === "totally_land") col = TILE_COLORS.totally_land;
-      ctx.fillStyle = col;
-      ctx.fillRect(lx, ly, tileSize, tileSize);
+  /**
+   * Point-in-land test for local coords inside one cell (0..ts).
+   * Matches tools/tile-factory/scripts/autotile_geometry.py land_mask().
+   */
+  function isLandAt(topology, lx, ly, ts) {
+    if (topology === "totally_sea") return false;
+    if (topology === "totally_land") return true;
+    const h = ts / 2;
+    const q = ts / 4;
+    switch (topology) {
+      case "horizontal_top_land":
+        return ly < h;
+      case "horizontal_bottom_land":
+        return ly >= h;
+      case "vertical_left_land":
+        return lx < h;
+      case "vertical_right_land":
+        return lx >= h;
+      case "vertical_channel_land":
+        return lx < q || lx >= ts - q;
+      case "horizontal_channel_land":
+        return ly < q || ly >= ts - q;
+      case "cape_north_land":
+        return ly >= h;
+      case "cape_south_land":
+        return ly < h;
+      case "cape_east_land":
+        return lx < h;
+      case "cape_west_land":
+        return lx >= h;
+      case "diagonal_descending_right_land":
+        return lx + ly >= h;
+      case "diagonal_rising_left_land":
+        return lx + ly <= 3 * h - 2;
+      case "diagonal_rising_right_land":
+        return ly <= lx + h - 1;
+      case "diagonal_descending_left_land":
+        return ly >= lx - h + 1;
+      default:
+        return true;
     }
   }
 
+  /** Vector land path (used only for coast-stroke overlay). */
+  function traceLandInto(c, topology, lx, ly, ts) {
+    const h = ts / 2;
+    const q = ts / 4;
+    switch (topology) {
+      case "totally_land":
+        c.rect(lx, ly, ts, ts);
+        return true;
+      case "horizontal_top_land":
+        c.rect(lx, ly, ts, h);
+        return true;
+      case "horizontal_bottom_land":
+        c.rect(lx, ly + h, ts, h);
+        return true;
+      case "vertical_left_land":
+        c.rect(lx, ly, h, ts);
+        return true;
+      case "vertical_right_land":
+        c.rect(lx + h, ly, h, ts);
+        return true;
+      case "vertical_channel_land":
+        c.rect(lx, ly, q, ts);
+        c.rect(lx + ts - q, ly, q, ts);
+        return true;
+      case "horizontal_channel_land":
+        c.rect(lx, ly, ts, q);
+        c.rect(lx, ly + ts - q, ts, q);
+        return true;
+      case "cape_north_land":
+        c.rect(lx, ly + h, ts, h);
+        return true;
+      case "cape_south_land":
+        c.rect(lx, ly, ts, h);
+        return true;
+      case "cape_east_land":
+        c.rect(lx, ly, h, ts);
+        return true;
+      case "cape_west_land":
+        c.rect(lx + h, ly, h, ts);
+        return true;
+      case "diagonal_descending_right_land":
+        c.moveTo(lx + h, ly);
+        c.lineTo(lx + ts, ly);
+        c.lineTo(lx + ts, ly + ts);
+        c.lineTo(lx, ly + ts);
+        c.lineTo(lx, ly + h);
+        c.closePath();
+        return true;
+      case "diagonal_rising_left_land": {
+        const lim = 3 * h - 2;
+        if (lim >= ts) {
+          c.rect(lx, ly, ts, ts);
+          return true;
+        }
+        c.moveTo(lx, ly);
+        c.lineTo(lx + Math.min(ts, lim), ly);
+        c.lineTo(lx, ly + Math.min(ts, lim));
+        c.lineTo(lx, ly + ts);
+        c.lineTo(lx + ts, ly + ts);
+        c.lineTo(lx + ts, ly);
+        c.closePath();
+        return true;
+      }
+      case "diagonal_rising_right_land": {
+        const y0 = h - 1;
+        c.moveTo(lx, ly);
+        c.lineTo(lx + ts, ly);
+        c.lineTo(lx + ts, ly + ts);
+        c.lineTo(lx, ly + Math.max(0, y0));
+        c.closePath();
+        return true;
+      }
+      case "diagonal_descending_left_land": {
+        const x0 = Math.max(0, h - 1);
+        c.moveTo(lx, ly);
+        c.lineTo(lx + x0, ly);
+        c.lineTo(lx + ts, ly);
+        c.lineTo(lx + ts, ly + ts);
+        c.lineTo(lx, ly + ts);
+        c.closePath();
+        return true;
+      }
+      default:
+        c.rect(lx, ly, ts, ts);
+        return true;
+    }
+  }
+
+  /** Coast line for shore tiles (optional tan overlay). */
+  function traceCoastEdge(topology, lx, ly, ts) {
+    const h = ts / 2;
+    const q = ts / 4;
+    switch (topology) {
+      case "horizontal_top_land":
+      case "horizontal_bottom_land":
+        ctx.moveTo(lx, ly + h);
+        ctx.lineTo(lx + ts, ly + h);
+        return true;
+      case "vertical_left_land":
+      case "vertical_right_land":
+        ctx.moveTo(lx + h, ly);
+        ctx.lineTo(lx + h, ly + ts);
+        return true;
+      case "diagonal_rising_left_land":
+        ctx.moveTo(lx + Math.min(ts, 3 * h - 2), ly);
+        ctx.lineTo(lx, ly + Math.min(ts, 3 * h - 2));
+        return true;
+      case "diagonal_rising_right_land":
+        ctx.moveTo(lx, ly + Math.max(0, h - 1));
+        ctx.lineTo(lx + ts, ly + Math.min(ts, ts + h - 1));
+        return true;
+      case "diagonal_descending_left_land":
+        ctx.moveTo(lx + Math.max(0, h - 1), ly);
+        ctx.lineTo(lx + ts, ly + Math.min(ts, ts - h + 1));
+        return true;
+      case "diagonal_descending_right_land":
+        ctx.moveTo(lx + h, ly);
+        ctx.lineTo(lx, ly + h);
+        return true;
+      case "cape_north_land":
+        ctx.moveTo(lx, ly + h);
+        ctx.lineTo(lx + ts, ly + h);
+        return true;
+      case "cape_south_land":
+        ctx.moveTo(lx, ly + h);
+        ctx.lineTo(lx + ts, ly + h);
+        return true;
+      case "cape_east_land":
+        ctx.moveTo(lx + h, ly);
+        ctx.lineTo(lx + h, ly + ts);
+        return true;
+      case "cape_west_land":
+        ctx.moveTo(lx + h, ly);
+        ctx.lineTo(lx + h, ly + ts);
+        return true;
+      case "horizontal_channel_land":
+        ctx.moveTo(lx, ly + q);
+        ctx.lineTo(lx + ts, ly + q);
+        ctx.moveTo(lx, ly + ts - q);
+        ctx.lineTo(lx + ts, ly + ts - q);
+        return true;
+      case "vertical_channel_land":
+        ctx.moveTo(lx + q, ly);
+        ctx.lineTo(lx + q, ly + ts);
+        ctx.moveTo(lx + ts - q, ly);
+        ctx.lineTo(lx + ts - q, ly + ts);
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Rasterize tilemap into ImageData at RENDER_SCALE using isLandAt() per pixel.
+   * Avoids vector gaps between adjacent shore cells (blue corner triangles).
+   */
+  function buildTilemapCache() {
+    const w = bounds.x1 - bounds.x0;
+    const h = bounds.y1 - bounds.y0;
+    const pw = w * RENDER_SCALE;
+    const ph = h * RENDER_SCALE;
+    const cache = document.createElement("canvas");
+    cache.width = pw;
+    cache.height = ph;
+    const tctx = cache.getContext("2d");
+    tctx.imageSmoothingEnabled = false;
+
+    const img = tctx.createImageData(pw, ph);
+    const data = img.data;
+    const [sr, sg, sb, sa] = SEA_RGBA;
+    const [lr, lg, lb, la] = LAND_RGBA;
+    for (let i = 0; i < data.length; i += 4) {
+      data[i] = sr;
+      data[i + 1] = sg;
+      data[i + 2] = sb;
+      data[i + 3] = sa;
+    }
+
+    const tiles = window._areaTiles || [];
+    const ts = tileSize;
+    const ps = Math.max(1, Math.round(ts * RENDER_SCALE));
+
+    for (const t of tiles) {
+      if (t.tile === "totally_sea") continue;
+      const baseLx = t.x - bounds.x0;
+      const baseLy = t.y - bounds.y0;
+      const px0 = Math.round(baseLx * RENDER_SCALE);
+      const py0 = Math.round(baseLy * RENDER_SCALE);
+
+      if (t.tile === "totally_land") {
+        for (let sy = 0; sy < ps; sy++) {
+          const row = (py0 + sy) * pw;
+          for (let sx = 0; sx < ps; sx++) {
+            const i = (row + px0 + sx) * 4;
+            data[i] = lr;
+            data[i + 1] = lg;
+            data[i + 2] = lb;
+            data[i + 3] = la;
+          }
+        }
+        continue;
+      }
+
+      for (let sy = 0; sy < ps; sy++) {
+        const ly = (sy + 0.5) / RENDER_SCALE;
+        const row = (py0 + sy) * pw;
+        for (let sx = 0; sx < ps; sx++) {
+          const lx = (sx + 0.5) / RENDER_SCALE;
+          if (!isLandAt(t.tile, lx, ly, ts)) continue;
+          const i = (row + px0 + sx) * 4;
+          data[i] = lr;
+          data[i + 1] = lg;
+          data[i + 2] = lb;
+          data[i + 3] = la;
+        }
+      }
+    }
+
+    tctx.putImageData(img, 0, 0);
+    tilemapCache = cache;
+
+    // Match the visible canvas to the cache once per area load. Setting
+    // canvas.width/height resets context state, so doing it here (rather than
+    // every drawTilemap) keeps drag/zoom redraws cheap.
+    canvas.width = cache.width;
+    canvas.height = cache.height;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    ctx.imageSmoothingEnabled = false;
+  }
+
+  function drawTilemap() {
+    if (!tilemapCache) return;
+    const w = bounds.x1 - bounds.x0;
+    const h = bounds.y1 - bounds.y0;
+
+    // Blit the cached fills over the whole canvas, then overlay the
+    // viewScale-dependent coast stroke. drawImage covers everything so no
+    // explicit clear is needed.
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.drawImage(tilemapCache, 0, 0);
+    ctx.setTransform(RENDER_SCALE, 0, 0, RENDER_SCALE, 0, 0);
+
+    const tiles = window._areaTiles || [];
+    const s = viewScale > 0 ? viewScale : 1;
+    ctx.strokeStyle = COAST_COLOR;
+    // Constant ~1 screen-pixel stroke at any zoom. Floor avoids vanishing at
+    // extreme zoom-in where 1/s rounds toward zero.
+    ctx.lineWidth = Math.max(0.05, 1 / s);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    let anyEdge = false;
+    for (const t of tiles) {
+      if (t.tile === "totally_sea" || t.tile === "totally_land") continue;
+      const lx = t.x - bounds.x0;
+      const ly = t.y - bounds.y0;
+      if (lx < -tileSize || ly < -tileSize || lx > w || ly > h) continue;
+      if (traceCoastEdge(t.tile, lx, ly, tileSize)) anyEdge = true;
+    }
+    if (anyEdge) ctx.stroke();
+  }
+
   function drawMarkers() {
-    const r = 10;
+    // Compensate for the CSS scale on the canvas so markers stay the same
+    // pixel size on screen regardless of zoom level.
+    const s = viewScale > 0 ? viewScale : 1;
+    const r = 10 / s;
+    const stroke = 2 / s;
+    const labelOffset = 4 / s;
+    const fontPx = 11 / s;
     for (const p of areaPorts) {
       const pos = getPortPos(p.id);
       if (!pos) continue;
@@ -208,12 +519,12 @@
       ctx.fillStyle = selected ? "#ff6b4a" : "#f0c040";
       ctx.fill();
       ctx.strokeStyle = "#1a1008";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = stroke;
       ctx.stroke();
       if (selected) {
         ctx.fillStyle = "#fff";
-        ctx.font = "11px system-ui,sans-serif";
-        ctx.fillText(p.name, lx + r + 4, ly + 4);
+        ctx.font = `${fontPx}px system-ui,sans-serif`;
+        ctx.fillText(p.name, lx + r + labelOffset, ly + labelOffset);
       }
     }
   }
@@ -312,6 +623,8 @@
       else if (isShoreTile(t.tile)) shoreTiles.push(t);
     }
 
+    buildTilemapCache();
+
     areaPorts = allPorts.filter((p) => p.chart_area_id === id);
     for (const p of areaPorts) {
       if (!portState.has(p.id)) {
@@ -330,14 +643,18 @@
     renderPortList();
     draw();
     exportBtn.disabled = areaPorts.length === 0;
+    const src = data._source_file ? ` · ${data._source_file}` : "";
     setStatus(
-      `${ca.name || id}: ${tiles.length} tiles, ${shoreTiles.length} shore snap targets, ${areaPorts.length} ports`,
+      `${ca.name || id}: ${tiles.length} tiles, ${shoreTiles.length} shore snap targets, ${areaPorts.length} ports${src}`,
     );
-    mapOverlay.textContent = "Drag port · wheel zoom · right-drag pan";
+    mapOverlay.textContent = "Left-drag map to pan · drag a marker to move port · wheel to zoom";
   }
 
   function hitTestPort(lx, ly) {
-    const hitR = 14;
+    // Match the on-screen marker size: drawn radius is 10/viewScale in canvas
+    // space, so the hit radius scales the same way (with a small pad).
+    const s = viewScale > 0 ? viewScale : 1;
+    const hitR = 14 / s;
     for (const p of areaPorts) {
       const pos = getPortPos(p.id);
       if (!pos) continue;
@@ -354,13 +671,22 @@
     lastPointerX = e.clientX;
     lastPointerY = e.clientY;
 
-    if (e.button === 2 || (e.button === 0 && e.altKey)) {
+    // Explicit pan modifiers: right-click, middle-click, or Alt+left.
+    // These pan even when the click lands on a port marker.
+    if (e.button === 1 || e.button === 2 || (e.button === 0 && e.altKey)) {
+      // Middle-click would otherwise open the Windows autoscroll cursor.
+      e.preventDefault();
       panning = true;
       canvas.classList.add("panning");
       canvas.setPointerCapture(e.pointerId);
       return;
     }
 
+    if (e.button !== 0) return;
+
+    // Plain left-click: drag a marker if we hit one, otherwise pan the map.
+    // Selecting a port is no longer required to pan, so freshly-zoomed views
+    // can be navigated immediately.
     const hit = hitTestPort(lx, ly);
     if (hit) {
       selectPort(hit);
@@ -371,7 +697,7 @@
       dragOffsetY = ly - loc.ly;
       canvas.classList.add("dragging-port");
       canvas.setPointerCapture(e.pointerId);
-    } else if (selectedPortId) {
+    } else {
       panning = true;
       canvas.classList.add("panning");
       canvas.setPointerCapture(e.pointerId);
@@ -424,8 +750,10 @@
     const my = e.clientY - wrapRect.top;
     viewPanX = mx - (mx - viewPanX) * factor;
     viewPanY = my - (my - viewPanY) * factor;
-    viewScale = Math.max(0.15, Math.min(12, viewScale * factor));
+    viewScale = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, viewScale * factor));
     applyViewTransform();
+    // Marker size compensates for viewScale, so redraw after zooming.
+    draw();
   }, { passive: false });
 
   canvas.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -498,7 +826,10 @@
   });
 
   window.addEventListener("resize", () => {
-    if (bounds) fitView();
+    if (!bounds) return;
+    fitView();
+    // Coast stroke width tracks viewScale, which changes on resize.
+    draw();
   });
 
   async function init() {

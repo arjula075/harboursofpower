@@ -1,0 +1,166 @@
+{
+  "description": "Terrain topology registry. legacy_id matches docs/mediterranean_recursive_tilemap_cleaned_pipeline.json tile_types. phase v1 = initial 10; wang16 = full 4-connect bitmask set.",
+  "edge_kinds": ["land_land", "sea_sea", "land_sea", "sea_land"],
+  "topologies": [
+    {
+      "id": "totally_sea",
+      "legacy_id": "totally_sea",
+      "phase": "v1",
+      "wang_mask": 0,
+      "terrain_class": "sea",
+      "edges": { "north": "sea_sea", "east": "sea_sea", "south": "sea_sea", "west": "sea_sea" },
+      "sail_mask": "all_water"
+    },
+    {
+      "id": "totally_land",
+      "legacy_id": "totally_land",
+      "phase": "v1",
+      "wang_mask": 15,
+      "terrain_class": "land",
+      "edges": { "north": "land_land", "east": "land_land", "south": "land_land", "west": "land_land" },
+      "sail_mask": "all_land"
+    },
+    {
+      "id": "horizontal_top_land",
+      "legacy_id": "horizontal_top_land",
+      "phase": "v1",
+      "wang_mask": 8,
+      "terrain_class": "shore",
+      "edges": { "north": "land_land", "east": "land_sea", "south": "land_sea", "west": "land_sea" },
+      "sail_mask": "sea_south",
+      "notes": "Land mass to the north; water along S edge (and typical E/W beach)."
+    },
+    {
+      "id": "horizontal_bottom_land",
+      "legacy_id": "horizontal_bottom_land",
+      "phase": "v1",
+      "wang_mask": 2,
+      "terrain_class": "shore",
+      "edges": { "north": "sea_land", "east": "sea_land", "south": "land_land", "west": "sea_land" },
+      "sail_mask": "sea_north"
+    },
+    {
+      "id": "vertical_left_land",
+      "legacy_id": "vertical_left_land",
+      "phase": "v1",
+      "wang_mask": 1,
+      "terrain_class": "shore",
+      "edges": { "north": "sea_land", "east": "sea_land", "south": "sea_land", "west": "land_land" },
+      "sail_mask": "sea_east"
+    },
+    {
+      "id": "vertical_right_land",
+      "legacy_id": "vertical_right_land",
+      "phase": "v1",
+      "wang_mask": 4,
+      "terrain_class": "shore",
+      "edges": { "north": "sea_land", "east": "land_land", "south": "sea_land", "west": "sea_land" },
+      "sail_mask": "sea_west"
+    },
+    {
+      "id": "diagonal_rising_left_land",
+      "legacy_id": "diagonal_rising_left_land",
+      "phase": "v1",
+      "wang_mask": 9,
+      "terrain_class": "shore",
+      "cosmetic_linker": true,
+      "edges": { "north": "land_land", "east": "sea_sea", "south": "sea_sea", "west": "land_land" },
+      "sail_mask": "sea_se_corner",
+      "notes": "Visual diagonal beach; gameplay cell still shore (partial sail)."
+    },
+    {
+      "id": "diagonal_rising_right_land",
+      "legacy_id": "diagonal_rising_right_land",
+      "phase": "v1",
+      "wang_mask": 12,
+      "terrain_class": "shore",
+      "cosmetic_linker": true,
+      "edges": { "north": "land_land", "east": "land_land", "south": "sea_sea", "west": "sea_sea" },
+      "sail_mask": "sea_sw_corner"
+    },
+    {
+      "id": "diagonal_descending_left_land",
+      "legacy_id": "diagonal_descending_left_land",
+      "phase": "v1",
+      "wang_mask": 3,
+      "terrain_class": "shore",
+      "cosmetic_linker": true,
+      "edges": { "north": "sea_sea", "east": "sea_sea", "south": "land_land", "west": "land_land" },
+      "sail_mask": "sea_ne_corner"
+    },
+    {
+      "id": "diagonal_descending_right_land",
+      "legacy_id": "diagonal_descending_right_land",
+      "phase": "v1",
+      "wang_mask": 6,
+      "terrain_class": "shore",
+      "cosmetic_linker": true,
+      "edges": { "north": "sea_sea", "east": "land_land", "south": "land_land", "west": "sea_sea" },
+      "sail_mask": "sea_nw_corner"
+    },
+    {
+      "id": "vertical_channel_land",
+      "legacy_id": "vertical_channel_land",
+      "phase": "v2",
+      "wang_mask": 5,
+      "terrain_class": "shore",
+      "edges": { "north": "sea_sea", "east": "land_land", "south": "sea_sea", "west": "land_land" },
+      "sail_mask": "sea_channel_vertical",
+      "notes": "Land neighbours E+W; sea N+S (narrow N-S water gap)."
+    },
+    {
+      "id": "cape_north_land",
+      "legacy_id": "cape_north_land",
+      "phase": "v2",
+      "wang_mask": 7,
+      "terrain_class": "shore",
+      "edges": { "north": "sea_land", "east": "land_land", "south": "land_land", "west": "land_land" },
+      "sail_mask": "sea_north",
+      "notes": "Land S+E+W; open sea to the north (peninsula tip)."
+    },
+    {
+      "id": "horizontal_channel_land",
+      "legacy_id": "horizontal_channel_land",
+      "phase": "v2",
+      "wang_mask": 10,
+      "terrain_class": "shore",
+      "edges": { "north": "land_land", "east": "sea_sea", "south": "land_land", "west": "sea_sea" },
+      "sail_mask": "sea_channel_horizontal",
+      "notes": "Land neighbours N+S; sea E+W (narrow E-W water gap)."
+    },
+    {
+      "id": "cape_east_land",
+      "legacy_id": "cape_east_land",
+      "phase": "v2",
+      "wang_mask": 11,
+      "terrain_class": "shore",
+      "edges": { "north": "land_land", "east": "sea_land", "south": "land_land", "west": "land_land" },
+      "sail_mask": "sea_east",
+      "notes": "Land N+S+W; open sea to the east."
+    },
+    {
+      "id": "cape_south_land",
+      "legacy_id": "cape_south_land",
+      "phase": "v2",
+      "wang_mask": 13,
+      "terrain_class": "shore",
+      "edges": { "north": "land_land", "east": "land_land", "south": "land_sea", "west": "land_land" },
+      "sail_mask": "sea_south",
+      "notes": "Land N+E+W; open sea to the south."
+    },
+    {
+      "id": "cape_west_land",
+      "legacy_id": "cape_west_land",
+      "phase": "v2",
+      "wang_mask": 14,
+      "terrain_class": "shore",
+      "edges": { "north": "land_land", "east": "land_land", "south": "land_land", "west": "land_sea" },
+      "sail_mask": "sea_west",
+      "notes": "Land N+E+S; open sea to the west."
+    }
+  ],
+  "wang16_extension": {
+    "description": "Full 16-mask set is defined in topologies[]. Art for phase v2 masks is generated via tile-factory.",
+    "pending_masks": []
+  }
+}

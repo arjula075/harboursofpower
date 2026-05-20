@@ -1,0 +1,113 @@
+{
+  "tile_size": 512,
+  "edge_band_px": 16,
+  "edge_compose_mode": "none",
+  "edge_blend_strength": 0.35,
+  "sea_min_water_ratio": 0.93,
+  "sea_max_land_ratio": 0.04,
+  "sea_max_corner_luma_delta": 8,
+  "autotile_coast_band_px": 32,
+  "autotile_sea_fade_px": 96,
+  "autotile_edge_tolerance": 14,
+  "land_perimeter_px": 64,
+  "diagonal_sea_fade_px": 48,
+  "beach_land_px": 22,
+  "beach_sea_px": 10,
+  "sea_shallow_px": 36,
+  "coast_ai_px": 26,
+  "coast_ai_weight": 0.35,
+  "autotile_boundary_clamp_px": 6,
+  "v01_coast_wobble_px": 11,
+  "v01_coast_land_detail_px": 46,
+  "v01_coast_surf_detail_px": 18,
+  "v01_coast_land_ai_weight": 0.68,
+  "v01_coast_surf_ai_weight": 0.42,
+  "horizontal_edge_max_diff": 22,
+  "vertical_edge_max_diff": 22,
+  "format": "webp",
+  "webp_quality": 90,
+  "biome": "sparse_olive",
+  "season": "summer",
+  "biome_catalog": [
+    {
+      "id": "dry_scrubland",
+      "name": "Dry rocky scrubland",
+      "status": "v1_done"
+    },
+    {
+      "id": "sparse_olive",
+      "name": "Sparse olive-like trees",
+      "status": "v1_in_progress"
+    },
+    {
+      "id": "pine_clusters",
+      "name": "Pine clusters",
+      "status": "planned"
+    },
+    {
+      "id": "grassy_patches",
+      "name": "Grassy patches",
+      "status": "planned"
+    },
+    {
+      "id": "terraced_hillsides",
+      "name": "Terraced hillsides",
+      "status": "planned"
+    }
+  ],
+  "biomes": {
+    "dry_scrubland": {
+      "open_sea_rgb": [
+        17,
+        54,
+        58
+      ],
+      "beach_rgb": [
+        196,
+        178,
+        142
+      ]
+    },
+    "sparse_olive": {
+      "open_sea_rgb": [
+        15,
+        52,
+        62
+      ],
+      "beach_rgb": [
+        210,
+        190,
+        150
+      ]
+    }
+  },
+  "variations_per_topology": 3,
+  "phash_hamming_threshold": 8,
+  "openai_image_model": "gpt-image-1",
+  "openai_image_size": "1024x1024",
+  "openai_fallback_model": "dall-e-3",
+  "paths": {
+    "style": "tools/tile-factory/style",
+    "edges": "tools/tile-factory/edges",
+    "specs": "tools/tile-factory/specs",
+    "raw": "tools/tile-factory/raw",
+    "reports": "tools/tile-factory/reports",
+    "review": "tools/tile-factory/review",
+    "approved": "assets/tiles/approved",
+    "pending": "assets/tiles/pending",
+    "rejected": "assets/tiles/rejected",
+    "manifest": "data/tiles_manifest.json"
+  },
+  "wang_bit_order": {
+    "north": 8,
+    "east": 4,
+    "south": 2,
+    "west": 1,
+    "note": "1 = land neighbor, 0 = sea neighbor; mask = N|E|S|W"
+  },
+  "open_sea_rgb": [
+    15,
+    52,
+    62
+  ]
+}

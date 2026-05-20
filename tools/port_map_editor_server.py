@@ -4,12 +4,15 @@
 Run from repo root:
   python3 tools/port_map_editor_server.py
 
-Then open http://127.0.0.1:8765/
+Then open http://127.0.0.1:8766/
+(Override with PORT_MAP_EDITOR_PORT; 8765 is reserved for another local tool.)
 """
 from __future__ import annotations
 
+import errno
 import json
 import os
+import sys
 from datetime import datetime, timezone
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler
@@ -20,12 +23,17 @@ from urllib.parse import urlparse
 REPO_ROOT = Path(__file__).resolve().parents[1]
 STATIC_DIR = REPO_ROOT / "tools" / "port_map_editor"
 DOCS_MAPS = REPO_ROOT / "docs" / "chart_area_tilemaps_and_maps"
+# Tilemaps served to the editor. shore_fixed/ holds the post-processed coastline
+# tilemaps that the editor should snap ports against; the parent folder is kept
+# as a fallback for any area that has not been shore-fixed yet.
+TILEMAP_DIRS = (DOCS_MAPS / "shore_fixed", DOCS_MAPS)
 WORLD_PATH = REPO_ROOT / "data" / "world_full.json"
 EXPORT_PATH = REPO_ROOT / "data" / "port_map_editor_export.json"
 CHART_INDEX_PATH = DOCS_MAPS / "chart_area_index.json"
 
 HOST = os.environ.get("PORT_MAP_EDITOR_HOST", "127.0.0.1")
-PORT = int(os.environ.get("PORT_MAP_EDITOR_PORT", "8765"))
+# 8765 is used by another local tool in this workspace; the editor defaults to 8766.
+PORT = int(os.environ.get("PORT_MAP_EDITOR_PORT", "8766"))
 
 # Source of truth on load: data/world_full.json only. Set to 1 to overlay export file (legacy).
 MERGE_EXPORT_ON_LOAD = os.environ.get("PORT_MAP_EDITOR_MERGE_EXPORT", "").strip() in ("1", "true", "yes")
@@ -140,15 +148,22 @@ class PortMapEditorHandler(SimpleHTTPRequestHandler):
 
         if path.startswith("/api/tilemap/"):
             area_id = path.removeprefix("/api/tilemap/").strip("/")
-            if not area_id or ".." in area_id:
+            if not area_id or ".." in area_id or "/" in area_id or "\\" in area_id:
                 _json_response(self, HTTPStatus.BAD_REQUEST, {"error": "invalid area id"})
                 return
-            tilemap_path = DOCS_MAPS / f"{area_id}_tilemap.json"
-            if not tilemap_path.is_file():
+            tilemap_path = None
+            for d in TILEMAP_DIRS:
+                candidate = d / f"{area_id}_tilemap.json"
+                if candidate.is_file():
+                    tilemap_path = candidate
+                    break
+            if tilemap_path is None:
                 _json_response(self, HTTPStatus.NOT_FOUND, {"error": "tilemap not found"})
                 return
             try:
                 data = _read_json(tilemap_path)
+                if isinstance(data, dict):
+                    data.setdefault("_source_file", str(tilemap_path.relative_to(REPO_ROOT)))
                 _json_response(self, HTTPStatus.OK, data)
             except OSError as exc:
                 _json_response(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"error": str(exc)})
@@ -208,11 +223,34 @@ class PortMapEditorHandler(SimpleHTTPRequestHandler):
         )
 
 
+class _ReusableTCPServer(TCPServer):
+    # SO_REUSEADDR avoids "address already in use" right after a clean Ctrl+C
+    # while a TIME_WAIT socket lingers. (On Windows this does not let two live
+    # servers share the port — that needs SO_EXCLUSIVEADDRUSE, which we do not
+    # want — so a real conflict still surfaces below.)
+    allow_reuse_address = True
+
+
 def main() -> None:
     if not STATIC_DIR.is_dir():
         raise SystemExit(f"Missing static dir: {STATIC_DIR}")
     os.chdir(STATIC_DIR)
-    with TCPServer((HOST, PORT), PortMapEditorHandler) as httpd:
+    try:
+        httpd = _ReusableTCPServer((HOST, PORT), PortMapEditorHandler)
+    except OSError as exc:
+        in_use = exc.errno in (errno.EADDRINUSE, getattr(errno, "WSAEADDRINUSE", 10048))
+        if in_use or "10048" in str(exc):
+            print(
+                f"Port {PORT} on {HOST} is already in use. "
+                f"Either stop the other server, or pick a free port:\n"
+                f'    $env:PORT_MAP_EDITOR_PORT="8766"; python tools\\port_map_editor_server.py\n'
+                f"To find the process holding the port:\n"
+                f"    Get-NetTCPConnection -LocalPort {PORT} -State Listen | Select-Object OwningProcess",
+                file=sys.stderr,
+            )
+            raise SystemExit(2) from exc
+        raise
+    with httpd:
         url = f"http://{HOST}:{PORT}/"
         print(f"Port map editor at {url}")
         print(f"Export file: {EXPORT_PATH}")

@@ -1,0 +1,11 @@
+{
+  "id": "overlay/port_greek/summer/v01",
+  "kind": "port_overlay",
+  "culture": "greek",
+  "season": "summer",
+  "variation": 1,
+  "status": "pending",
+  "raw_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\tools\\tile-factory\\raw\\overlays\\port_greek\\summer\\v01.png",
+  "pending_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\assets\\tiles\\overlays\\pending\\port_greek\\summer\\v01.webp",
+  "approved_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\assets\\tiles\\overlays\\approved\\port_greek\\summer\\v01.webp"
+}

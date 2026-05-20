@@ -1,0 +1,10 @@
+{
+  "description": "5x5 review mosaic: land ring, shore ring, single sea center (small lake)",
+  "grid": [
+    ["totally_land", "totally_land", "totally_land", "totally_land", "totally_land"],
+    ["totally_land", "diagonal_rising_left_land", "horizontal_top_land", "diagonal_rising_right_land", "totally_land"],
+    ["totally_land", "vertical_left_land", "totally_sea", "vertical_right_land", "totally_land"],
+    ["totally_land", "diagonal_descending_left_land", "horizontal_bottom_land", "diagonal_descending_right_land", "totally_land"],
+    ["totally_land", "totally_land", "totally_land", "totally_land", "totally_land"]
+  ]
+}

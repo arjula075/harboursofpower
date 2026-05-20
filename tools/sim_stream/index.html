@@ -69,6 +69,59 @@
     .spark { display: block; }
     code { background: #0b0f14; padding: 1px 4px; border-radius: 3px; color: var(--accent); font-size: 11px; }
     .footer { color: var(--fg-mute); font-size: 11px; padding: 6px 14px; border-top: 1px solid var(--border); }
+    .contract-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; padding: 10px 12px; }
+    .contract-tile { background: var(--bg-row); border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px; }
+    .contract-tile .ct-label { color: var(--fg-mute); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .contract-tile .ct-value { font-size: 18px; font-weight: 600; margin-top: 2px; }
+    .contract-tile .ct-sub { font-size: 10px; color: var(--fg-mute); margin-top: 2px; }
+    .contract-tile.inactive { opacity: 0.45; }
+    .contract-lifecycle { display: flex; flex-wrap: wrap; gap: 12px; padding: 0 12px 10px; font-size: 11px; color: var(--fg-mute); }
+    .regions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; padding: 10px 12px; }
+    .region-card { background: var(--bg-row); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
+    .region-card h3 { margin: 0 0 6px; font-size: 12px; font-weight: 600; }
+    .region-card .rg-meta { font-size: 10px; color: var(--fg-mute); margin-bottom: 6px; }
+    .region-card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 11px; }
+    .region-card dt { color: var(--fg-mute); }
+    .region-card dd { margin: 0; text-align: right; }
+    .alliance-bands { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; padding: 10px 12px; }
+    .alliance-card { background: var(--bg-row); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
+    .alliance-card h3 { margin: 0 0 4px; font-size: 12px; font-weight: 600; }
+    .alliance-card .ab-meta { font-size: 10px; color: var(--fg-mute); margin-bottom: 6px; }
+    .alliance-card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 11px; }
+    .alliance-card dt { color: var(--fg-mute); }
+    .alliance-card dd { margin: 0; text-align: right; }
+    .wars-body { padding: 10px 12px; font-size: 12px; }
+    .wars-summary { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 10px; color: var(--fg-mute); }
+    .wars-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .wars-table th, .wars-table td { padding: 4px 8px; text-align: left; border-top: 1px solid var(--border); }
+    .wars-table th { color: var(--fg-mute); font-size: 10px; text-transform: uppercase; }
+    .event-timeline { display: block; width: 100%; height: 72px; background: #0b0f14; }
+    .heatmap-wrap { padding: 8px 12px 12px; }
+    .heatmap-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; font-size: 12px; color: var(--fg-mute); }
+    .heatmap-controls select { background: #0b0f14; color: var(--fg); border: 1px solid var(--border); padding: 3px 6px; border-radius: 3px; }
+    .heatmap-map { display: block; width: 100%; height: 280px; background: #0b0f14; border-radius: 4px; }
+    .heatmap-legend { font-size: 10px; color: var(--fg-mute); margin-top: 6px; text-align: right; }
+    .flow-grid { padding: 10px 12px; display: grid; gap: 6px; }
+    .flow-row { display: grid; grid-template-columns: 72px 1fr 56px; gap: 8px; align-items: center; font-size: 11px; }
+    .flow-label { color: var(--fg-mute); text-transform: uppercase; font-size: 10px; letter-spacing: 0.4px; }
+    .flow-track { position: relative; height: 12px; background: var(--bg-row); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
+    .flow-track .mid { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--border); }
+    .flow-bar { position: absolute; top: 1px; bottom: 1px; border-radius: 2px; }
+    .flow-bar.surplus { background: var(--good); left: 50%; }
+    .flow-bar.deficit { background: var(--bad); right: 50%; }
+    .flow-net { text-align: right; font-weight: 600; }
+    .flow-subhead { padding: 8px 12px 4px; font-size: 11px; font-weight: 600; color: var(--fg-mute); text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid var(--border); margin-top: 4px; }
+    .flow-total-row { margin: 0 12px 8px; padding: 10px 12px; background: var(--bg-row); border: 1px solid var(--border); border-radius: 6px; }
+    .flow-total-row .flow-row { grid-template-columns: 100px 1fr 80px; }
+    .flow-trade-meta { padding: 6px 12px 10px; font-size: 11px; color: var(--fg-mute); line-height: 1.45; border-top: 1px solid var(--border); }
+    .treasury-meta { padding: 0 12px 8px; font-size: 11px; color: var(--fg-mute); display: flex; flex-wrap: wrap; gap: 14px; }
+    .inequality-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px 12px; }
+    @media (max-width: 720px) { .inequality-grid { grid-template-columns: 1fr; } }
+    .ineq-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .ineq-table th, .ineq-table td { padding: 3px 6px; border-top: 1px solid var(--border); text-align: right; }
+    .ineq-table th { color: var(--fg-mute); font-size: 10px; text-transform: uppercase; }
+    .ineq-table td:first-child, .ineq-table th:first-child { text-align: left; }
+    .ineq-head { padding: 8px 12px 0; font-size: 11px; color: var(--fg-mute); }
   </style>
 </head>
 <body>
@@ -87,6 +140,107 @@
   <main>
     <section class="kpis" id="kpis"></section>
 
+    <section class="panel" id="contractsPanel">
+      <div class="panel-h">
+        <h2>Institutional contracts</h2>
+        <span class="hint">twin mirrors only <code>grain_delivery</code> into <code>institutional_contracts[]</code> today · other catalogue types are schema/UI · adjacency + convoy escort tracked separately</span>
+      </div>
+      <div class="contract-lifecycle" id="contractsLifecycle"></div>
+      <div class="contract-grid" id="contractsGrid"></div>
+    </section>
+
+    <section class="panel" id="regionsPanel">
+      <div class="panel-h">
+        <h2>Chart regions</h2>
+        <span class="hint">rolled up from per-port snapshot · deltas vs previous poll when available</span>
+      </div>
+      <div class="regions" id="regionsGrid"></div>
+    </section>
+
+    <section class="panel" id="alliancePanel">
+      <div class="panel-h">
+        <h2>Alliance bands (Phase 3)</h2>
+        <span class="hint">institutional_trade.phase3 · configured toll/buy/route multipliers · intra-band voyage share for merchants homed in band</span>
+      </div>
+      <div class="alliance-bands" id="allianceBands"></div>
+    </section>
+
+    <section class="panel" id="warsPanel">
+      <div class="panel-h">
+        <h2>Wars</h2>
+        <span class="hint">per-port war bursts (not paired wars) · top ports by days remaining</span>
+      </div>
+      <div class="wars-body" id="warsBody"></div>
+    </section>
+
+    <section class="panel" id="eventTimelinePanel">
+      <div class="panel-h">
+        <h2>Event timeline</h2>
+        <span class="hint">per-tick deltas · riots · bankruptcies · new wars · new plague · synced to charts below</span>
+      </div>
+      <svg id="eventTimeline" class="event-timeline" viewBox="0 0 800 72" preserveAspectRatio="none" width="100%" height="72"></svg>
+    </section>
+
+    <section class="panel" id="heatmapPanel">
+      <div class="panel-h">
+        <h2>Chart heatmap</h2>
+        <span class="hint">ports at map_u / map_v · hover a dot for id</span>
+      </div>
+      <div class="heatmap-wrap">
+        <div class="heatmap-controls">
+          <label>Colour by
+            <select id="heatmapMetric">
+              <option value="food_unrest">Food unrest</option>
+              <option value="wealth">Wealth</option>
+              <option value="wealth_delta">Wealth Δ (vs last poll)</option>
+              <option value="grain_food_days">Grain food-days</option>
+              <option value="plague_days">Plague days</option>
+            </select>
+          </label>
+        </div>
+        <svg id="heatmap" class="heatmap-map" viewBox="0 0 800 280" preserveAspectRatio="none" width="100%" height="280"></svg>
+        <div class="heatmap-legend" id="heatmapLegend"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="goodsFlowPanel">
+      <div class="panel-h">
+        <h2>Production vs consumption (global)</h2>
+        <span class="hint">structural supply vs demand, warehouse Δ, and NPC dock trade (twin formulas)</span>
+      </div>
+      <div class="flow-subhead">Per tick (units / day)</div>
+      <div class="flow-grid" id="goodsFlowGrid"></div>
+      <div class="flow-subhead">Cumulative (units since stream start)</div>
+      <div class="flow-total-row" id="goodsFlowCumulativeTotal"></div>
+      <div class="flow-grid" id="goodsFlowCumulativeGrid"></div>
+      <div class="flow-subhead">Global stock change (since stream start)</div>
+      <div class="flow-total-row" id="goodsFlowStockTotal"></div>
+      <div class="flow-grid" id="goodsFlowStockGrid"></div>
+      <div class="flow-trade-meta" id="goodsFlowTradeMeta"></div>
+      <div class="flow-subhead">Trade &amp; other offset vs structural gap</div>
+      <div class="flow-total-row" id="goodsFlowBalanceTotal"></div>
+      <div class="flow-grid" id="goodsFlowBalanceGrid"></div>
+    </section>
+
+    <section class="panel" id="treasuryPanel">
+      <div class="panel-h">
+        <h2>World treasury &amp; harbour dues</h2>
+        <span class="hint">treasury coins · dues to port wealth this tick (import tolls flow through trade, not isolated here)</span>
+      </div>
+      <div class="treasury-meta" id="treasuryMeta"></div>
+      <svg id="sparkTreasury" class="spark" viewBox="0 0 800 100" preserveAspectRatio="none" width="100%" height="100"></svg>
+    </section>
+
+    <section class="panel" id="inequalityPanel">
+      <div class="panel-h">
+        <h2>Wealth inequality</h2>
+        <span class="hint">Gini across port wealth · top movers vs previous snapshot</span>
+      </div>
+      <div class="ineq-head" id="inequalityHead"></div>
+      <svg id="sparkGini" class="spark" viewBox="0 0 800 80" preserveAspectRatio="none" width="100%" height="80"></svg>
+      <div class="inequality-grid" id="inequalityTables"></div>
+    </section>
+
     <section class="panel">
       <div class="panel-h">
         <h2>NPC purse &amp; mean city size</h2>
@@ -97,8 +251,8 @@
 
     <section class="panel">
       <div class="panel-h">
-        <h2>Grain &amp; metal &mdash; mean dock buy (coins/unit)</h2>
-        <span class="hint">unweighted mean across ports, NPC wholesale counterparty &middot; same history window as chart above</span>
+        <h2>Dock buy price index by need-tier (coins/unit)</h2>
+        <span class="hint">unweighted mean of per-good dock buy, averaged within each tier (food: grain/salt/fish · comfort: wine/oil/pottery/timber/textiles · metal: metal/wire)</span>
       </div>
       <svg id="sparkPrices" class="spark" viewBox="0 0 800 140" preserveAspectRatio="none" width="100%" height="140"></svg>
     </section>
@@ -162,7 +316,7 @@
     trendSrc: "trend.jsonl",
     last: null,
     prev: null,
-    history: [],     // [{ tick, day, npc_purse, riots, bust, population_mean, price_grain_mean, price_metal_mean, food_unrest_mean }]
+    history: [],     // [{ tick, day, npc_purse, riots, bust, population_mean, price_tier_*, food_unrest_mean }]
     historyMax: 20000,
     sort: { key: "population_grain", dir: "desc" },
     rendered: false,
@@ -172,6 +326,26 @@
   };
 
   function $(id) { return document.getElementById(id); }
+
+  /** Trend row price for a need-tier; falls back to legacy grain/metal columns. */
+  function tierPrice(row, tier) {
+    const key = "price_tier_" + tier;
+    if (row[key] != null && row[key] !== "") return +row[key];
+    if (tier === "food" && row.price_grain_mean != null && row.price_grain_mean !== "") return +row.price_grain_mean;
+    if (tier === "metal" && row.price_metal_mean != null && row.price_metal_mean !== "") return +row.price_metal_mean;
+    return null;
+  }
+
+  const CONTRACT_TYPE_LABELS = {
+    grain_delivery: "Grain delivery",
+    temple_supply: "Temple supply",
+    military_provisioning: "Military provisioning",
+    convoy_escort: "Convoy escort",
+    harbor_priority: "Harbour priority",
+    toll_privilege: "Toll privilege",
+    exclusive_purchase: "Exclusive purchase",
+    city_patronage: "City patronage",
+  };
   function fmt(n) { return typeof n === "number" ? n.toLocaleString() : (n ?? ""); }
   function moodClass(unrest) {
     const u = +unrest || 0;
@@ -243,15 +417,20 @@
         population_mean: (r.population_mean != null && r.population_mean !== "")
           ? +r.population_mean
           : null,
-        price_grain_mean: (r.price_grain_mean != null && r.price_grain_mean !== "")
-          ? +r.price_grain_mean
-          : null,
-        price_metal_mean: (r.price_metal_mean != null && r.price_metal_mean !== "")
-          ? +r.price_metal_mean
-          : null,
+        price_tier_food: tierPrice(r, "food"),
+        price_tier_comfort: tierPrice(r, "comfort"),
+        price_tier_metal: tierPrice(r, "metal"),
         food_unrest_mean: (r.food_unrest_mean != null && r.food_unrest_mean !== "")
           ? +r.food_unrest_mean
           : null,
+        riot_delta: (r.riot_delta != null) ? +r.riot_delta : null,
+        bust_delta: (r.bust_delta != null) ? +r.bust_delta : null,
+        war_new_ports: (r.war_new_ports != null) ? +r.war_new_ports : null,
+        plague_new_ports: (r.plague_new_ports != null) ? +r.plague_new_ports : null,
+        ports_at_war: (r.ports_at_war != null) ? +r.ports_at_war : null,
+        world_treasury: (r.world_treasury_coins != null) ? +r.world_treasury_coins : null,
+        harbour_dues: (r.harbour_dues_tick != null) ? +r.harbour_dues_tick : null,
+        gini: (r.gini != null && !Number.isNaN(+r.gini)) ? +r.gini : null,
       }));
       if (state.history.length > state.historyMax) {
         state.history = state.history.slice(-state.historyMax);
@@ -299,14 +478,38 @@
         population_mean: (snap.pop_summary && snap.pop_summary.population_mean != null)
           ? +snap.pop_summary.population_mean
           : null,
-        price_grain_mean: (snap.price_grain_mean != null) ? +snap.price_grain_mean : null,
-        price_metal_mean: (snap.price_metal_mean != null) ? +snap.price_metal_mean : null,
+        price_tier_food: (snap.price_tier_food != null) ? +snap.price_tier_food : (snap.price_grain_mean != null ? +snap.price_grain_mean : null),
+        price_tier_comfort: (snap.price_tier_comfort != null) ? +snap.price_tier_comfort : null,
+        price_tier_metal: (snap.price_tier_metal != null) ? +snap.price_tier_metal : (snap.price_metal_mean != null ? +snap.price_metal_mean : null),
         food_unrest_mean: (snap.food_unrest_mean != null) ? +snap.food_unrest_mean : null,
+        riot_delta: (snap.events && snap.events.riot_delta != null) ? +snap.events.riot_delta : null,
+        bust_delta: (snap.events && snap.events.bust_delta != null) ? +snap.events.bust_delta : null,
+        war_new_ports: (snap.events && snap.events.war_new_ports != null) ? +snap.events.war_new_ports : null,
+        plague_new_ports: (snap.events && snap.events.plague_new_ports != null) ? +snap.events.plague_new_ports : null,
+        ports_at_war: (snap.events && snap.events.ports_at_war != null) ? +snap.events.ports_at_war : null,
+        world_treasury: (snap.world_treasury_coins != null) ? +snap.world_treasury_coins : null,
+        harbour_dues: (snap.treasury && snap.treasury.harbour_dues_tick != null) ? +snap.treasury.harbour_dues_tick : null,
+        gini: (snap.inequality && snap.inequality.gini != null) ? +snap.inequality.gini : null,
       });
       if (state.history.length > state.historyMax) state.history.shift();
     }
     renderHeader(snap);
     renderKpis(snap);
+    renderContracts(snap);
+    renderRegions(snap);
+    renderAllianceBands(snap);
+    renderWars(snap);
+    renderEventTimeline();
+    renderHeatmap(snap);
+    renderGoodsFlow(snap);
+    renderGoodsFlowCumulative(snap);
+    renderGoodsFlowStock(snap);
+    renderGoodsFlowTrade(snap);
+    renderGoodsFlowBalance(snap);
+    renderTreasury(snap);
+    renderInequality(snap);
+    renderSparkTreasury();
+    renderSparkGini();
     renderSpark();
     renderSparkPrices();
     renderSparkUnrest();
@@ -351,6 +554,17 @@
         value: fmt(snap.pirate_raids_success) + deltaSpan(delta(snap.pirate_raids_success, prev?.pirate_raids_success)),
         sub: "successful encounters",
       },
+      (() => {
+        const w = snap.wars || {};
+        const wp = prev?.wars || {};
+        return {
+          label: "Ports at war",
+          value: fmt(w.active_count ?? 0) + deltaSpan(delta(w.active_count, wp.active_count)),
+          sub: w.avg_days_remaining != null
+            ? `avg ${(+w.avg_days_remaining).toFixed(1)} d left · ${w.recurring_count ?? 0} recurring`
+            : "per-port war bursts",
+        };
+      })(),
       {
         label: "World treasury",
         value: fmt(snap.world_treasury_coins) + deltaSpan(delta(snap.world_treasury_coins, prev?.world_treasury_coins)),
@@ -582,11 +796,551 @@
     const popLine = polyPop
       ? `<polyline fill="none" stroke="#fb923c" stroke-width="1.2" stroke-dasharray="4,3" points="${polyPop}" />`
       : "";
+    const marks = chartEventMarksFragment(h0, w, h, pad);
     svg.innerHTML = `
+      ${marks}
       <polyline fill="none" stroke="#5eead4" stroke-width="1.5" points="${polyP}" />
       ${popLine}
       <text x="${w - pad}" y="14" text-anchor="end" fill="#94a3b8" font-size="11">NPC purse range ${fmt(minP)}–${fmt(maxP)}${popLegend}</text>
       <text x="${w - pad}" y="${h - pad - 2}" text-anchor="end" fill="#94a3b8" font-size="11">latest tick ${last.tick} · d${last.day}</text>
+    `;
+  }
+
+  function renderContracts(snap) {
+    const c = snap.contracts;
+    const lifeEl = $("contractsLifecycle");
+    const gridEl = $("contractsGrid");
+    if (!c) {
+      lifeEl.textContent = "Re-run sim_stream.py to populate contract metrics (not in this snapshot).";
+      gridEl.innerHTML = "";
+      return;
+    }
+    const en = c.enabled || {};
+    lifeEl.innerHTML = [
+      `<span>Active on agents: <strong>${fmt(c.active_total)}</strong></span>`,
+      `<span>Lane contracts: <strong>${fmt(c.lane_active)}</strong></span>`,
+      `<span>Civic grain signed / fulfilled / breached: <strong>${fmt(c.city_grain_signed)}</strong> / <strong>${fmt(c.city_grain_fulfilled)}</strong> / <strong class="mood-critical">${fmt(c.city_grain_breached)}</strong></span>`,
+      `<span>Adjacency rows: <strong>${fmt(c.adjacency_rows)}</strong> · earmark ${fmt(c.adjacency_earmark_units)} u</span>`,
+      `<span>Alliance bands: <strong>${fmt(c.phase3_bands)}</strong> · ports tagged <strong>${fmt(c.phase3_ports_tagged)}</strong></span>`,
+      `<span>Merchant houses: <strong>${fmt(c.phase4_houses)}</strong></span>`,
+      en.city_grain === false ? `<span class="mood-tense">civic grain disabled</span>` : "",
+      en.adjacency === false ? `<span class="mood-tense">adjacency disabled</span>` : "",
+    ].filter(Boolean).join(" · ");
+
+    const byType = c.active_by_type || {};
+    const catalogue = Array.isArray(c.catalogue) ? c.catalogue : [];
+    const simulated = new Set(Array.isArray(c.simulated_types) ? c.simulated_types : ["grain_delivery"]);
+    const esc = c.convoy_escort || {};
+    const liveTiles = [
+      { label: "Grain delivery", value: byType.grain_delivery || 0, sub: "institutional_contracts[] · civic haul", live: true },
+      { label: "Adjacency grain", value: c.adjacency_rows || 0, sub: "standing hub→spoke lanes (separate list)", live: true },
+      { label: "Convoy escort", value: (esc.leaders_npc_escort || 0) + (esc.leaders_player_escort || 0),
+        sub: `NPC ${fmt(esc.leaders_npc_escort || 0)} · player ${fmt(esc.leaders_player_escort || 0)} (voyage fields)`, live: true },
+    ];
+    const catalogueTiles = (catalogue.length ? catalogue : Object.keys(byType))
+      .filter(tid => tid !== "grain_delivery")
+      .map(tid => ({
+        label: CONTRACT_TYPE_LABELS[tid] || tid.replace(/_/g, " "),
+        value: byType[tid] || 0,
+        sub: simulated.has(tid) ? tid : `${tid} · catalogue only (not in twin yet)`,
+        live: simulated.has(tid),
+      }));
+    const allTiles = liveTiles.concat(catalogueTiles);
+    if (!allTiles.length) {
+      gridEl.innerHTML = `<div class="contract-tile"><div class="ct-label">contracts</div><div class="ct-value">0</div><div class="ct-sub">no catalogue in world</div></div>`;
+      return;
+    }
+    gridEl.innerHTML = allTiles.map(t => {
+      const inactive = !t.live && !t.value;
+      return `<div class="contract-tile${inactive ? " inactive" : ""}">
+        <div class="ct-label">${t.label}</div>
+        <div class="ct-value">${fmt(t.value)}</div>
+        <div class="ct-sub">${t.sub}</div>
+      </div>`;
+    }).join("");
+  }
+
+  function renderRegions(snap) {
+    const gridEl = $("regionsGrid");
+    const regions = snap.regions || {};
+    const order = (snap.chart_areas || []).map(a => a.id);
+    if (order.indexOf("_other") < 0) order.push("_other");
+    const prevRegions = state.prev?.regions || {};
+    const ids = order.filter(id => regions[id] && (regions[id].port_count > 0 || id !== "_other"));
+    Object.keys(regions).forEach(id => {
+      if (ids.indexOf(id) < 0 && regions[id].port_count > 0) ids.push(id);
+    });
+    if (!ids.length) {
+      gridEl.innerHTML = `<p style="padding:10px 12px;color:var(--fg-mute);margin:0">No regional rollups (re-run sim_stream.py).</p>`;
+      return;
+    }
+    const unrestFmt = v => (+v).toFixed(1);
+    const daysFmt = v => (+v).toFixed(1);
+    gridEl.innerHTML = ids.map(id => {
+      const r = regions[id];
+      const pr = prevRegions[id] || {};
+      const mood = moodClass(r.food_unrest_mean);
+      return `<article class="region-card">
+        <h3>${r.name || id}</h3>
+        <div class="rg-meta">${r.port_count} port(s)${r.ports_at_war ? ` · <span class="mood-critical">${r.ports_at_war} at war</span>` : ""}</div>
+        <dl>
+          <dt>Wealth μ</dt><dd>${fmt(r.wealth_mean)}${deltaSpan(delta(r.wealth_mean, pr.wealth_mean))}</dd>
+          <dt>Unrest μ</dt><dd><span class="${mood}">${unrestFmt(r.food_unrest_mean)}</span>${deltaSpan(delta(r.food_unrest_mean, pr.food_unrest_mean), unrestFmt)}</dd>
+          <dt>Grain days μ</dt><dd>${daysFmt(r.grain_food_days_mean)}${deltaSpan(delta(r.grain_food_days_mean, pr.grain_food_days_mean), daysFmt)}</dd>
+          <dt>Pop μ</dt><dd>${fmt(r.population_mean)}${deltaSpan(delta(r.population_mean, pr.population_mean))}</dd>
+          <dt>Riots Σ</dt><dd>${fmt(r.riot_events_sum)}${deltaSpan(delta(r.riot_events_sum, pr.riot_events_sum))}</dd>
+        </dl>
+      </article>`;
+    }).join("");
+  }
+
+  function historyEventDelta(p, i, h0, field, cumField) {
+    if (p[field] != null && !Number.isNaN(+p[field])) return Math.max(0, +p[field]);
+    if (i <= 0 || cumField == null) return 0;
+    const c = p[cumField];
+    const pr = h0[i - 1][cumField];
+    if (c == null || pr == null || Number.isNaN(+c) || Number.isNaN(+pr)) return 0;
+    return Math.max(0, (+c) - (+pr));
+  }
+
+  function timelineMarksFragment(h0, w, h, pad, lanes) {
+    if (h0.length < 2) return "";
+    const xScale = i => pad + (i / (h0.length - 1)) * (w - 2 * pad);
+    const laneY = { riot: 12, bust: 28, war: 44, plague: 60 };
+    const laneColor = { riot: "#dc2626", bust: "#f59e0b", war: "#b91c1c", plague: "#a855f7" };
+    const parts = [];
+    for (let i = 0; i < h0.length; i++) {
+      const p = h0[i];
+      const x = xScale(i);
+      const specs = [
+        ["riot", historyEventDelta(p, i, h0, "riot_delta", "riots")],
+        ["bust", historyEventDelta(p, i, h0, "bust_delta", "bust")],
+        ["war", historyEventDelta(p, i, h0, "war_new_ports", null)],
+        ["plague", historyEventDelta(p, i, h0, "plague_new_ports", null)],
+      ];
+      for (const [lane, d] of specs) {
+        if (!lanes[lane] || !d) continue;
+        const y = laneY[lane];
+        const stem = Math.min(10, 4 + d * 2);
+        parts.push(`<line x1="${x}" y1="${y + 6}" x2="${x}" y2="${y + 6 - stem}" stroke="${laneColor[lane]}" stroke-width="2" stroke-linecap="round" opacity="0.95" />`);
+      }
+    }
+    return parts.join("");
+  }
+
+  function chartEventMarksFragment(h0, w, h, pad) {
+    if (h0.length < 2) return "";
+    const xScale = i => pad + (i / (h0.length - 1)) * (w - 2 * pad);
+    const baseY = h - pad;
+    const specs = [
+      { color: "#dc2626", field: "riot_delta", cum: "riots" },
+      { color: "#f59e0b", field: "bust_delta", cum: "bust" },
+      { color: "#b91c1c", field: "war_new_ports", cum: null },
+      { color: "#a855f7", field: "plague_new_ports", cum: null },
+    ];
+    const parts = [];
+    for (let i = 0; i < h0.length; i++) {
+      const x = xScale(i);
+      const p = h0[i];
+      for (const s of specs) {
+        const d = historyEventDelta(p, i, h0, s.field, s.cum);
+        if (!d) continue;
+        const stem = Math.min(28, 6 + d * 3);
+        parts.push(`<line x1="${x}" y1="${baseY}" x2="${x}" y2="${baseY - stem}" stroke="${s.color}" stroke-width="2" stroke-linecap="round" opacity="0.85" />`);
+      }
+    }
+    return parts.join("");
+  }
+
+  function renderAllianceBands(snap) {
+    const el = $("allianceBands");
+    const ab = snap.alliance_bands;
+    if (!ab || !Array.isArray(ab.bands)) {
+      el.innerHTML = `<p style="padding:10px 12px;color:var(--fg-mute);margin:0">No alliance data (re-run sim_stream.py).</p>`;
+      return;
+    }
+    const mul = ab.multipliers || {};
+    const head = ab.enabled
+      ? `Phase 3 active · ${ab.band_count} bands · ${ab.ports_tagged} ports tagged · toll×${mul.ally_toll_mul ?? "?"} enemy×${mul.enemy_toll_mul ?? "?"} buy×${mul.ally_buy_mul ?? "?"}`
+      : "Phase 3 disabled in twin";
+    el.innerHTML = `<p class="ab-meta" style="grid-column:1/-1;font-size:11px;color:var(--fg-mute);margin:0 0 4px">${head}</p>` +
+      ab.bands.map(b => {
+        const v = b.voyage || {};
+        const share = v.intra_share != null ? (v.intra_share * 100).toFixed(0) + "%" : "—";
+        return `<article class="alliance-card">
+          <h3>${b.name || ("Band " + b.band_index)}</h3>
+          <div class="ab-meta">${b.port_count} ports · ${b.ports_at_war || 0} at war · toll×${b.configured_toll_mul} · route+${b.configured_route_ally_bonus}</div>
+          <dl>
+            <dt>Intra-band voyages</dt><dd>${share} <span style="color:var(--fg-mute)">(${v.intra_band ?? 0}/${v.voyages_at_sea ?? 0} at sea)</span></dd>
+            <dt>NPC buy coins</dt><dd>${fmt(b.commerce_npc_buy_coins)}</dd>
+            <dt>NPC sell coins</dt><dd>${fmt(b.commerce_npc_sell_coins)}</dd>
+          </dl>
+        </article>`;
+      }).join("");
+  }
+
+  function renderWars(snap) {
+    const el = $("warsBody");
+    const w = snap.wars;
+    if (!w) {
+      el.innerHTML = `<p style="color:var(--fg-mute);margin:0">No war summary (re-run sim_stream.py).</p>`;
+      return;
+    }
+    const top = Array.isArray(w.top) ? w.top : [];
+    const rows = top.map(r => `<tr>
+      <td>${r.name || r.port_id}</td>
+      <td>${r.war_days_left} d</td>
+      <td>${r.war_recurring ? "recurring" : "—"}</td>
+      <td class="${moodClass(r.food_unrest)}">${r.food_unrest}</td>
+    </tr>`).join("");
+    el.innerHTML = `
+      <div class="wars-summary">
+        <span><strong>${fmt(w.active_count)}</strong> ports at war</span>
+        <span>avg <strong>${(+w.avg_days_remaining || 0).toFixed(1)}</strong> days left</span>
+        <span><strong>${fmt(w.recurring_count)}</strong> recurring</span>
+        ${(snap.events && snap.events.war_new_ports) ? `<span class="mood-critical">+${snap.events.war_new_ports} new this tick</span>` : ""}
+      </div>
+      ${top.length ? `<table class="wars-table"><thead><tr><th>Port</th><th>War</th><th>Type</th><th>Unrest</th></tr></thead><tbody>${rows}</tbody></table>` : `<p style="color:var(--fg-mute);margin:8px 0 0">No active wars.</p>`}`;
+  }
+
+  function renderEventTimeline() {
+    const svg = $("eventTimeline");
+    const w = 800, h = 72, pad = 6;
+    const h0 = state.history;
+    if (h0.length < 2) { svg.innerHTML = ""; return; }
+    const lanes = { riot: true, bust: true, war: true, plague: true };
+    const labels = [
+      `<text x="${pad}" y="14" fill="#dc2626" font-size="9">riots</text>`,
+      `<text x="${pad}" y="30" fill="#f59e0b" font-size="9">bust</text>`,
+      `<text x="${pad}" y="46" fill="#b91c1c" font-size="9">war</text>`,
+      `<text x="${pad}" y="62" fill="#a855f7" font-size="9">plague</text>`,
+    ].join("");
+    svg.innerHTML = labels + timelineMarksFragment(h0, w, h, pad, lanes);
+  }
+
+  function heatmapColor(metric, value, minV, maxV) {
+    const t = maxV > minV ? (value - minV) / (maxV - minV) : 0.5;
+    if (metric === "plague_days") {
+      return value > 0 ? "#a855f7" : "#334155";
+    }
+    if (metric === "grain_food_days") {
+      const inv = 1 - Math.min(1, value / 30);
+      return `rgb(${Math.round(34 + inv * 200)},${Math.round(180 - inv * 120)},${Math.round(80 + (1 - inv) * 40)})`;
+    }
+    if (metric === "wealth_delta") {
+      if (value > 0) return "#22c55e";
+      if (value < 0) return "#ef4444";
+      return "#64748b";
+    }
+    if (metric === "food_unrest") {
+      const u = Math.min(1, value / 200);
+      return `rgb(${Math.round(34 + u * 200)},${Math.round(197 - u * 100)},${Math.round(94 - u * 60)})`;
+    }
+    const g = Math.round(40 + t * 180);
+    return `rgb(${g},${g + 20},${g + 40})`;
+  }
+
+  function renderHeatmap(snap) {
+    const svg = $("heatmap");
+    const legend = $("heatmapLegend");
+    const metric = $("heatmapMetric").value || "food_unrest";
+    const ports = snap.ports || {};
+    const prev = state.prev?.ports || {};
+    const rows = Object.entries(ports).map(([pid, p]) => {
+      let v = +p[metric] || 0;
+      if (metric === "wealth_delta") {
+        const pp = prev[pid] || {};
+        v = (+p.wealth || 0) - (+pp.wealth || 0);
+      }
+      return { pid, p, v, u: +p.map_u || 0, vv: +p.map_v || 0, band: +p.alliance_band };
+    }).filter(r => r.u > 0 && r.vv > 0);
+    if (!rows.length) {
+      svg.innerHTML = `<text x="400" y="140" text-anchor="middle" fill="#94a3b8">No map coords — re-run sim_stream</text>`;
+      legend.textContent = "";
+      return;
+    }
+    const vals = rows.map(r => r.v);
+    const minV = Math.min(...vals), maxV = Math.max(...vals);
+    const w = 800, h = 280, pad = 20;
+    const xScale = u => pad + u * (w - 2 * pad);
+    const yScale = v => h - pad - v * (h - 2 * pad);
+    const bandStroke = ["#5eead4", "#fcd34d", "#fb923c", "#c4b5fd", "#f472b6"];
+    const dots = rows.map(r => {
+      const fill = heatmapColor(metric, r.v, minV, maxV);
+      const stroke = r.band >= 0 ? bandStroke[r.band % bandStroke.length] : "#64748b";
+      const title = `${r.pid} · ${metric}=${r.v.toFixed ? r.v.toFixed(1) : r.v}`;
+      return `<circle cx="${xScale(r.u)}" cy="${yScale(r.vv)}" r="5" fill="${fill}" stroke="${stroke}" stroke-width="1.2" opacity="0.92"><title>${title}</title></circle>`;
+    }).join("");
+    svg.innerHTML = `<rect x="0" y="0" width="${w}" height="${h}" fill="#0b0f14"/>${dots}`;
+    legend.textContent = `${metric}: ${minV.toFixed(1)} – ${maxV.toFixed(1)} · stroke = alliance band · ${rows.length} ports`;
+  }
+
+  function renderFlowBars(el, rows, netKey, prodKey, consKey, unitHint) {
+    if (!rows.length) {
+      el.innerHTML = `<p style="color:var(--fg-mute);margin:0">No data.</p>`;
+      return;
+    }
+    const maxNet = Math.max(1, ...rows.map(r => Math.abs(+r[netKey] || 0)));
+    el.innerHTML = rows.map(r => {
+      const net = +r[netKey] || 0;
+      const pct = Math.min(50, (Math.abs(net) / maxNet) * 50);
+      const bar = net >= 0
+        ? `<span class="flow-bar surplus" style="width:${pct}%"></span>`
+        : `<span class="flow-bar deficit" style="width:${pct}%"></span>`;
+      const netCls = net > 0 ? "delta-up" : net < 0 ? "delta-dn" : "delta-zero";
+      const prod = (+r[prodKey] || 0).toFixed(1);
+      const cons = (+r[consKey] || 0).toFixed(1);
+      return `<div class="flow-row" title="production ${prod} · consumption ${cons} ${unitHint}">
+        <span class="flow-label">${r.id}</span>
+        <div class="flow-track"><span class="mid"></span>${bar}</div>
+        <span class="flow-net ${netCls}">${net > 0 ? "+" : ""}${fmtNet(net)}</span>
+      </div>`;
+    }).join("");
+  }
+
+  function fmtNet(n) {
+    const v = +n || 0;
+    if (Math.abs(v) >= 1000) return v.toLocaleString(undefined, { maximumFractionDigits: 0 });
+    return v.toFixed(1);
+  }
+
+  function renderGoodsFlow(snap) {
+    const gf = snap.goods_flow;
+    if (!gf || !gf.goods) {
+      $("goodsFlowGrid").innerHTML = `<p style="color:var(--fg-mute);margin:0">No goods flow data (re-run sim_stream.py).</p>`;
+      return;
+    }
+    const rows = gf.goods.map(r => ({
+      id: r.id,
+      net_per_day: r.net_per_day,
+      production_per_day: r.production_per_day,
+      consumption_per_day: r.consumption_per_day,
+    }));
+    renderFlowBars($("goodsFlowGrid"), rows, "net_per_day", "production_per_day", "consumption_per_day", "u/day");
+  }
+
+  function renderGoodsFlowCumulative(snap) {
+    const totalEl = $("goodsFlowCumulativeTotal");
+    const gridEl = $("goodsFlowCumulativeGrid");
+    const cum = snap.goods_flow && snap.goods_flow.cumulative;
+    if (!cum || !Array.isArray(cum.goods)) {
+      totalEl.innerHTML = "";
+      gridEl.innerHTML = `<p style="color:var(--fg-mute);margin:0">Cumulative totals appear after the first simulated day (re-run sim_stream.py).</p>`;
+      return;
+    }
+    const net = +cum.net_total || 0;
+    const netCls = net > 0 ? "delta-up" : net < 0 ? "delta-dn" : "delta-zero";
+    const maxNet = Math.max(1, Math.abs(net));
+    const pct = Math.min(50, (Math.abs(net) / maxNet) * 50);
+    const bar = net >= 0
+      ? `<span class="flow-bar surplus" style="width:${pct}%"></span>`
+      : `<span class="flow-bar deficit" style="width:${pct}%"></span>`;
+    totalEl.innerHTML = `
+      <div class="flow-row" style="margin-bottom:6px">
+        <span class="flow-label">ALL GOODS</span>
+        <span style="font-size:10px;color:var(--fg-mute)">${cum.ticks} day(s) integrated</span>
+      </div>
+      <div class="flow-row">
+        <span class="flow-label">net Σ</span>
+        <div class="flow-track"><span class="mid"></span>${bar}</div>
+        <span class="flow-net ${netCls}">${net > 0 ? "+" : ""}${fmtNet(net)}</span>
+      </div>
+      <div style="font-size:10px;color:var(--fg-mute);margin-top:6px">
+        production ${fmtNet(cum.production_total)} · consumption ${fmtNet(cum.consumption_total)} units total
+      </div>`;
+    const rows = cum.goods.map(r => ({
+      id: r.id,
+      net_per_day: r.net_total,
+      production_per_day: r.production_total,
+      consumption_per_day: r.consumption_total,
+    }));
+    renderFlowBars(gridEl, rows, "net_per_day", "production_per_day", "consumption_per_day", "units total");
+  }
+
+  function renderGoodsFlowStock(snap) {
+    const totalEl = $("goodsFlowStockTotal");
+    const gridEl = $("goodsFlowStockGrid");
+    const st = snap.goods_flow && snap.goods_flow.stock;
+    if (!st || !Array.isArray(st.goods)) {
+      totalEl.innerHTML = "";
+      gridEl.innerHTML = `<p style="color:var(--fg-mute);margin:0">Stock totals need sim_stream.py with stock tracking (re-run stream).</p>`;
+      return;
+    }
+    const net = +st.stock_change_total || 0;
+    const netCls = net > 0 ? "delta-up" : net < 0 ? "delta-dn" : "delta-zero";
+    const maxNet = Math.max(1, Math.abs(net));
+    const pct = Math.min(50, (Math.abs(net) / maxNet) * 50);
+    const bar = net >= 0
+      ? `<span class="flow-bar surplus" style="width:${pct}%"></span>`
+      : `<span class="flow-bar deficit" style="width:${pct}%"></span>`;
+    totalEl.innerHTML = `
+      <div class="flow-row" style="margin-bottom:6px">
+        <span class="flow-label">ALL GOODS</span>
+        <span style="font-size:10px;color:var(--fg-mute)">${st.ticks} day(s) · warehouses summed</span>
+      </div>
+      <div class="flow-row">
+        <span class="flow-label">Δ stock</span>
+        <div class="flow-track"><span class="mid"></span>${bar}</div>
+        <span class="flow-net ${netCls}">${net > 0 ? "+" : ""}${fmtNet(net)}</span>
+      </div>
+      <div style="font-size:10px;color:var(--fg-mute);margin-top:6px">
+        on hand now ${fmtNet(st.stock_total)} units (all ports)
+      </div>`;
+    const rows = st.goods.map(r => ({
+      id: r.id,
+      net_per_day: r.stock_change_total,
+      production_per_day: r.stock_total,
+      consumption_per_day: r.stock_delta_per_day,
+    }));
+    renderFlowBars(gridEl, rows, "net_per_day", "production_per_day", "consumption_per_day", "on hand · Δ last day");
+  }
+
+  function renderGoodsFlowTrade(snap) {
+    const el = $("goodsFlowTradeMeta");
+    const tr = snap.goods_flow && snap.goods_flow.trade;
+    if (!tr) {
+      el.textContent = "";
+      return;
+    }
+    const net = +tr.net_inflow_total || 0;
+    const netCls = net > 0 ? "delta-up" : net < 0 ? "delta-dn" : "delta-zero";
+    el.innerHTML = [
+      `<strong>NPC dock trade (all goods)</strong> · `,
+      `cumulative in ${fmtNet(tr.npc_sell_total)} u · out ${fmtNet(tr.npc_buy_total)} u · `,
+      `<span class="${netCls}">net in ${net > 0 ? "+" : ""}${fmtNet(net)}</span>`,
+      ` · last day in ${fmtNet(tr.npc_sell_per_day)} / out ${fmtNet(tr.npc_buy_per_day)}`,
+      ` <span style="color:var(--fg-mute)">(sell = merchant delivers to port stock)</span>`,
+    ].join("");
+  }
+
+  function renderGoodsFlowBalance(snap) {
+    const totalEl = $("goodsFlowBalanceTotal");
+    const gridEl = $("goodsFlowBalanceGrid");
+    const bal = snap.goods_flow && snap.goods_flow.balance;
+    if (!bal || !Array.isArray(bal.goods)) {
+      totalEl.innerHTML = "";
+      gridEl.innerHTML = "";
+      return;
+    }
+    const net = +bal.offset_total || 0;
+    const netCls = net > 0 ? "delta-up" : net < 0 ? "delta-dn" : "delta-zero";
+    const maxNet = Math.max(1, Math.abs(net));
+    const pct = Math.min(50, (Math.abs(net) / maxNet) * 50);
+    const bar = net >= 0
+      ? `<span class="flow-bar surplus" style="width:${pct}%"></span>`
+      : `<span class="flow-bar deficit" style="width:${pct}%"></span>`;
+    totalEl.innerHTML = `
+      <div class="flow-row" style="margin-bottom:6px">
+        <span class="flow-label">ALL GOODS</span>
+        <span style="font-size:10px;color:var(--fg-mute)">offset = Δstock − structural net</span>
+      </div>
+      <div class="flow-row">
+        <span class="flow-label">net offset</span>
+        <div class="flow-track"><span class="mid"></span>${bar}</div>
+        <span class="flow-net ${netCls}">${net > 0 ? "+" : ""}${fmtNet(net)}</span>
+      </div>
+      <div style="font-size:10px;color:var(--fg-mute);margin-top:6px">
+        positive = trade, mint, harvest bumps, etc. kept stocks above the local farm/mine vs demand gap
+      </div>`;
+    const rows = bal.goods.map(r => ({
+      id: r.id,
+      net_per_day: r.offset_total,
+      production_per_day: r.stock_change_total,
+      consumption_per_day: r.structural_net_total,
+    }));
+    renderFlowBars(gridEl, rows, "net_per_day", "production_per_day", "consumption_per_day", "Δstock · structural net");
+  }
+
+  function renderTreasury(snap) {
+    const t = snap.treasury;
+    const meta = $("treasuryMeta");
+    if (!t) {
+      meta.textContent = "Re-run sim_stream.py for treasury block.";
+      return;
+    }
+    const d = t.delta_since_prev || 0;
+    const dCls = d > 0 ? "delta-up" : d < 0 ? "delta-dn" : "delta-zero";
+    meta.innerHTML = [
+      `<span>Treasury <strong>${fmt(t.coins)}</strong> / ${fmt(t.initial_coins)} initial (${t.pct_of_initial != null ? t.pct_of_initial + "%" : "—"})</span>`,
+      `<span>Δ poll <strong class="${dCls}">${d > 0 ? "+" : ""}${fmt(d)}</strong></span>`,
+      `<span>Harbour dues this tick <strong>${fmt(t.harbour_dues_tick)}</strong> → port wealth</span>`,
+    ].join(" · ");
+  }
+
+  function renderInequality(snap) {
+    const ineq = snap.inequality;
+    const head = $("inequalityHead");
+    const tables = $("inequalityTables");
+    if (!ineq) {
+      head.textContent = "";
+      tables.innerHTML = `<p style="color:var(--fg-mute);margin:0">Re-run sim_stream.py for inequality block.</p>`;
+      return;
+    }
+    head.textContent = `Gini ${(+ineq.gini).toFixed(3)} · mean wealth ${fmt(ineq.wealth_mean)} · total ${fmt(ineq.wealth_total)}`;
+    const tbl = (title, rows, deltaKey) => {
+      const body = (rows || []).map(r => {
+        const d = +r[deltaKey] || 0;
+        const cls = d > 0 ? "delta-up" : d < 0 ? "delta-dn" : "delta-zero";
+        return `<tr><td>${r.name || r.port_id}</td><td>${fmt(r.wealth)}</td><td class="${cls}">${d > 0 ? "+" : ""}${fmt(d)}</td></tr>`;
+      }).join("");
+      return `<div><h3 style="margin:0 0 6px;font-size:12px">${title}</h3>
+        <table class="ineq-table"><thead><tr><th>Port</th><th>Wealth</th><th>Δ</th></tr></thead><tbody>${body || `<tr><td colspan="3">—</td></tr>`}</tbody></table></div>`;
+    };
+    tables.innerHTML = tbl("Top gainers (vs last poll)", ineq.top_gainers, "wealth_delta")
+      + tbl("Top losers (vs last poll)", ineq.top_losers, "wealth_delta");
+  }
+
+  function renderSparkTreasury() {
+    const svg = $("sparkTreasury");
+    const w = 800, h = 100, pad = 6;
+    const h0 = state.history;
+    if (h0.length < 2) { svg.innerHTML = ""; return; }
+    const xScale = i => pad + (i / (h0.length - 1)) * (w - 2 * pad);
+    const treas = h0.map(p => (p.world_treasury != null) ? +p.world_treasury : null);
+    const dues = h0.map(p => (p.harbour_dues != null) ? +p.harbour_dues : null);
+    const filledT = filledPopMeans(treas);
+    const filledD = filledPopMeans(dues);
+    if (!filledT) { svg.innerHTML = ""; return; }
+    const finiteT = treas.filter(v => v != null);
+    const minT = Math.min(...finiteT), maxT = Math.max(...finiteT);
+    const yT = v => h - pad - ((v - minT) / Math.max(1e-6, maxT - minT)) * (h - 2 * pad);
+    const polyT = filledT.map((v, i) => `${xScale(i)},${yT(v)}`).join(" ");
+    let polyD = "";
+    let duesLegend = "";
+    if (filledD) {
+      const finiteD = dues.filter(v => v != null);
+      const maxD = Math.max(1, ...finiteD);
+      const yD = v => h - pad - (v / maxD) * (h - 2 * pad) * 0.45;
+      polyD = filledD.map((v, i) => `${xScale(i)},${yD(v)}`).join(" ");
+      duesLegend = ` · dues max ${maxD}`;
+    }
+    const last = h0[h0.length - 1];
+    svg.innerHTML = `
+      <polyline fill="none" stroke="#5eead4" stroke-width="1.5" points="${polyT}" />
+      ${polyD ? `<polyline fill="none" stroke="#f59e0b" stroke-width="1" stroke-dasharray="3,3" points="${polyD}" />` : ""}
+      <text x="${w - pad}" y="12" text-anchor="end" fill="#94a3b8" font-size="10">treasury ${fmt(minT)}–${fmt(maxT)}${duesLegend}</text>
+      <text x="${w - pad}" y="${h - 4}" text-anchor="end" fill="#94a3b8" font-size="10">tick ${last.tick}</text>
+    `;
+  }
+
+  function renderSparkGini() {
+    const svg = $("sparkGini");
+    const w = 800, h = 80, pad = 6;
+    const h0 = state.history;
+    if (h0.length < 2) { svg.innerHTML = ""; return; }
+    const raw = h0.map(p => (p.gini != null && !Number.isNaN(+p.gini)) ? +p.gini : null);
+    const filled = filledPopMeans(raw);
+    if (!filled) { svg.innerHTML = ""; return; }
+    const finite = raw.filter(v => v != null);
+    const minG = Math.min(...finite), maxG = Math.max(...finite);
+    const xScale = i => pad + (i / (h0.length - 1)) * (w - 2 * pad);
+    const yScale = v => h - pad - ((v - minG) / Math.max(1e-6, maxG - minG)) * (h - 2 * pad);
+    const poly = filled.map((v, i) => `${xScale(i)},${yScale(v)}`).join(" ");
+    const last = h0[h0.length - 1];
+    svg.innerHTML = `
+      <polyline fill="none" stroke="#c4b5fd" stroke-width="1.4" points="${poly}" />
+      <text x="${w - pad}" y="12" text-anchor="end" fill="#94a3b8" font-size="10">Gini ${minG.toFixed(3)}–${maxG.toFixed(3)} (0=equal · 1=concentrated)</text>
+      <text x="${w - pad}" y="${h - 4}" text-anchor="end" fill="#94a3b8" font-size="10">tick ${last.tick}</text>
     `;
   }
 
@@ -596,50 +1350,47 @@
     const h0 = state.history;
     if (h0.length < 2) { svg.innerHTML = ""; return; }
     const xs = h0.map((_, i) => i);
-    const grainRaw = h0.map(p =>
-      (p.price_grain_mean != null && !Number.isNaN(+p.price_grain_mean)) ? +p.price_grain_mean : null
-    );
-    const metalRaw = h0.map(p =>
-      (p.price_metal_mean != null && !Number.isNaN(+p.price_metal_mean)) ? +p.price_metal_mean : null
-    );
     const xScale = i => pad + (i / (xs.length - 1)) * (w - 2 * pad);
 
-    let polyGrain = "";
-    let grainLegend = "";
-    const filledGrain = filledPopMeans(grainRaw);
-    const finiteGrain = grainRaw.filter(v => v != null);
-    if (filledGrain && finiteGrain.length >= 1) {
-      const minG = Math.min(...finiteGrain), maxG = Math.max(...finiteGrain);
-      const yScaleG = v => h - pad - ((v - minG) / Math.max(1e-6, maxG - minG)) * (h - 2 * pad);
-      polyGrain = filledGrain.map((v, i) => `${xScale(i)},${yScaleG(v)}`).join(" ");
-      grainLegend = `Grain ${minG.toFixed(2)}–${maxG.toFixed(2)}`;
+    const series = [
+      { key: "food", label: "Food", stroke: "#fcd34d", dash: "" },
+      { key: "comfort", label: "Comfort", stroke: "#fb923c", dash: "4,3" },
+      { key: "metal", label: "Metal", stroke: "#c4b5fd", dash: "2,2" },
+    ];
+    const built = [];
+    const allVals = [];
+    for (const s of series) {
+      const raw = h0.map(p => {
+        const v = p["price_tier_" + s.key];
+        return (v != null && !Number.isNaN(+v)) ? +v : null;
+      });
+      const finite = raw.filter(v => v != null);
+      if (!finite.length) continue;
+      const filled = filledPopMeans(raw);
+      if (!filled) continue;
+      finite.forEach(v => allVals.push(v));
+      built.push({ ...s, filled, minV: Math.min(...finite), maxV: Math.max(...finite) });
     }
-
-    let polyMetal = "";
-    let metalLegend = "";
-    const finiteMetal = metalRaw.filter(v => v != null);
-    const metalVisible = finiteMetal.length >= 1 && Math.max(...finiteMetal) > 0;
-    const filledMetal = filledPopMeans(metalRaw);
-    if (metalVisible && filledMetal) {
-      const minM = Math.min(...finiteMetal), maxM = Math.max(...finiteMetal);
-      const yScaleM = v => h - pad - ((v - minM) / Math.max(1e-6, maxM - minM)) * (h - 2 * pad);
-      polyMetal = filledMetal.map((v, i) => `${xScale(i)},${yScaleM(v)}`).join(" ");
-      metalLegend = `  ·  Metal ${minM.toFixed(2)}–${maxM.toFixed(2)}`;
-    } else {
-      metalLegend = finiteMetal.length ? "  ·  Metal flat 0 (no good?)" : "  ·  Metal (n/a)";
+    if (!built.length || !allVals.length) {
+      svg.innerHTML = `<text x="${w / 2}" y="${h / 2}" text-anchor="middle" fill="#94a3b8" font-size="12">no tier price series (re-run sim_stream)</text>`;
+      return;
     }
-
-    const lineGrain = polyGrain
-      ? `<polyline fill="none" stroke="#fcd34d" stroke-width="1.5" points="${polyGrain}" />`
-      : "";
-    const lineMetal = polyMetal
-      ? `<polyline fill="none" stroke="#c4b5fd" stroke-width="1.2" stroke-dasharray="4,3" points="${polyMetal}" />`
-      : "";
+    const minAll = Math.min(...allVals), maxAll = Math.max(...allVals);
+    const yScale = v => h - pad - ((v - minAll) / Math.max(1e-6, maxAll - minAll)) * (h - 2 * pad);
+    const polys = [];
+    const legends = [];
+    for (const s of built) {
+      const pts = s.filled.map((v, i) => `${xScale(i)},${yScale(v)}`).join(" ");
+      const dashAttr = s.dash ? ` stroke-dasharray="${s.dash}"` : "";
+      polys.push(`<polyline fill="none" stroke="${s.stroke}" stroke-width="1.4"${dashAttr} points="${pts}" />`);
+      legends.push(`${s.label} ${s.minV.toFixed(2)}–${s.maxV.toFixed(2)}`);
+    }
     const last = h0[h0.length - 1];
-    const legendTop = grainLegend ? `${grainLegend}${metalLegend}` : "no price series";
+    const legendTop = `${legends.join("  ·  ")}  ·  axis ${minAll.toFixed(2)}–${maxAll.toFixed(2)}`;
+    const marks = chartEventMarksFragment(h0, w, h, pad);
     svg.innerHTML = `
-      ${lineGrain}
-      ${lineMetal}
+      ${marks}
+      ${polys.join("\n")}
       <text x="${w - pad}" y="14" text-anchor="end" fill="#94a3b8" font-size="11">${legendTop}</text>
       <text x="${w - pad}" y="${h - pad - 2}" text-anchor="end" fill="#94a3b8" font-size="11">latest tick ${last.tick} · d${last.day}</text>
     `;
@@ -665,26 +1416,8 @@
     const finite = raw.filter(v => v != null);
     const minU = finite.length ? Math.min(...finite) : 0;
     const maxU = finite.length ? Math.max(...finite) : 0;
-    const riotDeltas = h0.map((p, i) => {
-      if (i <= 0) return 0;
-      const c = p.riots;
-      const pr = h0[i - 1].riots;
-      if (c == null || pr == null || Number.isNaN(+c) || Number.isNaN(+pr)) return 0;
-      return Math.max(0, (+c) - (+pr));
-    });
-    const maxRiotTick = Math.max(0, ...riotDeltas);
-    const maxRiotScale = Math.max(1, maxRiotTick);
-    const baseY = h - pad;
-    const maxStem = 26;
-    const riotMarks = riotDeltas
-      .map((d, i) => {
-        if (!d) return "";
-        const x = xScale(i);
-        const stemH = (d / maxRiotScale) * maxStem;
-        const y1 = baseY - stemH;
-        return `<line x1="${x}" y1="${baseY}" x2="${x}" y2="${y1}" stroke="#dc2626" stroke-width="2" stroke-linecap="round" opacity="0.9" />`;
-      })
-      .join("");
+    const marks = chartEventMarksFragment(h0, w, h, pad);
+    const maxRiotTick = Math.max(0, ...h0.map((p, i) => historyEventDelta(p, i, h0, "riot_delta", "riots")));
     const riotLegend =
       maxRiotTick > 0 ? `  ·  <tspan fill="#dc2626">riots/sample max ${maxRiotTick}</tspan>` : "";
     const last = h0[h0.length - 1];
@@ -694,7 +1427,7 @@
     }).join("");
     svg.innerHTML = `
       ${guides}
-      ${riotMarks}
+      ${marks}
       <polyline fill="none" stroke="#f59e0b" stroke-width="1.6" points="${poly}" />
       <text x="${w - pad}" y="14" text-anchor="end" fill="#94a3b8" font-size="11">mean unrest ${minU.toFixed(1)}–${maxU.toFixed(1)} (axis 0–${U_MAX})${riotLegend}</text>
       <text x="${w - pad}" y="${h - pad - 2}" text-anchor="end" fill="#94a3b8" font-size="11">latest tick ${last.tick} · d${last.day}</text>
@@ -785,6 +1518,7 @@
   $("auto").addEventListener("change", e => e.target.checked ? start() : stop());
   $("poll").addEventListener("change", () => { if ($("auto").checked) start(); });
   $("refresh").addEventListener("click", poll);
+  $("heatmapMetric").addEventListener("change", () => { if (state.last) renderHeatmap(state.last); });
 
   poll();
   if ($("auto").checked) start();

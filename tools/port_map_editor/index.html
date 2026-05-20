@@ -12,8 +12,10 @@
         <h1>Port map editor</h1>
         <p class="hint">
           Rendered from tilemap JSON · shore snap = partial coast tiles (not open sea / solid land).
-          Rome &amp; Nile cities: use “Inland exception” then place manually. Loads
-          <code>data/world_full.json</code> only · export → <code>data/port_map_editor_export.json</code>
+          Rome &amp; Nile cities: use “Inland exception” then place manually. Tilemaps load from
+          <code>docs/chart_area_tilemaps_and_maps/shore_fixed/</code> (falling back to the parent folder).
+          Ports load from <code>data/world_full.json</code> only · export →
+          <code>data/port_map_editor_export.json</code>
         </p>
         <div class="legend">
           <span><i class="swatch" style="background: #1a4a6e"></i> sea</span>
@@ -56,6 +58,6 @@
         <span id="coords-text"></span>
       </footer>
     </div>
-    <script src="app.js"></script>
+    <script src="app.js?v=3"></script>
   </body>
 </html>

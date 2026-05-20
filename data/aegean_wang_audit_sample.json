@@ -1,0 +1,3146 @@
+{
+  "center": {
+    "x": 1122,
+    "y": 543
+  },
+  "step": 3,
+  "window_mismatches": [
+    {
+      "x": 1122,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 8,
+      "match": false,
+      "expected_topo": "horizontal_top_land",
+      "neighbors": {
+        "north": "diagonal_descending_right_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 525,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 525,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 12,
+      "match": false,
+      "expected_topo": "diagonal_rising_right_land",
+      "neighbors": {
+        "north": "diagonal_descending_right_land",
+        "east": "diagonal_rising_left_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 525,
+      "tile": "diagonal_rising_left_land",
+      "actual_mask": 9,
+      "expected_mask": 4,
+      "match": false,
+      "expected_topo": "vertical_right_land",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "diagonal_rising_left_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 2,
+      "match": false,
+      "expected_topo": "horizontal_bottom_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "diagonal_rising_left_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 2,
+      "match": false,
+      "expected_topo": "horizontal_bottom_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "diagonal_rising_left_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 4,
+      "match": false,
+      "expected_topo": "vertical_right_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_rising_left_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 531,
+      "tile": "diagonal_rising_left_land",
+      "actual_mask": 9,
+      "expected_mask": 4,
+      "match": false,
+      "expected_topo": "vertical_right_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_rising_left_land",
+        "south": "vertical_right_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 531,
+      "tile": "diagonal_rising_left_land",
+      "actual_mask": 9,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "horizontal_bottom_land",
+        "west": "diagonal_rising_left_land"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 534,
+      "tile": "vertical_right_land",
+      "actual_mask": 4,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "diagonal_rising_left_land",
+        "east": "horizontal_bottom_land",
+        "south": "vertical_right_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 534,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 3,
+      "match": false,
+      "expected_topo": "diagonal_descending_left_land",
+      "neighbors": {
+        "north": "diagonal_rising_left_land",
+        "east": "horizontal_bottom_land",
+        "south": "totally_land",
+        "west": "vertical_right_land"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 537,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 2,
+      "match": false,
+      "expected_topo": "horizontal_bottom_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "vertical_right_land",
+        "south": "diagonal_rising_left_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 540,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 6,
+      "match": false,
+      "expected_topo": "diagonal_descending_right_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_rising_left_land",
+        "south": "diagonal_rising_left_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 540,
+      "tile": "diagonal_rising_left_land",
+      "actual_mask": 9,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "horizontal_bottom_land",
+        "south": "horizontal_bottom_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 540,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 6,
+      "match": false,
+      "expected_topo": "diagonal_descending_right_land",
+      "neighbors": {
+        "north": "vertical_right_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "diagonal_rising_left_land"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 540,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "horizontal_bottom_land"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 543,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 4,
+      "match": false,
+      "expected_topo": "vertical_right_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_rising_left_land",
+        "south": "horizontal_bottom_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 543,
+      "tile": "diagonal_rising_left_land",
+      "actual_mask": 9,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "horizontal_bottom_land",
+        "south": "horizontal_bottom_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 543,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 6,
+      "match": false,
+      "expected_topo": "diagonal_descending_right_land",
+      "neighbors": {
+        "north": "diagonal_rising_left_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "diagonal_rising_left_land"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 543,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "horizontal_bottom_land"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 546,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "horizontal_bottom_land",
+        "south": "diagonal_descending_right_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 546,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 6,
+      "match": false,
+      "expected_topo": "diagonal_descending_right_land",
+      "neighbors": {
+        "north": "diagonal_rising_left_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_bottom_land"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 546,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_bottom_land"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 549,
+      "tile": "diagonal_descending_right_land",
+      "actual_mask": 6,
+      "expected_mask": 8,
+      "match": false,
+      "expected_topo": "horizontal_top_land",
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 549,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 9,
+      "match": false,
+      "expected_topo": "diagonal_rising_left_land",
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "diagonal_descending_right_land"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 549,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 12,
+      "match": false,
+      "expected_topo": "diagonal_rising_right_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "diagonal_descending_right_land",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 549,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 552,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 8,
+      "match": false,
+      "expected_topo": "horizontal_top_land",
+      "neighbors": {
+        "north": "diagonal_descending_right_land",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 552,
+      "tile": "diagonal_descending_right_land",
+      "actual_mask": 6,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 552,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 13,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "vertical_right_land",
+        "west": "diagonal_descending_right_land"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 552,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 555,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 8,
+      "match": false,
+      "expected_topo": "horizontal_top_land",
+      "neighbors": {
+        "north": "diagonal_descending_right_land",
+        "east": "vertical_right_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 558,
+      "tile": "diagonal_descending_right_land",
+      "actual_mask": 6,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "vertical_right_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 558,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 9,
+      "match": false,
+      "expected_topo": "diagonal_rising_left_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "diagonal_descending_right_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 558,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 558,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 8,
+      "match": false,
+      "expected_topo": "horizontal_top_land",
+      "neighbors": {
+        "north": "diagonal_descending_right_land",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 561,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 561,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_top_land"
+      }
+    }
+  ],
+  "all_cells_in_window": [
+    {
+      "x": 1104,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 8,
+      "match": false,
+      "expected_topo": "horizontal_top_land",
+      "neighbors": {
+        "north": "diagonal_descending_right_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 525,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 525,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "diagonal_rising_left_land",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 525,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 12,
+      "match": false,
+      "expected_topo": "diagonal_rising_right_land",
+      "neighbors": {
+        "north": "diagonal_descending_right_land",
+        "east": "diagonal_rising_left_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 525,
+      "tile": "diagonal_rising_left_land",
+      "actual_mask": 9,
+      "expected_mask": 4,
+      "match": false,
+      "expected_topo": "vertical_right_land",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "diagonal_rising_left_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 2,
+      "match": false,
+      "expected_topo": "horizontal_bottom_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "diagonal_rising_left_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 2,
+      "match": false,
+      "expected_topo": "horizontal_bottom_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "diagonal_rising_left_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 528,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "diagonal_rising_left_land",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 4,
+      "match": false,
+      "expected_topo": "vertical_right_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_rising_left_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 531,
+      "tile": "diagonal_rising_left_land",
+      "actual_mask": 9,
+      "expected_mask": 4,
+      "match": false,
+      "expected_topo": "vertical_right_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_rising_left_land",
+        "south": "vertical_right_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 531,
+      "tile": "diagonal_rising_left_land",
+      "actual_mask": 9,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "horizontal_bottom_land",
+        "west": "diagonal_rising_left_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "horizontal_bottom_land",
+        "west": "diagonal_rising_left_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 531,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_descending_right_land",
+        "south": "horizontal_bottom_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 534,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 534,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 534,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 534,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 534,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 534,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 534,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 534,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 534,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "vertical_right_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 534,
+      "tile": "vertical_right_land",
+      "actual_mask": 4,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "diagonal_rising_left_land",
+        "east": "horizontal_bottom_land",
+        "south": "vertical_right_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 534,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 3,
+      "match": false,
+      "expected_topo": "diagonal_descending_left_land",
+      "neighbors": {
+        "north": "diagonal_rising_left_land",
+        "east": "horizontal_bottom_land",
+        "south": "totally_land",
+        "west": "vertical_right_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 534,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 2,
+      "match": true,
+      "expected_topo": "horizontal_bottom_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "horizontal_bottom_land",
+        "south": "totally_land",
+        "west": "horizontal_bottom_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 534,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 2,
+      "match": true,
+      "expected_topo": "horizontal_bottom_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "horizontal_bottom_land",
+        "south": "totally_land",
+        "west": "horizontal_bottom_land"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 537,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 537,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 537,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 537,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 537,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 537,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 537,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 537,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 537,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 2,
+      "match": false,
+      "expected_topo": "horizontal_bottom_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "vertical_right_land",
+        "south": "diagonal_rising_left_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 537,
+      "tile": "vertical_right_land",
+      "actual_mask": 4,
+      "expected_mask": 4,
+      "match": true,
+      "expected_topo": "vertical_right_land",
+      "neighbors": {
+        "north": "vertical_right_land",
+        "east": "totally_land",
+        "south": "horizontal_bottom_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 537,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "vertical_right_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 537,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 537,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 540,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 540,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 540,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 540,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 540,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 540,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 540,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 540,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 6,
+      "match": false,
+      "expected_topo": "diagonal_descending_right_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_rising_left_land",
+        "south": "diagonal_rising_left_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 540,
+      "tile": "diagonal_rising_left_land",
+      "actual_mask": 9,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "horizontal_bottom_land",
+        "south": "horizontal_bottom_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 540,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 6,
+      "match": false,
+      "expected_topo": "diagonal_descending_right_land",
+      "neighbors": {
+        "north": "vertical_right_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "diagonal_rising_left_land"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 540,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "horizontal_bottom_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 540,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 540,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 543,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 543,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 543,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 543,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 543,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 543,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 543,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 4,
+      "match": false,
+      "expected_topo": "vertical_right_land",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_rising_left_land",
+        "south": "horizontal_bottom_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 543,
+      "tile": "diagonal_rising_left_land",
+      "actual_mask": 9,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "horizontal_bottom_land",
+        "south": "horizontal_bottom_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 543,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 6,
+      "match": false,
+      "expected_topo": "diagonal_descending_right_land",
+      "neighbors": {
+        "north": "diagonal_rising_left_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "diagonal_rising_left_land"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 543,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "horizontal_bottom_land"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 543,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 543,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 543,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 546,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 546,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 546,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 546,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 546,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 546,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "horizontal_bottom_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 546,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "horizontal_bottom_land",
+        "south": "diagonal_descending_right_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 546,
+      "tile": "horizontal_bottom_land",
+      "actual_mask": 2,
+      "expected_mask": 6,
+      "match": false,
+      "expected_topo": "diagonal_descending_right_land",
+      "neighbors": {
+        "north": "diagonal_rising_left_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_bottom_land"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 546,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_bottom_land"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 546,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 546,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 546,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 546,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 549,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 549,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 549,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 549,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 549,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 549,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_descending_right_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 549,
+      "tile": "diagonal_descending_right_land",
+      "actual_mask": 6,
+      "expected_mask": 8,
+      "match": false,
+      "expected_topo": "horizontal_top_land",
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 549,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 9,
+      "match": false,
+      "expected_topo": "diagonal_rising_left_land",
+      "neighbors": {
+        "north": "horizontal_bottom_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "diagonal_descending_right_land"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 549,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 12,
+      "match": false,
+      "expected_topo": "diagonal_rising_right_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "diagonal_descending_right_land",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 549,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 549,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 549,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 549,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 552,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 552,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 552,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 552,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 552,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 552,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 552,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 8,
+      "match": false,
+      "expected_topo": "horizontal_top_land",
+      "neighbors": {
+        "north": "diagonal_descending_right_land",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 552,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "diagonal_descending_right_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 552,
+      "tile": "diagonal_descending_right_land",
+      "actual_mask": 6,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 552,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 13,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "vertical_right_land",
+        "west": "diagonal_descending_right_land"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 552,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 552,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 552,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 555,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 555,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 555,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 555,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 555,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 555,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 555,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 555,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 555,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 8,
+      "match": false,
+      "expected_topo": "horizontal_top_land",
+      "neighbors": {
+        "north": "diagonal_descending_right_land",
+        "east": "vertical_right_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 555,
+      "tile": "vertical_right_land",
+      "actual_mask": 4,
+      "expected_mask": 4,
+      "match": true,
+      "expected_topo": "vertical_right_land",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "totally_land",
+        "south": "diagonal_descending_right_land",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 555,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "vertical_right_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 555,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 555,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 15,
+      "match": true,
+      "expected_topo": "totally_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "totally_land",
+        "west": "totally_land"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 558,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 558,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 558,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 558,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 558,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 558,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 558,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 558,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 558,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "diagonal_descending_right_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 558,
+      "tile": "diagonal_descending_right_land",
+      "actual_mask": 6,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "vertical_right_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 558,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 9,
+      "match": false,
+      "expected_topo": "diagonal_rising_left_land",
+      "neighbors": {
+        "north": "totally_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "diagonal_descending_right_land"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 558,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 558,
+      "tile": "totally_land",
+      "actual_mask": 15,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_top_land"
+      }
+    },
+    {
+      "x": 1104,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1107,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1110,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1113,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1116,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1119,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1122,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1125,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1128,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "totally_sea",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1131,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 8,
+      "match": false,
+      "expected_topo": "horizontal_top_land",
+      "neighbors": {
+        "north": "diagonal_descending_right_land",
+        "east": "totally_sea",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1134,
+      "y": 561,
+      "tile": "totally_sea",
+      "actual_mask": 0,
+      "expected_mask": 0,
+      "match": true,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1137,
+      "y": 561,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 0,
+      "match": false,
+      "expected_topo": "totally_sea",
+      "neighbors": {
+        "north": "horizontal_top_land",
+        "east": "horizontal_top_land",
+        "south": "totally_sea",
+        "west": "totally_sea"
+      }
+    },
+    {
+      "x": 1140,
+      "y": 561,
+      "tile": "horizontal_top_land",
+      "actual_mask": 8,
+      "expected_mask": 14,
+      "match": false,
+      "expected_topo": null,
+      "neighbors": {
+        "north": "totally_land",
+        "east": "totally_land",
+        "south": "horizontal_top_land",
+        "west": "horizontal_top_land"
+      }
+    }
+  ]
+}

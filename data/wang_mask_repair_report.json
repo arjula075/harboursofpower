@@ -1,0 +1,587 @@
+{
+  "dry_run": false,
+  "files": [
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\aegean_tilemap.json",
+      "cells": 40482,
+      "step": 3,
+      "mismatches_before": 3618,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          3618,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 218,
+          "cape_north_land": 290,
+          "cape_south_land": 258,
+          "cape_west_land": 187,
+          "diagonal_descending_left_land": 305,
+          "diagonal_descending_right_land": 228,
+          "diagonal_rising_left_land": 229,
+          "diagonal_rising_right_land": 368,
+          "horizontal_bottom_land": 171,
+          "horizontal_channel_land": 7,
+          "horizontal_top_land": 203,
+          "totally_land": 15738,
+          "totally_sea": 22020,
+          "vertical_left_land": 108,
+          "vertical_right_land": 152
+        }
+      },
+      "compliance_after": {
+        "cells": 40482,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\egypt_cyrenaica_tilemap.json",
+      "cells": 33098,
+      "step": 3,
+      "mismatches_before": 2187,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          2187,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 164,
+          "cape_north_land": 327,
+          "cape_south_land": 348,
+          "cape_west_land": 118,
+          "diagonal_descending_left_land": 142,
+          "diagonal_descending_right_land": 218,
+          "diagonal_rising_left_land": 151,
+          "diagonal_rising_right_land": 167,
+          "horizontal_bottom_land": 170,
+          "horizontal_top_land": 124,
+          "totally_land": 15769,
+          "totally_sea": 15252,
+          "vertical_channel_land": 1,
+          "vertical_left_land": 44,
+          "vertical_right_land": 103
+        }
+      },
+      "compliance_after": {
+        "cells": 33098,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\iberia_gaul_tilemap.json",
+      "cells": 44196,
+      "step": 3,
+      "mismatches_before": 1453,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          1453,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 204,
+          "cape_north_land": 271,
+          "cape_south_land": 255,
+          "cape_west_land": 236,
+          "diagonal_descending_left_land": 91,
+          "diagonal_descending_right_land": 135,
+          "diagonal_rising_left_land": 183,
+          "diagonal_rising_right_land": 75,
+          "horizontal_bottom_land": 101,
+          "horizontal_top_land": 85,
+          "totally_land": 33740,
+          "totally_sea": 8737,
+          "vertical_channel_land": 3,
+          "vertical_left_land": 56,
+          "vertical_right_land": 24
+        }
+      },
+      "compliance_after": {
+        "cells": 44196,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\levant_cyprus_tilemap.json",
+      "cells": 25740,
+      "step": 3,
+      "mismatches_before": 941,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          941,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 151,
+          "cape_north_land": 233,
+          "cape_south_land": 240,
+          "cape_west_land": 112,
+          "diagonal_descending_left_land": 32,
+          "diagonal_descending_right_land": 124,
+          "diagonal_rising_left_land": 78,
+          "diagonal_rising_right_land": 64,
+          "horizontal_bottom_land": 57,
+          "horizontal_top_land": 64,
+          "totally_land": 19159,
+          "totally_sea": 5361,
+          "vertical_left_land": 12,
+          "vertical_right_land": 53
+        }
+      },
+      "compliance_after": {
+        "cells": 25740,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\north_africa_tilemap.json",
+      "cells": 45129,
+      "step": 3,
+      "mismatches_before": 1451,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          1451,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 130,
+          "cape_north_land": 232,
+          "cape_south_land": 335,
+          "cape_west_land": 146,
+          "diagonal_descending_left_land": 176,
+          "diagonal_descending_right_land": 151,
+          "diagonal_rising_left_land": 64,
+          "diagonal_rising_right_land": 57,
+          "horizontal_bottom_land": 180,
+          "horizontal_top_land": 34,
+          "totally_land": 28733,
+          "totally_sea": 14811,
+          "vertical_left_land": 46,
+          "vertical_right_land": 34
+        }
+      },
+      "compliance_after": {
+        "cells": 45129,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\propontis_pontus_tilemap.json",
+      "cells": 42042,
+      "step": 3,
+      "mismatches_before": 2469,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          2469,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 243,
+          "cape_north_land": 435,
+          "cape_south_land": 380,
+          "cape_west_land": 222,
+          "diagonal_descending_left_land": 138,
+          "diagonal_descending_right_land": 161,
+          "diagonal_rising_left_land": 195,
+          "diagonal_rising_right_land": 214,
+          "horizontal_bottom_land": 156,
+          "horizontal_channel_land": 1,
+          "horizontal_top_land": 139,
+          "totally_land": 28846,
+          "totally_sea": 10765,
+          "vertical_left_land": 84,
+          "vertical_right_land": 63
+        }
+      },
+      "compliance_after": {
+        "cells": 42042,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\sicily_ionian_tilemap.json",
+      "cells": 28980,
+      "step": 3,
+      "mismatches_before": 1902,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          1902,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 175,
+          "cape_north_land": 170,
+          "cape_south_land": 136,
+          "cape_west_land": 167,
+          "diagonal_descending_left_land": 160,
+          "diagonal_descending_right_land": 118,
+          "diagonal_rising_left_land": 144,
+          "diagonal_rising_right_land": 202,
+          "horizontal_bottom_land": 76,
+          "horizontal_top_land": 89,
+          "totally_land": 8576,
+          "totally_sea": 18761,
+          "vertical_left_land": 96,
+          "vertical_right_land": 110
+        }
+      },
+      "compliance_after": {
+        "cells": 28980,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\tyrrhenian_tilemap.json",
+      "cells": 27840,
+      "step": 3,
+      "mismatches_before": 2250,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          2250,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 192,
+          "cape_north_land": 251,
+          "cape_south_land": 206,
+          "cape_west_land": 149,
+          "diagonal_descending_left_land": 168,
+          "diagonal_descending_right_land": 154,
+          "diagonal_rising_left_land": 156,
+          "diagonal_rising_right_land": 256,
+          "horizontal_bottom_land": 107,
+          "horizontal_top_land": 125,
+          "totally_land": 10913,
+          "totally_sea": 14952,
+          "vertical_channel_land": 2,
+          "vertical_left_land": 115,
+          "vertical_right_land": 94
+        }
+      },
+      "compliance_after": {
+        "cells": 27840,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\shore_fixed\\aegean_tilemap.json",
+      "cells": 40482,
+      "step": 3,
+      "mismatches_before": 4483,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          4483,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 246,
+          "cape_north_land": 328,
+          "cape_south_land": 300,
+          "cape_west_land": 217,
+          "diagonal_descending_left_land": 314,
+          "diagonal_descending_right_land": 216,
+          "diagonal_rising_left_land": 215,
+          "diagonal_rising_right_land": 371,
+          "horizontal_bottom_land": 207,
+          "horizontal_channel_land": 11,
+          "horizontal_top_land": 243,
+          "totally_land": 14279,
+          "totally_sea": 23213,
+          "vertical_channel_land": 4,
+          "vertical_left_land": 136,
+          "vertical_right_land": 182
+        }
+      },
+      "compliance_after": {
+        "cells": 40482,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\shore_fixed\\egypt_cyrenaica_tilemap.json",
+      "cells": 33098,
+      "step": 3,
+      "mismatches_before": 2539,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          2539,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 175,
+          "cape_north_land": 321,
+          "cape_south_land": 351,
+          "cape_west_land": 129,
+          "diagonal_descending_left_land": 133,
+          "diagonal_descending_right_land": 214,
+          "diagonal_rising_left_land": 138,
+          "diagonal_rising_right_land": 149,
+          "horizontal_bottom_land": 180,
+          "horizontal_channel_land": 1,
+          "horizontal_top_land": 130,
+          "totally_land": 14986,
+          "totally_sea": 16018,
+          "vertical_channel_land": 3,
+          "vertical_left_land": 55,
+          "vertical_right_land": 115
+        }
+      },
+      "compliance_after": {
+        "cells": 33098,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\shore_fixed\\iberia_gaul_tilemap.json",
+      "cells": 44196,
+      "step": 3,
+      "mismatches_before": 1770,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          1770,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 211,
+          "cape_north_land": 278,
+          "cape_south_land": 264,
+          "cape_west_land": 240,
+          "diagonal_descending_left_land": 88,
+          "diagonal_descending_right_land": 133,
+          "diagonal_rising_left_land": 176,
+          "diagonal_rising_right_land": 73,
+          "horizontal_bottom_land": 108,
+          "horizontal_top_land": 94,
+          "totally_land": 33186,
+          "totally_sea": 9244,
+          "vertical_left_land": 68,
+          "vertical_right_land": 33
+        }
+      },
+      "compliance_after": {
+        "cells": 44196,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\shore_fixed\\levant_cyprus_tilemap.json",
+      "cells": 25740,
+      "step": 3,
+      "mismatches_before": 1187,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          1187,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 152,
+          "cape_north_land": 235,
+          "cape_south_land": 243,
+          "cape_west_land": 115,
+          "diagonal_descending_left_land": 31,
+          "diagonal_descending_right_land": 120,
+          "diagonal_rising_left_land": 75,
+          "diagonal_rising_right_land": 60,
+          "horizontal_bottom_land": 59,
+          "horizontal_top_land": 67,
+          "totally_land": 18820,
+          "totally_sea": 5692,
+          "vertical_left_land": 13,
+          "vertical_right_land": 58
+        }
+      },
+      "compliance_after": {
+        "cells": 25740,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\shore_fixed\\north_africa_tilemap.json",
+      "cells": 45129,
+      "step": 3,
+      "mismatches_before": 1710,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          1710,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 132,
+          "cape_north_land": 233,
+          "cape_south_land": 335,
+          "cape_west_land": 150,
+          "diagonal_descending_left_land": 171,
+          "diagonal_descending_right_land": 146,
+          "diagonal_rising_left_land": 62,
+          "diagonal_rising_right_land": 51,
+          "horizontal_bottom_land": 185,
+          "horizontal_top_land": 35,
+          "totally_land": 28216,
+          "totally_sea": 15323,
+          "vertical_channel_land": 1,
+          "vertical_left_land": 50,
+          "vertical_right_land": 39
+        }
+      },
+      "compliance_after": {
+        "cells": 45129,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\shore_fixed\\propontis_pontus_tilemap.json",
+      "cells": 42042,
+      "step": 3,
+      "mismatches_before": 3152,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          3152,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 263,
+          "cape_north_land": 463,
+          "cape_south_land": 415,
+          "cape_west_land": 248,
+          "diagonal_descending_left_land": 146,
+          "diagonal_descending_right_land": 171,
+          "diagonal_rising_left_land": 204,
+          "diagonal_rising_right_land": 209,
+          "horizontal_bottom_land": 177,
+          "horizontal_channel_land": 4,
+          "horizontal_top_land": 169,
+          "totally_land": 27822,
+          "totally_sea": 11567,
+          "vertical_channel_land": 1,
+          "vertical_left_land": 99,
+          "vertical_right_land": 84
+        }
+      },
+      "compliance_after": {
+        "cells": 42042,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\shore_fixed\\sicily_ionian_tilemap.json",
+      "cells": 28980,
+      "step": 3,
+      "mismatches_before": 2365,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          2365,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 178,
+          "cape_north_land": 169,
+          "cape_south_land": 143,
+          "cape_west_land": 178,
+          "diagonal_descending_left_land": 160,
+          "diagonal_descending_right_land": 112,
+          "diagonal_rising_left_land": 138,
+          "diagonal_rising_right_land": 186,
+          "horizontal_bottom_land": 82,
+          "horizontal_top_land": 98,
+          "totally_land": 7876,
+          "totally_sea": 19436,
+          "vertical_channel_land": 2,
+          "vertical_left_land": 101,
+          "vertical_right_land": 121
+        }
+      },
+      "compliance_after": {
+        "cells": 28980,
+        "mask_mismatch": 0
+      }
+    },
+    {
+      "path": "docs\\chart_area_tilemaps_and_maps\\shore_fixed\\tyrrhenian_tilemap.json",
+      "cells": 27840,
+      "step": 3,
+      "mismatches_before": 2640,
+      "mismatches_after": 0,
+      "reassign": {
+        "passes": 2,
+        "changes_per_pass": [
+          2640,
+          0
+        ],
+        "compliance_mismatch": 0,
+        "final_counts": {
+          "cape_east_land": 195,
+          "cape_north_land": 256,
+          "cape_south_land": 218,
+          "cape_west_land": 162,
+          "diagonal_descending_left_land": 162,
+          "diagonal_descending_right_land": 144,
+          "diagonal_rising_left_land": 149,
+          "diagonal_rising_right_land": 233,
+          "horizontal_bottom_land": 113,
+          "horizontal_channel_land": 1,
+          "horizontal_top_land": 137,
+          "totally_land": 10081,
+          "totally_sea": 15750,
+          "vertical_channel_land": 1,
+          "vertical_left_land": 126,
+          "vertical_right_land": 112
+        }
+      },
+      "compliance_after": {
+        "cells": 27840,
+        "mask_mismatch": 0
+      }
+    }
+  ],
+  "totals": {
+    "files": 16,
+    "cells": 575014,
+    "mismatches_before": 36117,
+    "mismatches_after": 0,
+    "cell_updates": 36117
+  }
+}
