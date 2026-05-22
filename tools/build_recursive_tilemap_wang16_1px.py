@@ -229,6 +229,11 @@ def collect_tile_types(counts: Counter) -> list[str]:
     return types
 
 
+def land_from_mask_png(path: Path) -> np.ndarray:
+    rgb = np.array(Image.open(path).convert("RGB"))
+    return rgb[:, :, 0] > 100
+
+
 def write_mask_png(path: Path, land: np.ndarray) -> None:
     img = np.zeros((LOG_H, LOG_W, 3), dtype=np.uint8)
     img[land] = (180, 160, 120)
@@ -334,6 +339,49 @@ def build_payload(
     }
 
 
+def write_chart_area_exports(
+    chart_dir: Path,
+    index: dict,
+    tiles: list[dict],
+    land: np.ndarray,
+    *,
+    src_label: str,
+    source_mode: str,
+) -> None:
+    """Write per-area JSON + map PNG using bounds from chart_area_index.json."""
+    chart_dir.mkdir(parents=True, exist_ok=True)
+    meta = {
+        "source_tilemap": "mediterranean_recursive_tilemap_wang16_1px.json",
+        "note": (
+            "Parallel 1px corner-Wang-16 chart cuts (same bounds as chart_area_tilemaps_and_maps). "
+            "Interior: totally_land / totally_sea; coast: corner bitmask names."
+        ),
+        "chart_areas": index["chart_areas"],
+    }
+    (chart_dir / "chart_area_index.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+
+    for area in index["chart_areas"]:
+        aid = area["id"]
+        bounds = area["bounds"]
+        area_tiles = extract_chart_area(tiles, bounds)
+        area_types = collect_tile_types(Counter(t["tile"] for t in area_tiles))
+        area_counts = Counter(t["tile"] for t in area_tiles)
+        area_payload = build_payload(
+            area_tiles,
+            area_types,
+            area_counts,
+            source_image=src_label,
+            chart_bounds=bounds,
+            source_mode=source_mode,
+        )
+        area_payload["chart_area_id"] = aid
+        out_json = chart_dir / f"{aid}_tilemap.json"
+        with open(out_json, "w", encoding="utf-8") as f:
+            json.dump(area_payload, f, separators=(",", ":"))
+        write_area_map_png(chart_dir / f"{aid}_map.png", land, bounds)
+        print(f"  {aid}: {len(area_tiles):,} tiles -> {out_json.name}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -359,7 +407,65 @@ def main() -> None:
         action="store_true",
         help="Only rewrite chart-area *_map.png from land mask (fast editor basemap refresh)",
     )
+    parser.add_argument(
+        "--split-only",
+        action="store_true",
+        help=(
+            "Split existing full-map JSON into chart-area files using bounds from "
+            "chart_area_tilemaps_and_maps/chart_area_index.json (no 3px/PNG rebuild)"
+        ),
+    )
+    parser.add_argument(
+        "--full-tilemap",
+        type=Path,
+        default=None,
+        help="Full-map JSON for --split-only (default: output-dir/mediterranean_recursive_tilemap_wang16_1px.json)",
+    )
+    parser.add_argument(
+        "--yes",
+        action="store_true",
+        help="Skip Phase A 'Are you sure?' prompt (automation only)",
+    )
     args = parser.parse_args()
+
+    if args.maps_only and args.split_only:
+        raise SystemExit("--maps-only and --split-only are mutually exclusive")
+
+    if not (args.maps_only or args.split_only):
+        from chunk_map_phase_a import confirm_tile_generation
+
+        if not confirm_tile_generation(assume_yes=args.yes):
+            raise SystemExit("Aborted.")
+
+    out_dir = args.output_dir
+    chart_dir = args.chart_dir
+    index = json.loads(CHART_INDEX_SRC.read_text(encoding="utf-8"))
+
+    if args.split_only:
+        full_path = args.full_tilemap or (out_dir / "mediterranean_recursive_tilemap_wang16_1px.json")
+        mask_path = out_dir / "mediterranean_recursive_tilemap_wang16_1px_mask.png"
+        if not full_path.is_file():
+            raise SystemExit(f"Missing full tilemap: {full_path}")
+        print(f"Loading {full_path.name} …")
+        data = json.loads(full_path.read_text(encoding="utf-8"))
+        tiles = data.get("tiles", [])
+        if not isinstance(tiles, list):
+            raise SystemExit("full tilemap has no tiles[]")
+        src_label = str(data.get("source_image", SOURCE_TILEMAP_3PX.name))
+        pipeline = data.get("classification_pipeline", {})
+        source_mode = str(pipeline.get("source_mode", "3px_upscale"))
+        if mask_path.is_file():
+            land = land_from_mask_png(mask_path)
+        else:
+            print("Mask PNG missing — building land grid from totally_land tiles (slow) …")
+            land = np.zeros((LOG_H, LOG_W), dtype=bool)
+            for t in tiles:
+                if t.get("tile") == FULL_LAND:
+                    land[int(t["y"]), int(t["x"])] = True
+        print(f"Splitting into {len(index['chart_areas'])} chart areas …")
+        write_chart_area_exports(chart_dir, index, tiles, land, src_label=src_label, source_mode=source_mode)
+        print("Done (split only).")
+        return
 
     if args.from_png:
         if not SOURCE_IMAGE.is_file():
@@ -385,15 +491,12 @@ def main() -> None:
         land = land_mask_from_3px_tilemap(SOURCE_TILEMAP_3PX)
         source_mode = "3px_upscale"
 
-    out_dir = args.output_dir
     out_dir.mkdir(parents=True, exist_ok=True)
     mask_path = out_dir / "mediterranean_recursive_tilemap_wang16_1px_mask.png"
     write_mask_png(mask_path, land)
     print(f"Wrote {mask_path}")
 
-    chart_dir = args.chart_dir
     chart_dir.mkdir(parents=True, exist_ok=True)
-    index = json.loads(CHART_INDEX_SRC.read_text(encoding="utf-8"))
     if args.maps_only:
         for area in index["chart_areas"]:
             aid = area["id"]
@@ -421,41 +524,11 @@ def main() -> None:
     print(f"Wrote {preview_path}")
 
     if args.skip_chart_areas:
+        print("Done (full map only).")
         return
 
-    new_index = {
-        "source_tilemap": "mediterranean_recursive_tilemap_wang16_1px.json",
-        "note": (
-            "Parallel 1px corner-Wang-16 chart cuts (same bounds as chart_area_tilemaps_and_maps). "
-            "Interior: totally_land / totally_sea; coast: corner bitmask names."
-        ),
-        "chart_areas": index["chart_areas"],
-    }
-    (chart_dir / "chart_area_index.json").write_text(
-        json.dumps(new_index, indent=2), encoding="utf-8"
-    )
-
-    for area in index["chart_areas"]:
-        aid = area["id"]
-        bounds = area["bounds"]
-        area_tiles = extract_chart_area(tiles, bounds)
-        area_types = collect_tile_types(Counter(t["tile"] for t in area_tiles))
-        area_counts = Counter(t["tile"] for t in area_tiles)
-        area_payload = build_payload(
-            area_tiles,
-            area_types,
-            area_counts,
-            source_image=src_label,
-            chart_bounds=bounds,
-            source_mode=source_mode,
-        )
-        area_payload["chart_area_id"] = aid
-        out_json = chart_dir / f"{aid}_tilemap.json"
-        with open(out_json, "w", encoding="utf-8") as f:
-            json.dump(area_payload, f, separators=(",", ":"))
-        write_area_map_png(chart_dir / f"{aid}_map.png", land, bounds)
-        print(f"  {aid}: {len(area_tiles):,} tiles -> {out_json.name}")
-
+    print(f"Splitting into {len(index['chart_areas'])} chart areas …")
+    write_chart_area_exports(chart_dir, index, tiles, land, src_label=src_label, source_mode=source_mode)
     print("Done.")
 
 

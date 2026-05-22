@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "source_master": "mediterranean_recursive_tilemap_wang16_1px_mask.png",
+  "world_width": 2000,
+  "world_height": 1000,
+  "logical_width": 2000,
+  "logical_height": 1000,
+  "chunk_size": 2048,
+  "chunks": [
+    {
+      "id": "0_0",
+      "cx": 0,
+      "cy": 0,
+      "path": "res://docs/maps/chunks/med_0_0.webp",
+      "x0": 0,
+      "y0": 0,
+      "x1": 2000,
+      "y1": 1000
+    }
+  ]
+}

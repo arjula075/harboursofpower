@@ -972,16 +972,21 @@ func _show_routes_fullscreen_overlay(rows: Array) -> void:
 	pay_refresh.pressed.connect(_on_pay_route_refresh_pressed)
 	bar.add_child(pay_refresh)
 	var hint := Label.new()
+	var chart_kind := "chunk map" if WorldMapChart.is_available() else "sea chart"
 	hint.text = (
-		"Drag pan · wheel zoom · click port to sail · default width %d map units (of %d). Risk: marker color + hover line."
-		% [int(HarboursChartGrid.ROUTES_LOCAL_VIEW_WIDTH_MAP), HarboursChartGrid.LOGICAL_GRID_WIDTH]
+		"%s · drag pan · wheel zoom · click port to sail · default width %d map units (of %d). Risk: marker color + hover line."
+		% [chart_kind, int(HarboursChartGrid.ROUTES_LOCAL_VIEW_WIDTH_MAP), HarboursChartGrid.LOGICAL_GRID_WIDTH]
 	)
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hint.add_theme_font_size_override("font_size", 10)
 	bar.add_child(hint)
 	v.add_child(bar)
-	var map_chart := RoutesMapChart.new()
+	var map_chart: Control
+	if WorldMapChart.is_available():
+		map_chart = WorldMapChart.new()
+	else:
+		map_chart = RoutesMapChart.new()
 	map_chart.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	map_chart.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	map_chart.setup(_gs, rows)

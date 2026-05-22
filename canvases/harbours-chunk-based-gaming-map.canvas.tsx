@@ -36,6 +36,12 @@ function nextStatus(s: TodoStatus): TodoStatus {
 
 const INITIAL_TRACKER: TodoItem[] = [
   {
+    id: "a-phase-confirm",
+    content:
+      "Phase A only: before tile coastline generation, prompt “Are you sure?” every time (tools/chunk_map_phase_a.py; orchestrator + build_recursive_tilemap_wang16; pass --yes for scripts).",
+    status: "completed",
+  },
+  {
     id: "c0-roles",
     content:
       "Document three layers in repo README snippet: Visual (chunks), Gameplay (world_full lanes/ports), Data (mask/grid from tile JSON).",
@@ -44,32 +50,32 @@ const INITIAL_TRACKER: TodoItem[] = [
   {
     id: "c1-basemap-master",
     content:
-      "Pick one master visual: stylized 4096×2048 (2× logical 2000×1000) from reference PNG + coast cleanup; store under res://maps/mediterranean/ or docs/maps/.",
-    status: "pending",
+      "Master: mediterranean_recursive_tilemap_wang16_1px_mask.png (2000×1000) → docs/maps/chunks via slice tool.",
+    status: "completed",
   },
   {
     id: "c1-slice-tool",
     content:
-      "tools/slice_map_chunks.py — input master WEBP/PNG, CHUNK_SIZE (default 2048), emit med_{cx}_{cy}.webp + maps/chunk_manifest.json (world px bounds).",
-    status: "pending",
+      "tools/slice_map_chunks.py — CHUNK_SIZE 2048, med_{cx}_{cy}.webp + data/maps/chunk_manifest.json.",
+    status: "completed",
   },
   {
     id: "c2-godot-root",
     content:
-      "scenes/map/WorldMapRoot.tscn: MapVisuals (Node2D), NavigationOverlay, DataLayers (optional), Ships — no TileMap for coast art.",
-    status: "pending",
+      "WorldMapChart Control in Routes overlay (draw-time chunk blit; SubViewport/WorldMapRoot.tscn deferred).",
+    status: "completed",
   },
   {
     id: "c2-chunk-loader",
     content:
-      "scripts/map/chunk_loader.gd: load/unload Sprite2D chunks by camera AABB ± LOAD_RADIUS; chunk coord = floor(world_pos / CHUNK_SIZE).",
-    status: "pending",
+      "Chunk textures loaded from manifest in WorldMapChart; multi-chunk culling when manifest has 2+ entries.",
+    status: "completed",
   },
   {
     id: "c2-projection",
     content:
-      "Single ChartProjection: map_u/map_v (0..1) ↔ world pixels ↔ screen; ports/lanes/ships share it (reuse navigable-chart plan).",
-    status: "pending",
+      "scripts/map/chart_projection.gd — map_u/v ↔ logical pixels ↔ screen (shared pan/zoom).",
+    status: "completed",
   },
   {
     id: "c3-mask-export",
@@ -253,14 +259,23 @@ Parallel data (not rendered as tiles):
 
       <Divider />
 
+      <H2>Phase A — tile generation guard (only deliverable)</H2>
+      <Callout tone="warning" title="Are you sure?">
+        Phase A does not block tooling or remove tile-factory. It only adds a user-facing rule: whenever someone
+        starts coastline tile generation, ask <strong>Are you sure?</strong> every time. Implemented in{" "}
+        <Code>tools/chunk_map_phase_a.py</Code>; wired into <Code>tools/tile-factory/scripts/orchestrator.py</Code> (API /
+        mosaic commands) and <Code>tools/build_recursive_tilemap_wang16_1px.py</Code> (full rebuild; skipped for{" "}
+        <Code>--maps-only</Code> / <Code>--split-only</Code>). Use <Code>--yes</Code> only for automation.
+      </Callout>
+
       <H2>Migration path (low risk)</H2>
       <Table
         headers={["Phase", "Outcome", "Touches"]}
         rows={[
           [
-            "A — Freeze tile art spend",
-            "No new wang variants for player map; editors → mask + ports only",
-            "tools/build_recursive_tilemap_*",
+            "A — Tile gen guard",
+            "Prompt “Are you sure?” on every tile-generation CLI run; no other Phase A work",
+            "chunk_map_phase_a.py, orchestrator.py, build_recursive_tilemap_wang16_1px.py",
           ],
           [
             "B — Master + manifest",
@@ -370,9 +385,9 @@ Parallel data (not rendered as tiles):
 
       <H3>Recommended order</H3>
       <Text tone="secondary" size="small">
-        A → B (master + slice tool) → C (Godot chunks + projection, parallel with navigable-chart phases 1–4) → D (mask) →
-        E (lanes/ships per pirates roadmap) → F. Ship the smallest playable slice: chunked static map + port dots + lane
-        lines, no free sailing.
+        A is done when the confirm prompt ships (no further Phase A scope). Then B (master + slice tool) → C (Godot chunks
+        + projection, parallel with navigable-chart phases 1–4) → D (mask) → E (lanes/ships per pirates roadmap) → F.
+        Ship the smallest playable slice: chunked static map + port dots + lane lines, no free sailing.
       </Text>
 
       <Callout tone="neutral" title="First vertical slice (MVP)">

@@ -15,6 +15,7 @@ import json
 import math
 import mimetypes
 import os
+import sys
 from datetime import datetime, timezone
 from functools import lru_cache
 from http import HTTPStatus
@@ -24,6 +25,10 @@ from socketserver import TCPServer
 from urllib.parse import urlparse
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+TOOLS_DIR = REPO_ROOT / "tools"
+if str(TOOLS_DIR) not in sys.path:
+    sys.path.insert(0, str(TOOLS_DIR))
+
 STATIC_DIR = REPO_ROOT / "tools" / "port_map_editor_wang16_1px"
 DOCS_MAPS = REPO_ROOT / "docs" / "chart_area_tilemaps_and_maps_wang16_1px"
 WORLD_PATH = REPO_ROOT / "data" / "world_full.json"
@@ -174,6 +179,16 @@ def clear_snap_cache() -> None:
     _load_global_land_mask.cache_clear()
 
 
+def _snap_index_for_area_editing(area_id: str) -> SnapIndex:
+    """Snap index using in-memory terrain session tiles when that area is dirty."""
+    from terrain_edit_session import get_session
+
+    session = get_session(area_id)
+    if session is not None and session.dirty:
+        return SnapIndex(session.tiles, tile_size=1)
+    return _snap_index_for_area(area_id)
+
+
 @lru_cache(maxsize=1)
 def _load_global_land_mask():
     """Bool (LOG_H, LOG_W) land mask from the full-map mask PNG."""
@@ -235,6 +250,12 @@ class PortMapEditorWang16Handler(SimpleHTTPRequestHandler):
     def log_message(self, fmt: str, *args) -> None:
         print("[%s] %s" % (self.log_date_time_string(), fmt % args))
 
+    def end_headers(self) -> None:
+        path = urlparse(self.path).path
+        if path.endswith((".js", ".html", ".css")) or path in ("", "/", "/index.html"):
+            self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")
+        super().end_headers()
+
     def do_OPTIONS(self) -> None:
         self.send_response(HTTPStatus.NO_CONTENT)
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -246,8 +267,27 @@ class PortMapEditorWang16Handler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path
 
+        if path == "/api/terrain/status":
+            try:
+                from terrain_edit_session import disk_terrain_save_status, list_dirty_area_ids
+
+                dirty = list_dirty_area_ids()
+                _json_response(
+                    self,
+                    HTTPStatus.OK,
+                    {
+                        "unsaved_sessions": dirty,
+                        "disk": disk_terrain_save_status(),
+                    },
+                )
+            except Exception as exc:
+                _json_response(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"error": str(exc)})
+            return
+
         if path == "/api/bootstrap":
             try:
+                from terrain_edit_session import disk_terrain_save_status
+
                 index = _read_json(CHART_INDEX_PATH)
                 areas = index.get("chart_areas", [])
                 ports = _load_ports()
@@ -275,6 +315,7 @@ class PortMapEditorWang16Handler(SimpleHTTPRequestHandler):
                         "basemap": "land_sea_mask_crop",
                         "mask_version": _mask_version_token(),
                         "mask_path": str(GLOBAL_MASK_PATH.relative_to(REPO_ROOT)),
+                        "terrain_disk": disk_terrain_save_status(),
                     },
                 )
             except OSError as exc:
@@ -320,6 +361,28 @@ class PortMapEditorWang16Handler(SimpleHTTPRequestHandler):
             except Exception as exc:
                 print(f"tilemap {area_id} error: {exc}")
                 _json_response(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"error": str(exc)})
+            return
+
+        if path.startswith("/api/terrain/preview/"):
+            area_id = path.removeprefix("/api/terrain/preview/").strip("/")
+            if not area_id or ".." in area_id:
+                self.send_error(HTTPStatus.BAD_REQUEST)
+                return
+            try:
+                from terrain_edit_session import ensure_session, get_session, preview_png
+
+                session = get_session(area_id) or ensure_session(area_id)
+                body = preview_png(area_id)
+                self.send_response(HTTPStatus.OK)
+                self.send_header("Content-Type", "image/png")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Cache-Control", "no-store")
+                self.send_header("X-Preview-Version", str(session.preview_version))
+                self.end_headers()
+                self.wfile.write(body)
+            except Exception as exc:
+                print(f"terrain preview {area_id} error: {exc}")
+                self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR)
             return
 
         if path.startswith("/api/map-image/"):
@@ -377,7 +440,7 @@ class PortMapEditorWang16Handler(SimpleHTTPRequestHandler):
                 gx = float(body.get("gx", 0))
                 gy = float(body.get("gy", 0))
                 inland = bool(body.get("inland"))
-                idx = _snap_index_for_area(area_id)
+                idx = _snap_index_for_area_editing(area_id)
                 cx, cy, tile = idx.nearest(gx, gy, inland)
                 _json_response(
                     self,
@@ -385,6 +448,86 @@ class PortMapEditorWang16Handler(SimpleHTTPRequestHandler):
                     {"gx": cx, "gy": cy, "tile": tile, "global_x": round(cx), "global_y": round(cy)},
                 )
             except OSError as exc:
+                _json_response(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"error": str(exc)})
+            return
+
+        if parsed.path == "/api/terrain/session":
+            area_id = str(body.get("area_id", ""))
+            if not area_id or ".." in area_id:
+                _json_response(self, HTTPStatus.BAD_REQUEST, {"error": "invalid area_id"})
+                return
+            try:
+                from terrain_edit_session import ensure_session, get_session, load_chart_index
+
+                session = get_session(area_id) or ensure_session(area_id)
+                index = load_chart_index()
+                boundary = session.boundary_status(index)
+                _json_response(
+                    self,
+                    HTTPStatus.OK,
+                    {
+                        "area_id": area_id,
+                        "dirty": session.dirty,
+                        "paint_count": session.paint_count,
+                        "preview_version": session.preview_version,
+                        "preview_url": f"/api/terrain/preview/{area_id}",
+                        **boundary,
+                    },
+                )
+            except Exception as exc:
+                _json_response(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"error": str(exc)})
+            return
+
+        if parsed.path == "/api/terrain/paint":
+            area_id = str(body.get("area_id", ""))
+            terrain = str(body.get("terrain", "")).lower()
+            if not area_id or ".." in area_id:
+                _json_response(self, HTTPStatus.BAD_REQUEST, {"error": "invalid area_id"})
+                return
+            if terrain not in ("land", "sea"):
+                _json_response(self, HTTPStatus.BAD_REQUEST, {"error": "terrain must be land or sea"})
+                return
+            try:
+                from terrain_edit_session import paint_cell_global
+
+                gx = int(round(float(body.get("gx", 0))))
+                gy = int(round(float(body.get("gy", 0))))
+                result = paint_cell_global(area_id, gx, gy, land=terrain == "land")
+                _json_response(self, HTTPStatus.OK, result)
+            except ValueError as exc:
+                _json_response(self, HTTPStatus.BAD_REQUEST, {"error": str(exc)})
+            except Exception as exc:
+                _json_response(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"error": str(exc)})
+            return
+
+        if parsed.path == "/api/terrain/discard":
+            area_id = str(body.get("area_id", ""))
+            if area_id and ".." not in area_id:
+                from terrain_edit_session import discard_session
+
+                discard_session(area_id)
+            _json_response(self, HTTPStatus.OK, {"ok": True})
+            return
+
+        if parsed.path == "/api/terrain/save":
+            dry_run = bool(body.get("dry_run", False))
+            label = "dry-run" if dry_run else "SAVE"
+            print(f"[terrain] {label} requested")
+            try:
+                from terrain_edit_session import save_all
+
+                report = save_all(
+                    dry_run=dry_run,
+                    snap_index_factory=_snap_index_for_area_editing,
+                    clear_snap_cache=clear_snap_cache,
+                )
+                print(f"[terrain] {label} ok: {report.get('message', '')[:120]}")
+                _json_response(self, HTTPStatus.OK, report)
+            except Exception as exc:
+                import traceback
+
+                print(f"[terrain] {label} FAILED: {exc}")
+                traceback.print_exc()
                 _json_response(self, HTTPStatus.INTERNAL_SERVER_ERROR, {"error": str(exc)})
             return
 
@@ -493,6 +636,7 @@ def main() -> None:
     with httpd:
         url = f"http://{host}:{port}/"
         print(f"Port map editor (wang16 1px) at {url}")
+        print("Terrain API: POST /api/terrain/save  GET /api/terrain/status  (build terrain-feedback-5)")
         print(f"Tilemaps: {DOCS_MAPS}")
         print(f"Export file: {EXPORT_PATH}")
         print("Ctrl+C to stop.")

@@ -50,8 +50,9 @@ export default function HarboursUseCaseMap() {
             <strong>Market</strong> and moods under <strong>Tavern</strong>. <strong>Location</strong> — docked port name
             or at-sea line only (no long intel strips in the header). <strong>City split</strong> — vertical{" "}
             <strong>Market · Harbor · Influence · Tavern &amp; intel · Ledger · Routes</strong> toggles; main evidence
-            tables and buttons. <strong>Routes</strong> — full-window sea chart overlay (pan/zoom, click to sail); city panel
-            shows a short pointer. Esc / Close chart / another tab dismisses overlay.{" "}
+            tables and buttons.             <strong>Routes</strong> — full-window sea chart overlay (pan/zoom, click to sail); uses{" "}
+            <Code>WorldMapChart</Code> (chunk manifest) when <Code>data/maps/chunk_manifest.json</Code> exists, else{" "}
+            <Code>RoutesMapChart</Code>. Esc / Close chart / another tab dismisses overlay.{" "}
             <strong>Status log</strong> — read-only log for rumors, saves, encounters, provenance dumps.
           </Text>
         </Stack>
@@ -119,8 +120,8 @@ export default function HarboursUseCaseMap() {
             "Docked (merchant)",
             "Plan and sail",
             "City → Routes — full-height map + pay refresh",
-            "`get_player_route_table` drives markers; click port → `start_voyage`; pay clerks on overlay bar. Full-window overlay (`RoutesFullscreenLayer` on `Main`); `RoutesMapChart` inside.",
-            "`get_player_route_table` · `start_voyage` · `try_player_buy_intel(routes)` · `_show_routes_fullscreen_overlay` · `RoutesMapChart` · `HarboursChartGrid`",
+            "`get_player_route_table` drives markers; click port → `start_voyage`; pay clerks on overlay bar. Full-window overlay (`RoutesFullscreenLayer` on `Main`); `WorldMapChart` or `RoutesMapChart`.",
+            "`get_player_route_table` · `start_voyage` · `try_player_buy_intel(routes)` · `_show_routes_fullscreen_overlay` · `WorldMapChart` · `RoutesMapChart` · `HarboursChartGrid` · `data/maps/chunk_manifest.json`",
           ],
           [
             "UC-08",

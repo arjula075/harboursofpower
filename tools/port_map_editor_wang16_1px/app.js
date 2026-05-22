@@ -3,10 +3,14 @@
  * Basemap from pre-rendered PNG; snap via server spatial index.
  */
 (function () {
+  const EDITOR_BUILD = "terrain-feedback-5";
   const GW = 2000;
   const GH = 1000;
 
   const WHEEL_ZOOM_FACTOR = 1.04;
+  /** Target on-screen marker radius (px); canvas radius divides by viewScale. */
+  const MARKER_SCREEN_RADIUS = 10;
+  const MARKER_HIT_PAD = 4;
 
   const $ = (id) => document.getElementById(id);
   const areaSelect = $("area-select");
@@ -16,12 +20,32 @@
   const inlandCb = $("inland-exception");
   const centerBtn = $("center-port");
   const exportBtn = $("export-btn");
+  const portsToolPanel = $("ports-tool-panel");
+  const terrainPanel = $("terrain-panel");
+  const terrainDryRunBtn = $("terrain-dry-run-btn");
+  const terrainSaveBtn = $("terrain-save-btn");
+  const terrainDiscardBtn = $("terrain-discard-btn");
+  const terrainFeedback = $("terrain-feedback");
+  const terrainFeedbackTitle = $("terrain-feedback-title");
+  const terrainFeedbackBody = $("terrain-feedback-body");
+  const terrainFeedbackDismiss = $("terrain-feedback-dismiss");
+  const terrainReportDetails = $("terrain-report-details");
+  const terrainReport = $("terrain-report");
+  const terrainDiskStatus = $("terrain-disk-status");
   const canvas = $("map-canvas");
   const ctx = canvas.getContext("2d");
   const mapWrap = $("map-wrap");
   const mapOverlay = $("map-overlay");
   const statusText = $("status-text");
   const coordsText = $("coords-text");
+
+  let toolMode = "ports";
+  let terrainBrush = "land";
+  let computing = false;
+  let terrainPreviewImage = null;
+  let terrainPreviewVersion = 0;
+  let terrainDirty = false;
+  let terrainBoundaryWarning = "";
 
   let chartAreas = [];
   let allPorts = [];
@@ -50,6 +74,217 @@
   function setStatus(msg, isErr) {
     statusText.textContent = msg;
     statusText.className = isErr ? "err" : "";
+  }
+
+  function setComputing(on, label) {
+    computing = on;
+    const app = $("app");
+    if (app) app.classList.toggle("computing", on);
+    if (mapWrap) mapWrap.classList.toggle("computing", on);
+    const overlay = $("computing-overlay");
+    if (overlay) overlay.textContent = label || "Recomputing chart area…";
+    updateToolUi();
+  }
+
+  function updateToolUi() {
+    const isTerrain = toolMode === "terrain";
+    if (terrainPanel) terrainPanel.classList.toggle("hidden", !isTerrain);
+    if (portsToolPanel) portsToolPanel.classList.toggle("hidden", isTerrain);
+    if (canvas) canvas.classList.toggle("terrain-mode", isTerrain);
+
+    const hasArea = !!areaId;
+    const busy = computing;
+    // Do not use HTML disabled — it blocks click events entirely (including delegation).
+    if (terrainDryRunBtn) {
+      terrainDryRunBtn.classList.toggle("btn-inactive", !hasArea || busy);
+      terrainDryRunBtn.title = hasArea
+        ? "Preview save without writing files"
+        : "Select a chart area first";
+    }
+    if (terrainSaveBtn) {
+      terrainSaveBtn.classList.toggle("btn-inactive", !hasArea || busy);
+      terrainSaveBtn.classList.toggle("btn-needs-paint", hasArea && !terrainDirty && !busy);
+      terrainSaveBtn.title = !terrainDirty
+        ? "Paint at least one land/sea cell first"
+        : "Write full tilemap + mask to disk";
+    }
+    if (terrainDiscardBtn) {
+      terrainDiscardBtn.classList.toggle("btn-inactive", !hasArea || busy);
+      terrainDiscardBtn.classList.toggle("btn-needs-paint", hasArea && !terrainDirty && !busy);
+      terrainDiscardBtn.title = !terrainDirty ? "No unsaved terrain edits" : "Revert session to disk";
+    }
+  }
+
+  function getTerrainBrush() {
+    const el = document.querySelector('input[name="terrain-brush"]:checked');
+    return el ? el.value : "land";
+  }
+
+  async function loadTerrainPreview() {
+    if (!areaId) return;
+    const url = `/api/terrain/preview/${encodeURIComponent(areaId)}?v=${terrainPreviewVersion}`;
+    terrainPreviewImage = await loadMapImage(url);
+  }
+
+  async function initTerrainSession() {
+    if (!areaId) return;
+    const res = await fetch("/api/terrain/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ area_id: areaId }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "terrain session failed");
+    terrainDirty = !!data.dirty;
+    terrainPreviewVersion = data.preview_version || 0;
+    terrainBoundaryWarning = "";
+    if (data.cross_area_ripple) {
+      const areas = (data.overlapping_chart_areas || []).join(", ");
+      terrainBoundaryWarning = `Boundary changed (${data.boundary_corners_changed} corners). Overlapping areas: ${areas || "—"}`;
+    }
+    await loadTerrainPreview();
+  }
+
+  function formatTerrainFeedback(out) {
+    if (out.no_edits) {
+      return {
+        tone: "warn",
+        title: "Nothing to save",
+        html:
+          `<p>${out.message || "No unsaved terrain edits in this server session."}</p>` +
+          `<p>Paint at least one cell, then dry-run or save again.</p>`,
+      };
+    }
+    if (out.dry_run) {
+      const areas = (out.applied_chart_areas || out.dirty_chart_areas || []).join(", ") || "—";
+      const warns = out.overlap_warnings || [];
+      let warnHtml = "";
+      if (warns.length) {
+        warnHtml =
+          "<p><strong>Boundary ripple</strong> (may affect overlapping areas on real save):</p><ul>" +
+          warns
+            .map(
+              (w) =>
+                `<li>${w.area_id}: ${w.boundary_corners_changed} corners → ${(w.overlapping_chart_areas || []).join(", ")}</li>`,
+            )
+            .join("") +
+          "</ul>";
+      }
+      return {
+        tone: "dry-run",
+        title: "Dry-run complete — disk unchanged",
+        html:
+          `<p>${out.message || ""}</p>` +
+          `<ul><li>Chart areas: <code>${areas}</code></li>` +
+          `<li>Ports that would resnap: <b>${out.ports_resnapped ?? 0}</b></li></ul>` +
+          warnHtml +
+          `<p>Click <b>Save terrain</b> to write files.</p>`,
+      };
+    }
+    if (out.written_to_disk) {
+      const v = out.verification || {};
+      const base = out.base_data || {};
+      let baseList = "";
+      if (base.mask_png) {
+        baseList =
+          "<p><strong>Base data updated</strong> (editor, routes map, Godot chunk map):</p><ul>" +
+          `<li>Mask: <code>${base.mask_png}</code></li>` +
+          (base.chunk_manifest ? `<li>Chunks: <code>${base.chunk_webps || "?"}</code> + manifest</li>` : "") +
+          (base.chart_area_tilemaps ? `<li>Chart areas: <code>${base.chart_area_tilemaps}/*</code></li>` : "") +
+          "</ul>";
+      }
+      return {
+        tone: "saved",
+        title: "Saved to disk",
+        html:
+          `<p>${out.message || "Terrain save completed."}</p>` +
+          baseList +
+          `<ul>` +
+          `<li>Saved at: <code>${out.saved_at || "?"}</code></li>` +
+          `<li>Export: <code>${out.export_path || "?"}</code> (${v.export_bytes != null ? (v.export_bytes / 1024).toFixed(1) + " KB" : "?"})</li>` +
+          `<li>Full tilemap: ${v.full_tilemap_bytes != null ? (v.full_tilemap_bytes / 1e6).toFixed(1) + " MB" : "?"}</li>` +
+          (v.chunks != null ? `<li>Game chunks refreshed: ${v.chunks}</li>` : "") +
+          (v.backup ? `<li>Backup: <code>${v.backup}</code></li>` : "") +
+          `</ul>` +
+          `<p><strong>Next:</strong> <code>${out.next_step || "python3 tools/apply_port_map_wang16_1px_export.py"}</code></p>`,
+      };
+    }
+    return {
+      tone: "warn",
+      title: "Result",
+      html: `<p>${out.message || JSON.stringify(out)}</p>`,
+    };
+  }
+
+  function dismissTerrainFeedback() {
+    if (terrainFeedback) terrainFeedback.classList.add("hidden");
+    if (terrainReportDetails) terrainReportDetails.classList.add("hidden");
+    if (mapOverlay) {
+      mapOverlay.style.background = "";
+      if (bounds) {
+        mapOverlay.textContent =
+          toolMode === "terrain"
+            ? "Terrain: click cell · Land/Sea brush · shore = derived Wang"
+            : "Ports: drag port · wheel zoom · right-drag pan";
+      }
+    }
+  }
+
+  function showTerrainFeedback(out) {
+    const { tone, title, html } = formatTerrainFeedback(out);
+    const plain = (out.message || title).replace(/<[^>]+>/g, "");
+    setStatus(plain, tone === "err" || tone === "warn");
+    if (tone === "saved") statusText.classList.add("ok");
+    if (mapOverlay && (tone === "saved" || tone === "dry-run")) {
+      mapOverlay.textContent = plain;
+      mapOverlay.style.background = "rgba(0,0,0,0.75)";
+    }
+    if (terrainFeedback) {
+      terrainFeedback.className = `terrain-feedback ${tone}`;
+      if (terrainFeedbackTitle) terrainFeedbackTitle.textContent = title;
+      if (terrainFeedbackBody) terrainFeedbackBody.innerHTML = html;
+      terrainFeedback.classList.remove("hidden");
+      terrainFeedback.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    } else {
+      window.alert(`${title}\n\n${plain}`);
+    }
+    if (terrainReport) terrainReport.textContent = JSON.stringify(out, null, 2);
+    if (terrainReportDetails) terrainReportDetails.classList.remove("hidden");
+    updateTerrainDiskStatus(out.disk_status);
+    console.info("[terrain]", tone, out);
+  }
+
+  if (terrainFeedbackDismiss) {
+    terrainFeedbackDismiss.addEventListener("click", (e) => {
+      e.preventDefault();
+      dismissTerrainFeedback();
+    });
+  }
+
+  function updateTerrainDiskStatus(disk) {
+    if (!terrainDiskStatus || !disk) return;
+    if (disk.on_disk) {
+      terrainDiskStatus.innerHTML =
+        `Last terrain save on disk: <code>${disk.last_saved_at || disk.export_generated_at || "?"}</code>` +
+        (disk.export_port_count != null ? ` · export has ${disk.export_port_count} ports` : "");
+      terrainDiskStatus.classList.remove("err");
+    } else {
+      terrainDiskStatus.textContent =
+        "No terrain editor save on disk yet (tilemap still 3px upscale / no export).";
+      terrainDiskStatus.classList.add("err");
+    }
+  }
+
+  async function refreshTerrainDiskStatus() {
+    try {
+      const res = await fetch("/api/terrain/status");
+      const data = await res.json();
+      if (res.ok) updateTerrainDiskStatus(data.disk);
+      if (data.unsaved_sessions?.length) {
+        terrainDirty = true;
+        updateToolUi();
+      }
+    } catch (_) {}
   }
 
   function globalFromUv(map_u, map_v) {
@@ -143,6 +378,10 @@
     canvas.style.transform = `translate(${viewPanX}px, ${viewPanY}px) scale(${viewScale})`;
   }
 
+  function markerCanvasScale() {
+    return viewScale > 0 ? viewScale : 1;
+  }
+
   function fitView() {
     const wrapW = mapWrap.clientWidth;
     const wrapH = mapWrap.clientHeight;
@@ -163,13 +402,21 @@
     canvas.height = h;
     ctx.fillStyle = "#0a0e12";
     ctx.fillRect(0, 0, w, h);
-    if (mapImage && mapImage.complete) {
-      ctx.drawImage(mapImage, 0, 0, w, h);
+    const img =
+      toolMode === "terrain" && terrainPreviewImage && terrainPreviewImage.complete
+        ? terrainPreviewImage
+        : mapImage;
+    if (img && img.complete) {
+      ctx.drawImage(img, 0, 0, w, h);
     }
   }
 
   function drawMarkers() {
-    const r = 8;
+    const s = markerCanvasScale();
+    const r = MARKER_SCREEN_RADIUS / s;
+    const stroke = 2 / s;
+    const labelGap = 4 / s;
+    const fontPx = 11 / s;
     for (const p of areaPorts) {
       const pos = getPortPos(p.id);
       if (!pos) continue;
@@ -180,12 +427,12 @@
       ctx.fillStyle = selected ? "#ff6b4a" : "#f0c040";
       ctx.fill();
       ctx.strokeStyle = "#1a1008";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = stroke;
       ctx.stroke();
       if (selected) {
         ctx.fillStyle = "#fff";
-        ctx.font = "11px system-ui,sans-serif";
-        ctx.fillText(p.name, lx + r + 4, ly + 4);
+        ctx.font = `${fontPx}px system-ui,sans-serif`;
+        ctx.fillText(p.name, lx + r + labelGap, ly + labelGap);
       }
     }
   }
@@ -193,7 +440,7 @@
   function draw() {
     if (!bounds) return;
     drawBasemap();
-    drawMarkers();
+    if (toolMode === "ports") drawMarkers();
     const p = portState.get(selectedPortId);
     if (p && p.map_u != null) {
       const { gx, gy } = globalFromUv(p.map_u, p.map_v);
@@ -295,6 +542,13 @@
       `/api/map-image/${encodeURIComponent(id)}?v=${data.mask_version || Date.now()}`;
     mapImage = await loadMapImage(mapUrl);
 
+    setComputing(true, "Loading terrain session…");
+    try {
+      await initTerrainSession();
+    } finally {
+      setComputing(false);
+    }
+
     areaPorts = allPorts.filter((p) => p.chart_area_id === id);
     for (const p of areaPorts) {
       if (!portState.has(p.id)) {
@@ -317,11 +571,53 @@
     setStatus(
       `${areaName}: ${shoreSnapCount.toLocaleString()} shore snap targets · ${areaPorts.length} ports · 1px wang16`,
     );
-    mapOverlay.textContent = "Drag port · wheel zoom · right-drag pan";
+    updateToolUi();
+    mapOverlay.textContent =
+      toolMode === "terrain"
+        ? "Terrain: click cell · Land/Sea brush · shore = derived Wang"
+        : "Ports: drag port · wheel zoom · right-drag pan";
+    if (terrainBoundaryWarning) setStatus(terrainBoundaryWarning, true);
+  }
+
+  async function paintTerrainAt(lx, ly) {
+    let { gx, gy } = globalFromLocal(lx, ly);
+    gx = Math.round(gx);
+    gy = Math.round(gy);
+    setComputing(true, "Recomputing chart area…");
+    try {
+      const res = await fetch("/api/terrain/paint", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          area_id: areaId,
+          gx,
+          gy,
+          terrain: terrainBrush,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "paint failed");
+      terrainDirty = true;
+      terrainPreviewVersion = data.preview_version || terrainPreviewVersion + 1;
+      await loadTerrainPreview();
+      draw();
+      let msg = `Painted (${gx}, ${gy}) → ${data.tile_after}`;
+      if (data.cross_area_ripple) {
+        const areas = (data.overlapping_chart_areas || []).join(", ");
+        msg += ` · boundary ripple → ${areas}`;
+        terrainBoundaryWarning = msg;
+        setStatus(msg, true);
+      } else {
+        setStatus(msg);
+      }
+    } finally {
+      setComputing(false);
+    }
   }
 
   function hitTestPort(lx, ly) {
-    const hitR = 12;
+    const s = markerCanvasScale();
+    const hitR = (MARKER_SCREEN_RADIUS + MARKER_HIT_PAD) / s;
     for (const p of areaPorts) {
       const pos = getPortPos(p.id);
       if (!pos) continue;
@@ -332,11 +628,20 @@
     return null;
   }
 
-  canvas.addEventListener("pointerdown", (e) => {
-    if (!bounds) return;
+  canvas.addEventListener("pointerdown", async (e) => {
+    if (!bounds || computing) return;
     const { lx, ly } = screenToLocal(e.clientX, e.clientY);
     lastPointerX = e.clientX;
     lastPointerY = e.clientY;
+
+    if (toolMode === "terrain" && e.button === 0 && !e.altKey) {
+      try {
+        await paintTerrainAt(lx, ly);
+      } catch (err) {
+        setStatus(String(err), true);
+      }
+      return;
+    }
 
     if (e.button === 2 || (e.button === 0 && e.altKey)) {
       panning = true;
@@ -414,6 +719,7 @@
       viewPanY = my - (my - viewPanY) * factor;
       viewScale = Math.max(0.15, Math.min(24, viewScale * factor));
       applyViewTransform();
+      if (toolMode === "ports") draw();
     },
     { passive: false },
   );
@@ -458,6 +764,168 @@
       setStatus(String(err), true);
     }
   });
+
+  document.querySelectorAll('input[name="tool-mode"]').forEach((el) => {
+    el.addEventListener("change", () => {
+      const checked = document.querySelector('input[name="tool-mode"]:checked');
+      if (checked) toolMode = checked.value;
+      updateToolUi();
+      if (toolMode === "terrain" && areaId && !terrainPreviewImage) {
+        loadTerrainPreview()
+          .then(() => draw())
+          .catch((err) => setStatus(String(err), true));
+      } else {
+        draw();
+      }
+      if (bounds) {
+        mapOverlay.textContent =
+          toolMode === "terrain"
+            ? "Terrain: click cell · Land/Sea brush"
+            : "Ports: drag port · wheel zoom · right-drag pan";
+      }
+    });
+  });
+
+  document.querySelectorAll('input[name="terrain-brush"]').forEach((el) => {
+    el.addEventListener("change", () => {
+      terrainBrush = getTerrainBrush();
+    });
+  });
+
+  async function postTerrainSave(dryRun) {
+    const res = await fetch("/api/terrain/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dry_run: dryRun }),
+    });
+    const text = await res.text();
+    let out;
+    try {
+      out = JSON.parse(text);
+    } catch (_) {
+      if (res.status === 404) {
+        throw new Error(
+          "POST /api/terrain/save not found — restart port_map_editor_wang16_1px_server.py (not the old 8766 editor).",
+        );
+      }
+      throw new Error(`Server returned non-JSON (${res.status}): ${text.slice(0, 120)}`);
+    }
+    if (!res.ok) throw new Error(out.error || `HTTP ${res.status}`);
+    return out;
+  }
+
+  async function runTerrainDryRun() {
+    if (!areaId) {
+      setStatus("Select a chart area first", true);
+      return;
+    }
+    setStatus("Dry-run: contacting server…");
+    setComputing(true, "Dry-run save…");
+    if (mapOverlay) mapOverlay.textContent = "Dry-run: checking edits…";
+    try {
+      const out = await postTerrainSave(true);
+      showTerrainFeedback(out);
+    } catch (err) {
+      const msg = String(err);
+      if (terrainFeedback) {
+        terrainFeedback.className = "terrain-feedback err";
+        terrainFeedback.innerHTML = `<h4>Dry-run failed</h4><p>${msg}</p>`;
+        terrainFeedback.classList.remove("hidden");
+      }
+      setStatus(msg, true);
+      window.alert(`Dry-run failed:\n${msg}`);
+    } finally {
+      setComputing(false);
+      updateToolUi();
+    }
+  }
+
+  async function runTerrainSave() {
+    if (!areaId) {
+      setStatus("Select a chart area first", true);
+      return;
+    }
+    if (!terrainDirty) {
+      setStatus("Paint at least one cell before saving terrain", true);
+      window.alert("Paint at least one land/sea cell on the map, then save.");
+      return;
+    }
+    if (
+      !window.confirm(
+        "Save terrain? Rewrites full wang16 tilemap, mask PNG, all chart-area files, and exports auto-resnap JSON.",
+      )
+    ) {
+      return;
+    }
+    setStatus("Saving terrain…");
+    setComputing(true, "Saving terrain (full rebuild)…");
+    if (mapOverlay) mapOverlay.textContent = "Writing tilemap + mask + chart areas…";
+    try {
+      const out = await postTerrainSave(false);
+      showTerrainFeedback(out);
+      if (!out.written_to_disk) return;
+      terrainDirty = false;
+      terrainBoundaryWarning = "";
+      mapImage = null;
+      await loadArea(areaId);
+      await refreshTerrainDiskStatus();
+    } catch (err) {
+      const msg = String(err);
+      if (terrainFeedback) {
+        terrainFeedback.className = "terrain-feedback err";
+        terrainFeedback.innerHTML =
+          `<h4>Save failed</h4><p>${msg}</p><p>Check the server terminal for tracebacks.</p>`;
+        terrainFeedback.classList.remove("hidden");
+      }
+      setStatus(msg, true);
+      window.alert(`Save failed:\n${msg}`);
+    } finally {
+      setComputing(false);
+      updateToolUi();
+    }
+  }
+
+  async function runTerrainDiscard() {
+    if (!areaId) return;
+    setComputing(true, "Discarding…");
+    try {
+      await fetch("/api/terrain/discard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ area_id: areaId }),
+      });
+      terrainDirty = false;
+      dismissTerrainFeedback();
+      terrainBoundaryWarning = "";
+      await loadArea(areaId);
+      setStatus("Terrain edits discarded");
+    } catch (err) {
+      setStatus(String(err), true);
+    } finally {
+      setComputing(false);
+      updateToolUi();
+    }
+  }
+
+  const sidebar = $("sidebar");
+  if (sidebar) {
+    sidebar.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn || computing || btn.classList.contains("btn-inactive")) return;
+      if (btn.id === "terrain-dry-run-btn") {
+        e.preventDefault();
+        void runTerrainDryRun();
+      } else if (btn.id === "terrain-save-btn") {
+        e.preventDefault();
+        void runTerrainSave();
+      } else if (btn.id === "terrain-discard-btn") {
+        e.preventDefault();
+        void runTerrainDiscard();
+      }
+    });
+  } else {
+    console.error("[terrain] #sidebar missing — button clicks will not work");
+  }
 
   exportBtn.addEventListener("click", async () => {
     const edits = [];
@@ -527,9 +995,28 @@
       }
       const stamp = $("build-stamp");
       if (stamp) {
-        stamp.textContent = `Basemap mask v${data.mask_version || "?"} · ${data.mask_path || ""}`;
+        stamp.textContent =
+          `Editor ${EDITOR_BUILD} · basemap v${data.mask_version || "?"} · ${data.mask_path || ""}`;
       }
-      setStatus(msg);
+      if (!data.terrain_disk) {
+        setStatus("Warning: server missing terrain API — use port_map_editor_wang16_1px_server.py", true);
+      }
+      updateTerrainDiskStatus(data.terrain_disk);
+      refreshTerrainDiskStatus();
+      let statusMsg = msg;
+      let statusErr = false;
+      try {
+        const tr = await fetch("/api/terrain/status");
+        if (!tr.ok) {
+          statusMsg = `Terrain API missing (HTTP ${tr.status}) — use port_map_editor_wang16_1px_server.py + hard-refresh`;
+          statusErr = true;
+        }
+      } catch (e) {
+        statusMsg = `Terrain API unreachable: ${e}`;
+        statusErr = true;
+      }
+      setStatus(statusMsg, statusErr);
+      updateToolUi();
       mapOverlay.textContent = "Select a chart area";
     } catch (err) {
       setStatus(String(err), true);

@@ -4,6 +4,8 @@ Generates **512×512 WebP** overworld tiles for Godot: v1 Wang shore set, proced
 
 **Terrain biomes:** see [BIOMES.md](BIOMES.md) (`dry_scrubland`, `sparse_olive`, `pine_clusters`, `grassy_patches`, `terraced_hillsides`).
 
+**Phase A (chunk map plan):** generation commands prompt **Are you sure?** every run. Pass `--yes` only for automation. See `tools/chunk_map_phase_a.py` and `canvases/harbours-chunk-based-gaming-map.canvas.tsx`.
+
 ## Two commands (new biome)
 
 ```powershell

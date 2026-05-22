@@ -7,6 +7,9 @@ const LOGICAL_GRID_HEIGHT := 1000
 
 ## Cropped map-only basemap (no sheet chrome). Takes precedence over the full coordinate sheet.
 ## For unchanged `world_full.json` UVs, pixels should still align with the same logical 2000×1000 frame; otherwise refresh UVs or add a transform.
+const CHUNK_MANIFEST_JSON := "res://data/maps/chunk_manifest.json"
+const CHUNK_MASK_MASTER_PNG := "res://docs/mediterranean_recursive_tilemap_wang16_1px_mask.png"
+
 const MAP_ORIGIN_BASEMAP_PNG := "res://docs/mi8l8sc4s5z81.png"
 
 ## Full reference sheet (table, margins) under `res://docs/`.

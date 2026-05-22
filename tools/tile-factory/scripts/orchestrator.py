@@ -380,8 +380,31 @@ body {{ font-family: system-ui; background: #1a1a1a; color: #eee; }}
     return 0
 
 
+# Phase A (chunk map plan): prompt before commands that spend API / build coast tiles.
+_PHASE_A_GENERATION_CMDS = frozenset(
+    {
+        "bootstrap-biome",
+        "build-v1-mosaic",
+        "generate-edges",
+        "generate",
+        "phase1",
+        "refresh-proof",
+        "fix-feedback",
+        "generate-full-v1",
+        "make-full-set",
+        "autotile",
+        "fix-sea",
+    }
+)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="HarboursOfPower tile factory")
+    parser.add_argument(
+        "--yes",
+        action="store_true",
+        help="Skip Phase A 'Are you sure?' prompt (automation only)",
+    )
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     def cmd_bootstrap_biome(args: argparse.Namespace) -> int:
@@ -584,6 +607,13 @@ def main() -> int:
     )
 
     args = parser.parse_args()
+    if args.cmd in _PHASE_A_GENERATION_CMDS:
+        sys.path.insert(0, str(repo_path("tools")))
+        from chunk_map_phase_a import confirm_tile_generation
+
+        if not confirm_tile_generation(assume_yes=getattr(args, "yes", False)):
+            print("Aborted.")
+            return 1
     return args.func(args)
 
 
