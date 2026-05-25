@@ -164,14 +164,26 @@ func _draw_map() -> void:
 		var short := pname if pname.length() <= 18 else pname.substr(0, 16) + "…"
 		draw_string(font, Vector2(pscr.x + rad + 5.0, pscr.y + 4.0), short, HORIZONTAL_ALIGNMENT_LEFT, -1, fz, Color(0.96, 0.94, 0.9))
 
-	var here_uv: Vector2 = _gs.get_port_map_uv(_gs.player_port_id)
-	if here_uv.x >= 0.0:
-		var hx: float = here_uv.x * lw
-		var hy: float = here_uv.y * lh
-		var hscr: Vector2 = _map_to_screen(hx, hy, geo)
+	_draw_player_ship(geo, lw, lh)
+
+
+func _draw_player_ship(geo: Dictionary, lw: float, lh: float) -> void:
+	var player_uv: Vector2 = _gs.get_player_chart_uv()
+	if player_uv.x < 0.0:
+		return
+	var hx: float = player_uv.x * lw
+	var hy: float = player_uv.y * lh
+	var hscr: Vector2 = _map_to_screen(hx, hy, geo)
+	var sz: Vector2 = geo["sz"]
+	if hscr.x < -80.0 or hscr.y < -80.0 or hscr.x > sz.x + 80.0 or hscr.y > sz.y + 80.0:
+		return
+	var sid := _gs.get_player_ship_class_id()
+	if not HarboursShipVisualCatalog.draw_map_ship(self, hscr, sid):
 		var cross := 14.0
 		draw_line(hscr + Vector2(-cross, 0.0), hscr + Vector2(cross, 0.0), Color(0.95, 0.95, 1.0, 0.95), 2.0)
 		draw_line(hscr + Vector2(0.0, -cross), hscr + Vector2(0.0, cross), Color(0.95, 0.95, 1.0, 0.95), 2.0)
+	else:
+		draw_circle(hscr, 5.0, Color(0.95, 0.92, 0.4, 0.85))
 
 
 func _row_for_port(port_id: String) -> Dictionary:

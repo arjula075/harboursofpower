@@ -142,6 +142,24 @@ func _draw_chunk(entry: Dictionary, geo: Dictionary, vis: Rect2) -> void:
 	draw_texture_rect_region(tex, dest, src)
 
 
+func _draw_player_ship(geo: Dictionary) -> void:
+	var player_uv: Vector2 = _gs.get_player_chart_uv()
+	if player_uv.x < 0.0:
+		return
+	var mp := _projection.uv_to_map(player_uv)
+	var hscr := _projection.map_to_screen(mp.x, mp.y, geo)
+	var sz: Vector2 = geo["sz"]
+	if hscr.x < -80.0 or hscr.y < -80.0 or hscr.x > sz.x + 80.0 or hscr.y > sz.y + 80.0:
+		return
+	var sid := _gs.get_player_ship_class_id()
+	if not HarboursShipVisualCatalog.draw_map_ship(self, hscr, sid):
+		var cross := 14.0
+		draw_line(hscr + Vector2(-cross, 0.0), hscr + Vector2(cross, 0.0), Color(0.95, 0.95, 1.0, 0.95), 2.0)
+		draw_line(hscr + Vector2(0.0, -cross), hscr + Vector2(0.0, cross), Color(0.95, 0.95, 1.0, 0.95), 2.0)
+	else:
+		draw_circle(hscr, 5.0, Color(0.95, 0.92, 0.4, 0.85))
+
+
 func _draw_ports(geo: Dictionary) -> void:
 	var font := get_theme_default_font()
 	var fz := 12
@@ -164,19 +182,13 @@ func _draw_ports(geo: Dictionary) -> void:
 		var short := pname if pname.length() <= 18 else pname.substr(0, 16) + "…"
 		draw_string(font, Vector2(pscr.x + rad + 5.0, pscr.y + 4.0), short, HORIZONTAL_ALIGNMENT_LEFT, -1, fz, Color(0.96, 0.94, 0.9))
 
-	var here_uv: Vector2 = _gs.get_port_map_uv(_gs.player_port_id)
-	if here_uv.x >= 0.0:
-		var hp := _projection.uv_to_map(here_uv)
-		var hscr := _projection.map_to_screen(hp.x, hp.y, geo)
-		var cross := 14.0
-		draw_line(hscr + Vector2(-cross, 0.0), hscr + Vector2(cross, 0.0), Color(0.95, 0.95, 1.0, 0.95), 2.0)
-		draw_line(hscr + Vector2(0.0, -cross), hscr + Vector2(0.0, cross), Color(0.95, 0.95, 1.0, 0.95), 2.0)
+	_draw_player_ship(geo)
 
 
 func _draw_legend(geo: Dictionary) -> void:
 	var font := get_theme_default_font()
 	var n := _chunks.size()
-	var legend := "Chunk map (%d) · drag pan · wheel zoom · click port to sail" % n
+	var legend := "Chunk map (%d) · your ship · drag pan · wheel zoom · click port to sail" % n
 	draw_string(font, Vector2(8.0, 18.0), legend, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.85, 0.88, 0.92))
 
 

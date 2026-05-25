@@ -83,6 +83,8 @@
     .region-card dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 11px; }
     .region-card dt { color: var(--fg-mute); }
     .region-card dd { margin: 0; text-align: right; }
+    .region-card .rg-merchant { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .region-card .rg-merchant dt { font-size: 10px; }
     .alliance-bands { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; padding: 10px 12px; }
     .alliance-card { background: var(--bg-row); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
     .alliance-card h3 { margin: 0 0 4px; font-size: 12px; font-weight: 600; }
@@ -139,6 +141,22 @@
 
   <main>
     <section class="kpis" id="kpis"></section>
+
+    <section class="panel" id="rolling30Panel">
+      <div class="panel-h">
+        <h2>Merchants — rolling last 30 days</h2>
+        <span class="hint">calendar days d<span id="rolling30DayStart">—</span>–d<span id="rolling30DayEnd">—</span> · from <code>trend.jsonl</code></span>
+      </div>
+      <div class="contract-grid" id="rolling30Grid"></div>
+    </section>
+
+    <section class="panel" id="rolling30RegionalPanel">
+      <div class="panel-h">
+        <h2>Merchants by chart region — rolling last 30 days</h2>
+        <span class="hint">homeward NPC count · spawns &amp; bankruptcies attributed to merchant <code>home_port</code> chart area · d<span id="rolling30RegDayStart">—</span>–d<span id="rolling30RegDayEnd">—</span></span>
+      </div>
+      <div class="regions" id="rolling30RegionalGrid"></div>
+    </section>
 
     <section class="panel" id="contractsPanel">
       <div class="panel-h">
@@ -316,7 +334,7 @@
     trendSrc: "trend.jsonl",
     last: null,
     prev: null,
-    history: [],     // [{ tick, day, npc_purse, riots, bust, population_mean, price_tier_*, food_unrest_mean }]
+    history: [],     // [{ tick, day, npc_agent_count, npc_spawn_delta, bust_delta, ... }]
     historyMax: 20000,
     sort: { key: "population_grain", dir: "desc" },
     rendered: false,
@@ -411,6 +429,8 @@
       state.history = rows.map(r => ({
         tick: r.tick,
         day: r.day,
+        npc_agent_count: (r.npc_agent_count != null) ? +r.npc_agent_count : null,
+        npc_spawn_delta: (r.npc_spawn_delta != null) ? +r.npc_spawn_delta : null,
         npc_purse: r.npc_purse,
         riots: r.riot_events_total,
         bust: r.bankruptcy_events_total,
@@ -431,6 +451,8 @@
         world_treasury: (r.world_treasury_coins != null) ? +r.world_treasury_coins : null,
         harbour_dues: (r.harbour_dues_tick != null) ? +r.harbour_dues_tick : null,
         gini: (r.gini != null && !Number.isNaN(+r.gini)) ? +r.gini : null,
+        mbr: r.mbr || null,
+        mbr_delta: r.mbr_delta || null,
       }));
       if (state.history.length > state.historyMax) {
         state.history = state.history.slice(-state.historyMax);
@@ -472,6 +494,10 @@
       state.history.push({
         tick: snap.tick,
         day: snap.day,
+        npc_agent_count: (snap.npc_agent_count != null) ? +snap.npc_agent_count : null,
+        npc_spawn_delta: (snap.events && snap.events.npc_spawn_delta != null)
+          ? +snap.events.npc_spawn_delta
+          : null,
         npc_purse: snap.npc_total_money,
         riots: snap.riot_events_total,
         bust: snap.bankruptcy_events_total,
@@ -490,11 +516,24 @@
         world_treasury: (snap.world_treasury_coins != null) ? +snap.world_treasury_coins : null,
         harbour_dues: (snap.treasury && snap.treasury.harbour_dues_tick != null) ? +snap.treasury.harbour_dues_tick : null,
         gini: (snap.inequality && snap.inequality.gini != null) ? +snap.inequality.gini : null,
+        mbr: snap.regions ? Object.fromEntries(
+          Object.entries(snap.regions).map(([aid, reg]) => [
+            aid,
+            {
+              a: reg.npc_agents != null ? +reg.npc_agents : 0,
+              s: reg.merchant_spawn_cum != null ? +reg.merchant_spawn_cum : 0,
+              b: reg.bankruptcy_cum != null ? +reg.bankruptcy_cum : 0,
+            },
+          ])
+        ) : null,
+        mbr_delta: (snap.events && snap.events.region_merchant) ? snap.events.region_merchant : null,
       });
       if (state.history.length > state.historyMax) state.history.shift();
     }
     renderHeader(snap);
     renderKpis(snap);
+    renderRolling30(snap);
+    renderRolling30Regional(snap);
     renderContracts(snap);
     renderRegions(snap);
     renderAllianceBands(snap);
@@ -519,6 +558,159 @@
 
   function renderHeader(snap) {
     $("src").textContent = (snap.world_path || "latest.json") + "  →  latest.json";
+  }
+
+  /** Last 30 calendar days of trend history (falls back to last 30 samples if run is shorter). */
+  function rolling30Rows(snap) {
+    const hist = state.history || [];
+    if (!hist.length) return [];
+    const dayEnd = +snap.day || hist[hist.length - 1].day;
+    const dayStart = dayEnd - 29;
+    let rows = hist.filter(h => h.day >= dayStart && h.day <= dayEnd);
+    if (rows.length < 2) rows = hist.slice(-30);
+    return rows;
+  }
+
+  function sumDelta(rows, field) {
+    let total = 0;
+    for (let i = 0; i < rows.length; i++) {
+      const v = rows[i][field];
+      if (v != null && !Number.isNaN(+v)) total += Math.max(0, +v);
+    }
+    return total;
+  }
+
+  function inferSpawnDelta(rows) {
+    let total = 0;
+    for (let i = 1; i < rows.length; i++) {
+      const prev = rows[i - 1].npc_agent_count;
+      const curr = rows[i].npc_agent_count;
+      if (prev == null || curr == null || Number.isNaN(+prev) || Number.isNaN(+curr)) continue;
+      total += Math.max(0, +curr - +prev);
+    }
+    return total;
+  }
+
+  function regionRolling30Stats(rows, areaId) {
+    const agentSamples = [];
+    let spawn = 0;
+    let bust = 0;
+    let hasDelta = false;
+    for (const row of rows) {
+      const entry = (row.mbr || {})[areaId];
+      if (entry && entry.a != null && !Number.isNaN(+entry.a)) agentSamples.push(+entry.a);
+      const md = (row.mbr_delta || {})[areaId];
+      if (md) {
+        hasDelta = true;
+        if (md.spawn != null && !Number.isNaN(+md.spawn)) spawn += Math.max(0, +md.spawn);
+        if (md.bust != null && !Number.isNaN(+md.bust)) bust += Math.max(0, +md.bust);
+      }
+    }
+    if (!hasDelta && rows.length >= 2) {
+      for (let i = 1; i < rows.length; i++) {
+        const c0 = (rows[i - 1].mbr || {})[areaId];
+        const c1 = (rows[i].mbr || {})[areaId];
+        if (!c0 || !c1) continue;
+        spawn += Math.max(0, (+c1.s || 0) - (+c0.s || 0));
+        bust += Math.max(0, (+c1.b || 0) - (+c0.b || 0));
+      }
+    }
+    const avgAgents = agentSamples.length
+      ? (agentSamples.reduce((a, b) => a + b, 0) / agentSamples.length)
+      : null;
+    return { avgAgents, spawn, bust, samples: agentSamples.length };
+  }
+
+  function renderRolling30Regional(snap) {
+    const rows = rolling30Rows(snap);
+    const dayEnd = +snap.day || (rows.length ? rows[rows.length - 1].day : null);
+    const dayStart = dayEnd != null ? dayEnd - 29 : null;
+    $("rolling30RegDayStart").textContent = dayStart != null ? String(dayStart) : "—";
+    $("rolling30RegDayEnd").textContent = dayEnd != null ? String(dayEnd) : "—";
+
+    const regions = snap.regions || {};
+    const order = (snap.chart_areas || []).map(a => a.id);
+    if (order.indexOf("_other") < 0) order.push("_other");
+    const ids = order.filter(id => regions[id] && (regions[id].port_count > 0 || id === "_other"));
+    Object.keys(regions).forEach(id => {
+      if (ids.indexOf(id) < 0 && regions[id].port_count > 0) ids.push(id);
+    });
+
+    if (!ids.length) {
+      $("rolling30RegionalGrid").innerHTML =
+        `<p style="padding:10px 12px;color:var(--fg-mute);margin:0">No chart regions (re-run sim_stream.py).</p>`;
+      return;
+    }
+
+    if (!rows.length) {
+      $("rolling30RegionalGrid").innerHTML =
+        `<p style="padding:10px 12px;color:var(--fg-mute);margin:0">No trend history yet — wait for ticks or reload after <code>trend.jsonl</code> fills.</p>`;
+      return;
+    }
+
+    $("rolling30RegionalGrid").innerHTML = ids.map(id => {
+      const r = regions[id];
+      const st = regionRolling30Stats(rows, id);
+      const curAgents = r.npc_agents != null ? +r.npc_agents : null;
+      const avgStr = st.avgAgents != null ? st.avgAgents.toFixed(0) : "—";
+      const spawnStr = fmt(st.spawn);
+      const bustStr = fmt(st.bust);
+      const meta = `${r.port_count || 0} port(s) · ${st.samples} sample(s) in window`;
+      const curSub = curAgents != null ? ` · now ${fmt(curAgents)} homed merchants` : "";
+      return `<article class="region-card">
+        <h3>${r.name || id}</h3>
+        <div class="rg-meta">${meta}${curSub}</div>
+        <dl class="rg-merchant">
+          <dt>Avg active NPCs</dt><dd>${avgStr}</dd>
+          <dt>New merchants</dt><dd>${spawnStr}</dd>
+          <dt>Bankruptcies</dt><dd>${bustStr}</dd>
+        </dl>
+      </article>`;
+    }).join("");
+  }
+
+  function renderRolling30(snap) {
+    const rows = rolling30Rows(snap);
+    const dayEnd = +snap.day || (rows.length ? rows[rows.length - 1].day : null);
+    const dayStart = dayEnd != null ? dayEnd - 29 : null;
+    $("rolling30DayStart").textContent = dayStart != null ? String(dayStart) : "—";
+    $("rolling30DayEnd").textContent = dayEnd != null ? String(dayEnd) : "—";
+
+    let avgNpc = "—";
+    let newMerchants = "—";
+    let busts = "—";
+    let subNpc = "no trend samples in window";
+    let subNew = "home-port sync adds merchants when commerce pulse warrants";
+    let subBust = "merchant liquidations (cumulative tick deltas)";
+
+    if (rows.length) {
+      const counts = rows
+        .map(r => r.npc_agent_count)
+        .filter(v => v != null && !Number.isNaN(+v));
+      if (counts.length) {
+        avgNpc = (counts.reduce((a, b) => a + +b, 0) / counts.length).toFixed(0);
+        subNpc = `mean of ${counts.length} sample(s) · current ${fmt(snap.npc_agent_count)}`;
+      }
+      const spawnField = rows.some(r => r.npc_spawn_delta != null);
+      newMerchants = fmt(spawnField ? sumDelta(rows, "npc_spawn_delta") : inferSpawnDelta(rows));
+      subNew = spawnField
+        ? "sum of per-tick headcount increases"
+        : "inferred from agent-count deltas (re-run sim_stream for explicit spawn_delta)";
+      busts = fmt(sumDelta(rows, "bust_delta"));
+      subBust = `sum of per-tick bankruptcy events · ${rows.length} sample(s)`;
+    }
+
+    $("rolling30Grid").innerHTML = [
+      { label: "Avg active NPC merchants", value: avgNpc, sub: subNpc },
+      { label: "New merchants", value: newMerchants, sub: subNew },
+      { label: "Bankruptcies", value: busts, sub: subBust },
+    ].map(t => `
+      <div class="contract-tile">
+        <div class="ct-label">${t.label}</div>
+        <div class="ct-value">${t.value}</div>
+        <div class="ct-sub">${t.sub}</div>
+      </div>
+    `).join("");
   }
 
   function renderKpis(snap) {

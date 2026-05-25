@@ -263,6 +263,26 @@ func _tbl_cell(txt: String, min_w: float = 0.0) -> Label:
 	return lb
 
 
+func _tbl_ship_cell(display_name: String, ship_class_id: String, min_w: float) -> Control:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	if min_w > 0.0:
+		row.custom_minimum_size.x = min_w
+	var tex: Texture2D = HarboursShipVisualCatalog.get_texture(ship_class_id)
+	if tex != null:
+		var icon := TextureRect.new()
+		icon.texture = tex
+		icon.custom_minimum_size = Vector2(20.0, 36.0)
+		icon.expand_mode = TextureRect.EXPAND_FIT_HEIGHT_PROPORTIONAL
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		row.add_child(icon)
+	var lb := Label.new()
+	lb.text = display_name
+	lb.add_theme_font_size_override("font_size", 11)
+	row.add_child(lb)
+	return row
+
+
 func _truncate(s: String, max_len: int) -> String:
 	if s.length() <= max_len:
 		return s
@@ -475,7 +495,13 @@ func _build_harbor_panel(parent: VBoxContainer) -> void:
 		grid.add_child(_tbl_cell(h, 24.0))
 	for row in _gs.list_player_harbor_ship_rows():
 		var d: Dictionary = row
-		grid.add_child(_tbl_cell(str(d.get("ship", "")), 100.0))
+		grid.add_child(
+			_tbl_ship_cell(
+				str(d.get("ship", "")),
+				str(d.get("ship_class_id", _gs.get_player_ship_class_id())),
+				100.0,
+			)
+		)
 		grid.add_child(_tbl_cell(str(d.get("cargo", "")), 52.0))
 		grid.add_child(_tbl_cell(str(int(d.get("speed_score", 0))), 36.0))
 		grid.add_child(_tbl_cell(str(int(d.get("condition", 0))), 36.0))

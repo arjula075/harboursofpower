@@ -70,6 +70,8 @@ header .hint code {
 }
 
 #sidebar {
+  grid-column: 1;
+  grid-row: 2;
   background: var(--panel);
   border-right: 1px solid var(--border);
   padding: 12px;
@@ -77,6 +79,7 @@ header .hint code {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: 0;
 }
 
 label {
@@ -180,35 +183,63 @@ button.btn-needs-paint {
 }
 
 #map-wrap {
+  grid-column: 2;
+  grid-row: 2;
   position: relative;
   overflow: hidden;
   background: #0a0e12;
   min-height: 0;
+  min-width: 0;
+  z-index: 2;
+  isolation: isolate;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+
+#map-wrap.terrain-mode {
+  cursor: crosshair;
+}
+
+#map-wrap.dragging-port {
+  cursor: grabbing;
+}
+
+#map-wrap.panning {
+  cursor: move;
 }
 
 #map-canvas {
   position: absolute;
   left: 0;
   top: 0;
+  z-index: 1;
   display: block;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-  cursor: grab;
   transform-origin: 0 0;
+  pointer-events: none;
 }
 
-#map-canvas.dragging-port {
-  cursor: grabbing;
+/* Untransformed full-area target — canvas transform breaks hit-testing in some browsers. */
+#map-hit-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: transparent;
+  pointer-events: auto;
+  touch-action: none;
 }
 
-#map-canvas.panning {
-  cursor: move;
+#map-wrap.computing #map-hit-layer {
+  pointer-events: none;
 }
 
 #map-overlay {
   position: absolute;
   left: 12px;
   top: 12px;
+  z-index: 3;
   padding: 8px 10px;
   background: rgba(0, 0, 0, 0.65);
   border-radius: 6px;
@@ -445,8 +476,8 @@ button.btn-needs-paint {
   color: #d4a574;
 }
 
-#app.computing #map-canvas {
-  pointer-events: none;
+/* Block canvas only when the map-wrap overlay is visible (same .computing hook). */
+#map-wrap.computing #map-canvas {
   opacity: 0.85;
 }
 
@@ -465,10 +496,6 @@ button.btn-needs-paint {
 
 #map-wrap.computing #computing-overlay {
   display: flex;
-}
-
-#map-canvas.terrain-mode {
-  cursor: crosshair;
 }
 
 #ports-tool-panel.hidden {

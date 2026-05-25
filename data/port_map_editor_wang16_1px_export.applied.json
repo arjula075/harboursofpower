@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "description": "Port map_u/map_v after terrain save auto-resnap.",
+  "global_grid_width": 2000,
+  "global_grid_height": 1000,
+  "tilemap_set": "chart_area_tilemaps_and_maps_wang16_1px",
+  "shore_snap_rule": "corner_wang_coast_tiles_excluding_totally_sea_and_totally_land",
+  "generated_at": "2026-05-21T10:42:24.453523+00:00",
+  "terrain_save": true,
+  "edits": [
+    {
+      "id": "athens_piraeus",
+      "name": "Athens / Piraeus",
+      "chart_area_id": "aegean",
+      "map_u": 0.61275,
+      "map_v": 0.5435,
+      "global_x": 1226,
+      "global_y": 544,
+      "snapped_tile": "NW_land_NE_sea_SE_sea_SW_sea"
+    },
+    {
+      "id": "chalcis",
+      "name": "Chalcis",
+      "chart_area_id": "aegean",
+      "map_u": 0.61875,
+      "map_v": 0.5205,
+      "global_x": 1238,
+      "global_y": 520,
+      "snapped_tile": "NW_land_NE_land_SE_sea_SW_sea"
+    },
+    {
+      "id": "corinth",
+      "name": "Corinth",
+      "chart_area_id": "aegean",
+      "map_u": 0.60225,
+      "map_v": 0.5375,
+      "global_x": 1204,
+      "global_y": 538,
+      "snapped_tile": "NW_sea_NE_sea_SE_land_SW_land"
+    },
+    {
+      "id": "ephesus",
+      "name": "Ephesus",
+      "chart_area_id": "aegean",
+      "map_u": 0.68775,
+      "map_v": 0.5775,
+      "global_x": 1376,
+      "global_y": 578,
+      "snapped_tile": "NW_sea_NE_land_SE_land_SW_land"
+    },
+    {
+      "id": "eretria",
+      "name": "Eretria",
+      "chart_area_id": "aegean",
+      "map_u": 0.62325,
+      "map_v": 0.5115,
+      "global_x": 1246,
+      "global_y": 512,
+      "snapped_tile": "NW_sea_NE_land_SE_land_SW_land"
+    },
+    {
+      "id": "gythion",
+      "name": "Gythion",
+      "chart_area_id": "aegean",
+      "map_u": 0.59475,
+      "map_v": 0.6035,
+      "global_x": 1190,
+      "global_y": 604,
+      "snapped_tile": "NW_land_NE_sea_SE_sea_SW_sea"
+    },
+    {
+      "id": "halicarnassus",
+      "name": "Halicarnassus",
+      "chart_area_id": "aegean",
+      "map_u": 0.69525,
+      "map_v": 0.5955,
+      "global_x": 1390,
+      "global_y": 596,
+      "snapped_tile": "NW_land_NE_land_SE_sea_SW_sea"
+    },
+    {
+      "id": "knossos",
+      "name": "Knossos",
+      "chart_area_id": "aegean",
+      "map_u": 0.63675,
+      "map_v": 0.6755,
+      "global_x": 1274,
+      "global_y": 676,
+      "snapped_tile": "NW_sea_NE_sea_SE_land_SW_land"
+    },
+    {
+      "id": "kydonia",
+      "name": "Kydonia",
+      "chart_area_id": "aegean",
+      "map_u": 0.62175,
+      "map_v": 0.6675,
+      "global_x": 1244,
+      "global_y": 668,
+      "snapped_tile": "NW_sea_NE_land_SE_land_SW_land"
+    },
+    {
+      "id": "megara",
+      "name": "Megara",
+      "chart_area_id": "aegean",
+      "map_u": 0.60825,
+      "map_v": 0.5505,
+      "global_x": 1216,
+      "global_y": 550,
+      "snapped_tile": "NW_land_NE_land_SE_sea_SW_sea"
+    },
+    {
+      "id": "miletus",
+      "name": "Miletus",
+      "chart_area_id": "aegean",
+      "map_u": 0.68475,
+      "map_v": 0.5555,
+      "global_x": 1370,
+      "global_y": 556,
+      "snapped_tile": "NW_sea_NE_sea_SE_land_SW_land"
+    },
+    {
+      "id": "rhodes",
+      "name": "Rhodes",
+      "chart_area_id": "aegean",
+      "map_u": 0.70425,
+      "map_v": 0.6245,
+      "global_x": 1408,
+      "global_y": 624,
+      "snapped_tile": "NW_sea_NE_sea_SE_land_SW_land"
+    },
+    {
+      "id": "smyrna",
+      "name": "Smyrna",
+      "chart_area_id": "aegean",
+      "map_u": 0.67425,
+      "map_v": 0.5355,
+      "global_x": 1348,
+      "global_y": 536,
+      "snapped_tile": "NW_sea_NE_land_SE_land_SW_land"
+    },
+    {
+      "id": "cenchreae_bread",
+      "name": "Cenchreae (grain road)",
+      "chart_area_id": "aegean",
+      "map_u": 0.59325,
+      "map_v": 0.5385,
+      "global_x": 1186,
+      "global_y": 538,
+      "snapped_tile": "NW_sea_NE_land_SE_land_SW_land"
+    },
+    {
+      "id": "sicyon_bread",
+      "name": "Sicyon (coastal fields)",
+      "chart_area_id": "aegean",
+      "map_u": 0.58575,
+      "map_v": 0.5315,
+      "global_x": 1172,
+      "global_y": 532,
+      "snapped_tile": "NW_sea_NE_sea_SE_land_SW_land"
+    },
+    {
+      "id": "troezen_coast",
+      "name": "Troezen (Argolid grain)",
+      "chart_area_id": "aegean",
+      "map_u": 0.60975,
+      "map_v": 0.5685,
+      "global_x": 1220,
+      "global_y": 568,
+      "snapped_tile": "NW_sea_NE_land_SE_land_SW_land"
+    }
+  ]
+}

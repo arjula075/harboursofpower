@@ -60,7 +60,11 @@ export default function HarboursImplementationPlan() {
       <H2>Current focus</H2>
       <Text>
         <strong>Living world first:</strong> economy and NPC traffic should feel credible before the player moves
-        the political needle. Keep twin and Godot behaviour aligned; re-run long sims after tuning.
+        the political needle. OCEAN traits already differentiate behaviour; the north star adds{" "}
+        <strong>personhood</strong> — names, history, player relationships on interaction, and NPC-to-NPC social memory in
+        the twin — as a later track (see <Code>EPIC-NPC</Code> in consolidated plan). Keep twin and Godot aligned; re-run
+        long sims after
+        tuning.
       </Text>
 
       <Divider />
@@ -69,6 +73,16 @@ export default function HarboursImplementationPlan() {
       <Table
         headers={["Track", "Goal", "Notes"]}
         rows={[
+          [
+            "NPCs as persons",
+            "Stable identity, names, history ledger, player relationship memory, NPC-to-NPC social memory on sim interactions.",
+            "OCEAN shipped; design save fields + bounded pairwise graph + twin parity before UI; EPIC-NPC.",
+          ],
+          [
+            "Personal scribe (Tiro)",
+            "UI secretary: codex of witnessed meetings and paid intel; ask what happened, who said what, whom to see.",
+            "Planned UC-PLAN-01; pairs with personhood + Tavern/Ledger; not F12 admin.",
+          ],
           [
             "Player political weight",
             "Stage impact: early none → mid local → late city-scale rise/fall.",

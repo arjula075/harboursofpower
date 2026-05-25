@@ -636,7 +636,7 @@ def main() -> None:
     with httpd:
         url = f"http://{host}:{port}/"
         print(f"Port map editor (wang16 1px) at {url}")
-        print("Terrain API: POST /api/terrain/save  GET /api/terrain/status  (build terrain-feedback-5)")
+        print("Terrain API: POST /api/terrain/save  GET /api/terrain/status  (build map-wrap-input-13, ?debug=1)")
         print(f"Tilemaps: {DOCS_MAPS}")
         print(f"Export file: {EXPORT_PATH}")
         print("Ctrl+C to stop.")

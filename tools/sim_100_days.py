@@ -718,6 +718,8 @@ class Sim:
         self.npc_next_id = 0
         self._last_grain_spoilage: dict[str, int] = {}
         self.bankruptcy_events: int = 0
+        self.bankruptcy_events_by_port: dict[str, int] = {}
+        self.merchant_spawn_events_by_port: dict[str, int] = {}
         self.convoy_formations: int = 0
         self.escort_coins_paid: int = 0
         self.pirate_encounter_attempts: int = 0
@@ -1147,6 +1149,8 @@ class Sim:
         self.riot_events = 0
         self.port_food_riot_events.clear()
         self.bankruptcy_events = 0
+        self.bankruptcy_events_by_port.clear()
+        self.merchant_spawn_events_by_port.clear()
         self.convoy_formations = 0
         self.escort_coins_paid = 0
         self.pirate_encounter_attempts = 0
@@ -7534,6 +7538,9 @@ class Sim:
                 add_n = min(_MERCHANT_HOME_COUNT_STEP_MAX, want - cur)
                 for _ in range(add_n):
                     self.npc_agents.append(self._new_npc_agent(ps))
+                    self.merchant_spawn_events_by_port[ps] = (
+                        int(self.merchant_spawn_events_by_port.get(ps, 0)) + 1
+                    )
                     cur += 1
             elif cur > want:
                 rem_n = min(_MERCHANT_HOME_COUNT_STEP_MAX, cur - want)
@@ -8159,6 +8166,11 @@ class Sim:
                 i += 1
                 continue
             self.bankruptcy_events += 1
+            hp_bust = str(ag.get("home_port", "") or "")
+            if hp_bust:
+                self.bankruptcy_events_by_port[hp_bust] = (
+                    int(self.bankruptcy_events_by_port.get(hp_bust, 0)) + 1
+                )
             old_id = int(ag.get("id", 0))
             self._npc_convoy_fixup_removed_agent_id(old_id)
             home = str(ag.get("home_port", ""))

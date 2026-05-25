@@ -1,0 +1,23 @@
+---
+description: How to open HarboursOfPower .canvas.tsx files in rendered (viewing) mode, not raw TSX
+globs:
+  - canvases/**/*.canvas.tsx
+  - "**/*.canvas.tsx"
+---
+
+# Open canvases in preview (viewing), not source (editing)
+
+## For the human (Ari)
+
+- **Reading / reviewing:** `Cmd+Shift+P` → **Open Canvas** → select the canvas. Prefer this over clicking the file in the explorer.
+- **File-tree click** opens **Source (TSX)**. Use the canvas tab control to switch to **Preview / Rendered**, or reopen via **Open Canvas**.
+- Full notes: `canvases/README.md`
+
+## For agents
+
+- When pointing the user at a canvas, say explicitly: open with **Open Canvas** (View), not by double-clicking in the tree.
+- New or updated canvases must exist in **both**:
+  - `canvases/<name>.canvas.tsx` (repo, git)
+  - `~/.cursor/projects/Users-ari-lahti-HarboursOfPower/canvases/<name>.canvas.tsx` (preview list)
+- At the top of each new canvas component (after the file comment), include a **neutral Callout** titled e.g. **How to open this canvas** with the Open Canvas / Source vs Preview instructions (see consolidated plan).
+- Do not tell users that double-clicking the repo file opens the rendered view by default — it does not today.

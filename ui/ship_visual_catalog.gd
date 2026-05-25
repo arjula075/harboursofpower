@@ -59,6 +59,25 @@ static func get_map_scale(ship_class_id: String) -> float:
 	return float(obj.get("map_scale", 1.0))
 
 
+## Target hull height on sea charts (Control `_draw`); separate from scene-tree `map_scale`.
+const CHART_DRAW_HEIGHT_PX := 88.0
+
+
+static func draw_map_ship(canvas: CanvasItem, screen_center: Vector2, ship_class_id: String) -> bool:
+	_ensure_loaded()
+	var tex := get_texture(ship_class_id)
+	if tex == null:
+		return false
+	var th: float = maxf(float(tex.get_height()), 1.0)
+	var sc: float = (CHART_DRAW_HEIGHT_PX / th) * get_map_scale(ship_class_id)
+	var flip_h: bool = str(get_visual_object(ship_class_id).get("facing", "east")).to_lower() == "west"
+	var sz: Vector2 = tex.get_size()
+	canvas.draw_set_transform(screen_center, 0.0, Vector2(-sc if flip_h else sc, sc))
+	canvas.draw_texture(tex, -sz * 0.5)
+	canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	return true
+
+
 static func make_sprite(ship_class_id: String) -> Sprite2D:
 	var spr := Sprite2D.new()
 	spr.name = "ShipSprite"

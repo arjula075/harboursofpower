@@ -1,0 +1,291 @@
+{
+  "version": 1,
+  "source_sheet": "docs/2a72b7d4-3770-4ea0-a0d1-d691d1348469.png",
+  "sheet_size": [
+    1536,
+    1024
+  ],
+  "layout": {
+    "sheet_size": [
+      1536,
+      1024
+    ],
+    "rows": [
+      {
+        "y0": 36,
+        "y1": 468,
+        "ids": [
+          "italic_coastal",
+          "greek_merchant",
+          "phoenician_deep",
+          "sicilian_grain",
+          "greek_trireme"
+        ]
+      },
+      {
+        "y0": 532,
+        "y1": 968,
+        "ids": [
+          "carthage_heavy_galley",
+          "levantine_luxury",
+          "illyrian_raider",
+          "egyptian_river_hybrid"
+        ]
+      }
+    ]
+  },
+  "objects": [
+    {
+      "id": "italic_coastal",
+      "ship_class_id": "italic_coastal",
+      "texture": "res://assets/ships/italic_coastal.png",
+      "source_sheet": "docs/2a72b7d4-3770-4ea0-a0d1-d691d1348469.png",
+      "source_rect": [
+        67,
+        40,
+        247,
+        449
+      ],
+      "size_px": [
+        180,
+        409
+      ],
+      "facing": "east",
+      "pivot_norm": [
+        0.5,
+        0.5
+      ],
+      "map_scale": 0.85,
+      "propulsion": "sail",
+      "size_tier": "small",
+      "has_sail": true,
+      "has_oars": false,
+      "oar_pairs": 0,
+      "notes": "Compact coastal trader; open deck cargo."
+    },
+    {
+      "id": "greek_merchant",
+      "ship_class_id": "greek_merchant",
+      "texture": "res://assets/ships/greek_merchant.png",
+      "source_sheet": "docs/2a72b7d4-3770-4ea0-a0d1-d691d1348469.png",
+      "source_rect": [
+        349,
+        36,
+        586,
+        468
+      ],
+      "size_px": [
+        237,
+        432
+      ],
+      "facing": "east",
+      "pivot_norm": [
+        0.5,
+        0.5
+      ],
+      "map_scale": 1.0,
+      "propulsion": "sail",
+      "size_tier": "medium",
+      "has_sail": true,
+      "has_oars": false,
+      "oar_pairs": 0,
+      "notes": "Wide roundship; deck crates."
+    },
+    {
+      "id": "phoenician_deep",
+      "ship_class_id": "phoenician_deep",
+      "texture": "res://assets/ships/phoenician_deep.png",
+      "source_sheet": "docs/2a72b7d4-3770-4ea0-a0d1-d691d1348469.png",
+      "source_rect": [
+        642,
+        36,
+        904,
+        468
+      ],
+      "size_px": [
+        262,
+        432
+      ],
+      "facing": "east",
+      "pivot_norm": [
+        0.5,
+        0.5
+      ],
+      "map_scale": 1.0,
+      "propulsion": "sail",
+      "size_tier": "medium",
+      "has_sail": true,
+      "has_oars": false,
+      "oar_pairs": 0,
+      "notes": "Long narrow deep-water hull."
+    },
+    {
+      "id": "sicilian_grain",
+      "ship_class_id": "sicilian_grain",
+      "texture": "res://assets/ships/sicilian_grain.png",
+      "source_sheet": "docs/2a72b7d4-3770-4ea0-a0d1-d691d1348469.png",
+      "source_rect": [
+        932,
+        36,
+        1193,
+        468
+      ],
+      "size_px": [
+        261,
+        432
+      ],
+      "facing": "east",
+      "pivot_norm": [
+        0.5,
+        0.5
+      ],
+      "map_scale": 1.15,
+      "propulsion": "sail",
+      "size_tier": "large",
+      "has_sail": false,
+      "has_oars": false,
+      "oar_pairs": 0,
+      "notes": "Open grain hold; minimal rigging shown."
+    },
+    {
+      "id": "greek_trireme",
+      "ship_class_id": "greek_trireme",
+      "texture": "res://assets/ships/greek_trireme.png",
+      "source_sheet": "docs/2a72b7d4-3770-4ea0-a0d1-d691d1348469.png",
+      "source_rect": [
+        1239,
+        41,
+        1460,
+        468
+      ],
+      "size_px": [
+        221,
+        427
+      ],
+      "facing": "east",
+      "pivot_norm": [
+        0.5,
+        0.5
+      ],
+      "map_scale": 1.15,
+      "propulsion": "oar",
+      "size_tier": "large",
+      "has_sail": false,
+      "has_oars": true,
+      "oar_pairs": 12,
+      "notes": "Ram warship; banks of oars, no sail."
+    },
+    {
+      "id": "carthage_heavy_galley",
+      "ship_class_id": "carthage_heavy_galley",
+      "texture": "res://assets/ships/carthage_heavy_galley.png",
+      "source_sheet": "docs/2a72b7d4-3770-4ea0-a0d1-d691d1348469.png",
+      "source_rect": [
+        75,
+        532,
+        344,
+        968
+      ],
+      "size_px": [
+        269,
+        436
+      ],
+      "facing": "east",
+      "pivot_norm": [
+        0.5,
+        0.5
+      ],
+      "map_scale": 1.15,
+      "propulsion": "oar",
+      "size_tier": "large",
+      "has_sail": false,
+      "has_oars": true,
+      "oar_pairs": 10,
+      "notes": "Heavy galley; raised fighting decks."
+    },
+    {
+      "id": "levantine_luxury",
+      "ship_class_id": "levantine_luxury",
+      "texture": "res://assets/ships/levantine_luxury.png",
+      "source_sheet": "docs/2a72b7d4-3770-4ea0-a0d1-d691d1348469.png",
+      "source_rect": [
+        406,
+        532,
+        743,
+        968
+      ],
+      "size_px": [
+        337,
+        436
+      ],
+      "facing": "east",
+      "pivot_norm": [
+        0.5,
+        0.5
+      ],
+      "map_scale": 1.0,
+      "propulsion": "sail",
+      "size_tier": "medium",
+      "has_sail": true,
+      "has_oars": false,
+      "oar_pairs": 0,
+      "notes": "Purple cabin / awning on deck."
+    },
+    {
+      "id": "illyrian_raider",
+      "ship_class_id": "illyrian_raider",
+      "texture": "res://assets/ships/illyrian_raider.png",
+      "source_sheet": "docs/2a72b7d4-3770-4ea0-a0d1-d691d1348469.png",
+      "source_rect": [
+        814,
+        532,
+        1080,
+        968
+      ],
+      "size_px": [
+        266,
+        436
+      ],
+      "facing": "east",
+      "pivot_norm": [
+        0.5,
+        0.5
+      ],
+      "map_scale": 0.85,
+      "propulsion": "oar",
+      "size_tier": "small",
+      "has_sail": false,
+      "has_oars": true,
+      "oar_pairs": 4,
+      "notes": "Sleek raider; few oar pairs."
+    },
+    {
+      "id": "egyptian_river_hybrid",
+      "ship_class_id": "egyptian_river_hybrid",
+      "texture": "res://assets/ships/egyptian_river_hybrid.png",
+      "source_sheet": "docs/2a72b7d4-3770-4ea0-a0d1-d691d1348469.png",
+      "source_rect": [
+        1158,
+        532,
+        1425,
+        968
+      ],
+      "size_px": [
+        267,
+        436
+      ],
+      "facing": "east",
+      "pivot_norm": [
+        0.5,
+        0.5
+      ],
+      "map_scale": 1.0,
+      "propulsion": "sail_and_oar",
+      "size_tier": "medium",
+      "has_sail": true,
+      "has_oars": true,
+      "oar_pairs": 3,
+      "notes": "Square sail plus stern oars; river\u2013sea hybrid."
+    }
+  ]
+}

@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Split the ship reference spritesheet into per-class PNGs + ship_visuals_manifest.json.
 
+Run from repo root (needs Pillow):
+  python3 -m venv .venv && .venv/bin/pip install Pillow
+  .venv/bin/python3 tools/extract_ship_spritesheet.py
+
 Source layout (left-to-right):
   row 0: italic_coastal, greek_merchant, phoenician_deep, sicilian_grain, greek_trireme
   row 1: carthage_heavy_galley, levantine_luxury, illyrian_raider, egyptian_river_hybrid

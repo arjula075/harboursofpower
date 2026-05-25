@@ -49,7 +49,8 @@ export default function HarboursUseCaseMap() {
             <strong>Header row</strong> — calendar, purse, hold/ship line; short pointer that stocks and supply sit under{" "}
             <strong>Market</strong> and moods under <strong>Tavern</strong>. <strong>Location</strong> — docked port name
             or at-sea line only (no long intel strips in the header). <strong>City split</strong> — vertical{" "}
-            <strong>Market · Harbor · Influence · Tavern &amp; intel · Ledger · Routes</strong> toggles; main evidence
+            <strong>Market · Harbor · Influence · Tavern &amp; intel · Ledger · Routes</strong> toggles (planned:{" "}
+            <strong>Scribe / Codex</strong> — personal secretary, Tiro analogue — see Planned section); main evidence
             tables and buttons.             <strong>Routes</strong> — full-window sea chart overlay (pan/zoom, click to sail); uses{" "}
             <Code>WorldMapChart</Code> (chunk manifest) when <Code>data/maps/chunk_manifest.json</Code> exists, else{" "}
             <Code>RoutesMapChart</Code>. Esc / Close chart / another tab dismisses overlay.{" "}
@@ -210,6 +211,40 @@ export default function HarboursUseCaseMap() {
             "Why buttons / tooltips on Market, Harbor, Ledger; route provenance from map context (no per-row ? on Routes)",
             "Opens log line from `get_player_data_provenance` (kind: `market_good` | `influence` | `ledger` | `ledger_good` | `route` | `harbor`).",
             "`get_player_data_provenance`",
+          ],
+        ]}
+      />
+
+      <Divider />
+
+      <H2>Planned — not shipped</H2>
+      <Callout tone="info" title="Personal scribe (Tiro)">
+        <Stack gap={8}>
+          <Text>
+            Roman merchants and magistrates relied on household secretaries; Cicero&apos;s <strong>Tiro</strong> (slave,
+            later freedman) kept correspondence and case notes. The player will have the same fiction: a{" "}
+            <strong>personal scribe</strong> who writes down what you witness — dock meetings, tavern whispers you paid
+            for, charter clauses, who refused to trade — and whom you query later: <em>what happened in Syracuse?</em>,{" "}
+            <em>who said the grain tax would rise?</em>, <em>whom should I ask in Massalia?</em>
+          </Text>
+          <Text tone="secondary" size="small">
+            Same design rule as the rest of the UI: the scribe&apos;s codex is <strong>not omniscient truth</strong> — only
+            entries the player earned (seen, heard, paid intel, scribe present). Deep NPC social memory in the twin may
+            inform what eventually gets written when you are not there, but the player reads it through the secretary,
+            not a debug dump.
+          </Text>
+        </Stack>
+      </Callout>
+      <Table
+        headers={["ID", "State", "Goal", "Trigger / UI (planned)", "Outcome (summary)", "Primary code (planned)"]}
+        rows={[
+          [
+            "UC-PLAN-01",
+            "Any (docked primary)",
+            "Consult your scribe",
+            "Planned: header affordance or city tab (e.g. Scribe / Codex) — search by person, port, date; prompts: what happened, who said what, whom to ask",
+            "Returns indexed entries from player scribe log with source, age, reliability; may suggest a named NPC to visit when personhood ships",
+            "`list_player_scribe_entries` · `query_player_scribe` · `append_player_scribe_entry` (TBD) · `ui/main.gd`",
           ],
         ]}
       />

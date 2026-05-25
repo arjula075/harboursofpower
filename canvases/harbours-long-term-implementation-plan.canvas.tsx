@@ -56,6 +56,18 @@ const INITIAL_MILESTONES: TodoItem[] = [
     status: "in_progress",
   },
   {
+    id: "m-npc-persons",
+    content:
+      "NPCs as persons (beyond OCEAN): stable identity, names, history ledger, persistent player relationships on interaction, and NPC-to-NPC social memory when they interact in the twin; save + twin parity.",
+    status: "pending",
+  },
+  {
+    id: "m-tiro-scribe",
+    content:
+      "Personal scribe UI (Tiro): household secretary keeps player-facing interaction records; query what happened, who said what, whom to ask; bounded to witnessed/paid intel, not omniscience.",
+    status: "pending",
+  },
+  {
     id: "m-city-ux",
     content:
       "City stress UX: richer in-port read on famine, riot risk, and recovery than status/admin lines alone; optional civic institutions when fiction supports it.",
@@ -133,7 +145,23 @@ export default function HarboursLongTermImplementationPlan() {
             </Text>
             <Text>
               Living world credibility. Ports, granaries, fleets, and prices should remain believable when the player is
-              idle; wars strain food and materiel without scripted riot guarantees.
+              idle; wars strain food and materiel without scripted riot guarantees. The world keeps running socially: NPCs
+              remember one another, not only the player.
+            </Text>
+            <Text>
+              <strong>NPCs as persons.</strong> Merchants and captains are not anonymous counters. OCEAN-style traits are
+              the behavioural floor (already in sim); over time they gain <strong>stable names</strong>, a{" "}
+              <strong>traceable history</strong>, and <strong>persistent relationships</strong> — with the{" "}
+              <strong>player</strong> when the player has interacted with them, and with <strong>other NPCs</strong> when
+              they have traded, competed, or dealt in the sim — trust, grudges, and remembered deals, not only purse and
+              trait rolls.
+            </Text>
+            <Text>
+              <strong>Personal scribe (Tiro).</strong> The player employs a household slave or freedman secretary — in the
+              Roman vein of Cicero&apos;s Tiro — who keeps <strong>written records</strong> of meetings, bargains, and
+              hearsay the player actually witnessed or paid to learn. In UI, the scribe is whom you ask:{" "}
+              <em>what happened</em>, <em>who said what</em>, <em>whom should I speak to next</em> — a legible memory
+              layer on top of sim logs, not a cheat sheet of omniscient truth.
             </Text>
             <Text>
               Fair observability. Long simulations and admin dumps should make stress visible for tuning; the Python twin
@@ -210,6 +238,11 @@ export default function HarboursLongTermImplementationPlan() {
             "Purses, wholesale, traits, risk lots, dust-sell, bust streaks, used-hull slip; duties add pressure — watch twin bankruptcies.",
           ],
           [
+            "NPC personhood (future)",
+            "Planned",
+            "OCEAN shipped; next: stable ids, names, history, player + NPC-to-NPC relationship memory on real interactions — see EPIC-NPC in consolidated plan.",
+          ],
+          [
             "Specie loop",
             "Shipped",
             "Mint batches, treasury, NPC/player gold and silver at mint-capable ports; strike wealth bonus; twin parity.",
@@ -250,6 +283,17 @@ export default function HarboursLongTermImplementationPlan() {
             "Institutions (later)",
             "Temples, granary policy, patronage — only when they reinforce the economy loop, not decoration.",
             "Defer until food and coin loops are stable.",
+          ],
+          [
+            "NPCs the player remembers",
+            "Names and faces in port; relationship memory when the player has actually dealt with them.",
+            "Surface met captains/merchants in UI; builds on m-npc-persons; pairs with city stress UX.",
+          ],
+          [
+            "Personal scribe (Tiro)",
+            "Ask the secretary",
+            'Dedicated UI (tab or always-available panel): search scribe\'s codex for people, ports, dates; "who should I see?" hints from recorded threads.',
+            "Planned m-tiro-scribe; feeds from interaction log + later NPC personhood; same show-numbers-not-truth rule.",
           ],
         ]}
       />

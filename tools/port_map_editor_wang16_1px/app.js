@@ -3,9 +3,57 @@
  * Basemap from pre-rendered PNG; snap via server spatial index.
  */
 (function () {
-  const EDITOR_BUILD = "terrain-feedback-5";
+  const EDITOR_BUILD = "map-wrap-input-13";
   const GW = 2000;
   const GH = 1000;
+
+  /** Enable: ?debug=1 in URL, or localStorage port_map_editor_debug=1 */
+  const DEBUG =
+    /(?:^|[?&])debug=(?:1|true)(?:&|$)/i.test(location.search) ||
+    localStorage.getItem("port_map_editor_debug") === "1";
+
+  function debugLog(step, detail) {
+    if (!DEBUG) return;
+    if (detail !== undefined) console.info(`[port-editor] ${step}`, detail);
+    else console.info(`[port-editor] ${step}`);
+  }
+
+  function debugWarn(step, detail) {
+    if (!DEBUG) return;
+    if (detail !== undefined) console.warn(`[port-editor] ${step}`, detail);
+    else console.warn(`[port-editor] ${step}`);
+  }
+
+  function debugSnapshot() {
+    const cRect = canvas?.getBoundingClientRect();
+    const wRect = mapWrap?.getBoundingClientRect();
+    return {
+      build: EDITOR_BUILD,
+      toolMode,
+      terrainBrush,
+      areaId,
+      bounds,
+      computing,
+      mapWrapComputingClass: mapWrap?.classList.contains("computing"),
+      canvasPointerEvents: canvas ? getComputedStyle(canvas).pointerEvents : null,
+      canvasRect: cRect
+        ? { left: cRect.left, top: cRect.top, width: cRect.width, height: cRect.height }
+        : null,
+      wrapRect: wRect
+        ? { left: wRect.left, top: wRect.top, width: wRect.width, height: wRect.height }
+        : null,
+      canvasSize: canvas ? { w: canvas.width, h: canvas.height } : null,
+      viewScale,
+      viewPanX,
+      viewPanY,
+      draggingPort,
+      panning,
+      selectedPortId,
+      areaPortCount: areaPorts.length,
+      terrainDirty,
+      terrainPreviewVersion,
+    };
+  }
 
   const WHEEL_ZOOM_FACTOR = 1.04;
   /** Target on-screen marker radius (px); canvas radius divides by viewScale. */
@@ -35,6 +83,7 @@
   const canvas = $("map-canvas");
   const ctx = canvas.getContext("2d");
   const mapWrap = $("map-wrap");
+  const mapHitLayer = $("map-hit-layer");
   const mapOverlay = $("map-overlay");
   const statusText = $("status-text");
   const coordsText = $("coords-text");
@@ -46,6 +95,8 @@
   let terrainPreviewVersion = 0;
   let terrainDirty = false;
   let terrainBoundaryWarning = "";
+  /** @type {{ lx: number, ly: number, until: number } | null} */
+  let paintFlash = null;
 
   let chartAreas = [];
   let allPorts = [];
@@ -77,12 +128,18 @@
   }
 
   function setComputing(on, label) {
+    debugLog(on ? "computing:start" : "computing:end", { label: label || "" });
     computing = on;
-    const app = $("app");
-    if (app) app.classList.toggle("computing", on);
     if (mapWrap) mapWrap.classList.toggle("computing", on);
     const overlay = $("computing-overlay");
     if (overlay) overlay.textContent = label || "Recomputing chart area…";
+    updateToolUi();
+  }
+
+  function clearStaleComputingUi() {
+    computing = false;
+    $("app")?.classList.remove("computing");
+    mapWrap?.classList.remove("computing");
     updateToolUi();
   }
 
@@ -90,7 +147,7 @@
     const isTerrain = toolMode === "terrain";
     if (terrainPanel) terrainPanel.classList.toggle("hidden", !isTerrain);
     if (portsToolPanel) portsToolPanel.classList.toggle("hidden", isTerrain);
-    if (canvas) canvas.classList.toggle("terrain-mode", isTerrain);
+    if (mapWrap) mapWrap.classList.toggle("terrain-mode", isTerrain);
 
     const hasArea = !!areaId;
     const busy = computing;
@@ -369,8 +426,10 @@
   function screenToLocal(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
     if (rect.width < 1 || rect.height < 1) return { lx: 0, ly: 0 };
-    const lx = ((clientX - rect.left) / rect.width) * canvas.width;
-    const ly = ((clientY - rect.top) / rect.height) * canvas.height;
+    const w = bounds ? bounds.x1 - bounds.x0 : canvas.width;
+    const h = bounds ? bounds.y1 - bounds.y0 : canvas.height;
+    const lx = ((clientX - rect.left) / rect.width) * w;
+    const ly = ((clientY - rect.top) / rect.height) * h;
     return { lx, ly };
   }
 
@@ -411,36 +470,65 @@
     }
   }
 
-  function drawMarkers() {
+  function drawPortMarker(p, selected, dimmed) {
+    const pos = getPortPos(p.id);
+    if (!pos) return;
     const s = markerCanvasScale();
     const r = MARKER_SCREEN_RADIUS / s;
     const stroke = 2 / s;
     const labelGap = 4 / s;
     const fontPx = 11 / s;
-    for (const p of areaPorts) {
-      const pos = getPortPos(p.id);
-      if (!pos) continue;
-      const { lx, ly } = localFromGlobal(pos.gx, pos.gy);
-      const selected = p.id === selectedPortId;
-      ctx.beginPath();
-      ctx.arc(lx, ly, r, 0, Math.PI * 2);
-      ctx.fillStyle = selected ? "#ff6b4a" : "#f0c040";
-      ctx.fill();
-      ctx.strokeStyle = "#1a1008";
-      ctx.lineWidth = stroke;
-      ctx.stroke();
-      if (selected) {
-        ctx.fillStyle = "#fff";
-        ctx.font = `${fontPx}px system-ui,sans-serif`;
-        ctx.fillText(p.name, lx + r + labelGap, ly + labelGap);
-      }
+    const { lx, ly } = localFromGlobal(pos.gx, pos.gy);
+    ctx.beginPath();
+    ctx.arc(lx, ly, r, 0, Math.PI * 2);
+    ctx.fillStyle = selected ? "#ff6b4a" : dimmed ? "#a08030" : "#f0c040";
+    ctx.globalAlpha = dimmed && !selected ? 0.55 : 1;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = "#1a1008";
+    ctx.lineWidth = stroke;
+    ctx.stroke();
+    if (selected) {
+      ctx.fillStyle = "#fff";
+      ctx.font = `${fontPx}px system-ui,sans-serif`;
+      ctx.fillText(p.name, lx + r + labelGap, ly + labelGap);
     }
+  }
+
+  function drawMarkers() {
+    for (const p of areaPorts) {
+      drawPortMarker(p, p.id === selectedPortId, false);
+    }
+  }
+
+  function drawSelectedPortMarker() {
+    if (!selectedPortId) return;
+    const p = areaPorts.find((x) => x.id === selectedPortId);
+    if (p) drawPortMarker(p, true, false);
+  }
+
+  function drawPaintFlash() {
+    if (!paintFlash || Date.now() > paintFlash.until) {
+      paintFlash = null;
+      return;
+    }
+    const s = markerCanvasScale();
+    const { lx, ly } = paintFlash;
+    ctx.save();
+    ctx.strokeStyle = "#ff6b4a";
+    ctx.fillStyle = "rgba(255, 107, 74, 0.45)";
+    ctx.lineWidth = Math.max(1, 2 / s);
+    ctx.fillRect(lx, ly, 1, 1);
+    ctx.strokeRect(lx - 0.5, ly - 0.5, 2, 2);
+    ctx.restore();
   }
 
   function draw() {
     if (!bounds) return;
     drawBasemap();
+    if (paintFlash) drawPaintFlash();
     if (toolMode === "ports") drawMarkers();
+    else drawSelectedPortMarker();
     const p = portState.get(selectedPortId);
     if (p && p.map_u != null) {
       const { gx, gy } = globalFromUv(p.map_u, p.map_v);
@@ -499,7 +587,11 @@
   }
 
   async function selectPort(portId) {
-    if (!areaPorts.some((p) => p.id === portId)) return;
+    debugLog("selectPort", { portId });
+    if (!areaPorts.some((p) => p.id === portId)) {
+      debugWarn("selectPort:ignored", "not-in-area");
+      return;
+    }
     selectedPortId = portId;
     await ensurePortInitialized(portId);
     portSelect.value = portId;
@@ -519,6 +611,7 @@
   }
 
   async function loadArea(id) {
+    debugLog("loadArea:start", { id });
     areaId = id;
     selectedPortId = "";
     mapImage = null;
@@ -577,12 +670,30 @@
         ? "Terrain: click cell · Land/Sea brush · shore = derived Wang"
         : "Ports: drag port · wheel zoom · right-drag pan";
     if (terrainBoundaryWarning) setStatus(terrainBoundaryWarning, true);
+    const wRect = mapWrap?.getBoundingClientRect();
+    debugLog("loadArea:done", {
+      ...debugSnapshot(),
+      wrapClientRect: wRect
+        ? { w: wRect.width, h: wRect.height, left: wRect.left, top: wRect.top }
+        : null,
+    });
+    if (DEBUG && wRect && (wRect.width < 8 || wRect.height < 8)) {
+      debugWarn("loadArea:wrap-too-small", "Map panel has near-zero size — check grid layout");
+    }
   }
 
   async function paintTerrainAt(lx, ly) {
     let { gx, gy } = globalFromLocal(lx, ly);
     gx = Math.round(gx);
     gy = Math.round(gy);
+    debugLog("paintTerrainAt:start", { lx, ly, gx, gy, areaId, terrain: terrainBrush });
+    const { lx: flashLx, ly: flashLy } = localFromGlobal(gx, gy);
+    paintFlash = { lx: flashLx, ly: flashLy, until: Date.now() + 2500 };
+    draw();
+    if (mapOverlay) {
+      mapOverlay.textContent = `Painting (${gx}, ${gy}) → ${terrainBrush}…`;
+      mapOverlay.style.background = "rgba(255, 107, 74, 0.35)";
+    }
     setComputing(true, "Recomputing chart area…");
     try {
       const res = await fetch("/api/terrain/paint", {
@@ -596,6 +707,7 @@
         }),
       });
       const data = await res.json();
+      debugLog("paintTerrainAt:response", { ok: res.ok, status: res.status, data });
       if (!res.ok) throw new Error(data.error || "paint failed");
       terrainDirty = true;
       terrainPreviewVersion = data.preview_version || terrainPreviewVersion + 1;
@@ -610,8 +722,16 @@
       } else {
         setStatus(msg);
       }
+      if (mapOverlay) {
+        mapOverlay.textContent = msg;
+        mapOverlay.style.background = "rgba(0, 0, 0, 0.75)";
+      }
+    } catch (err) {
+      debugWarn("paintTerrainAt:failed", String(err));
+      throw err;
     } finally {
       setComputing(false);
+      debugLog("paintTerrainAt:done");
     }
   }
 
@@ -628,46 +748,162 @@
     return null;
   }
 
-  canvas.addEventListener("pointerdown", async (e) => {
-    if (!bounds || computing) return;
+  function pointerInMapWrap(clientX, clientY) {
+    const r = mapWrap.getBoundingClientRect();
+    return clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom;
+  }
+
+  function topElementAt(clientX, clientY) {
+    return document.elementFromPoint(clientX, clientY);
+  }
+
+  function mapPointerBlockedReason(e) {
+    if (!mapWrap) return "no-map-wrap";
+    if (!pointerInMapWrap(e.clientX, e.clientY)) return "outside-map-wrap";
+    const top = topElementAt(e.clientX, e.clientY);
+    if (top?.id === "computing-overlay") return "computing-overlay";
+    const sidebar = $("sidebar");
+    if (sidebar && top && sidebar.contains(top)) return "sidebar";
+    if (document.querySelector("header")?.contains(top)) return "header";
+    if ($("status-bar")?.contains(top)) return "status-bar";
+    return null;
+  }
+
+  function mapPointerBlocked(e) {
+    return mapPointerBlockedReason(e) !== null;
+  }
+
+  let lastMapPressMs = 0;
+  let dragListenersActive = false;
+
+  function onMapPress(e, source) {
+    const t = e.timeStamp || performance.now();
+    if (t - lastMapPressMs < 40) return;
+    lastMapPressMs = t;
+    onMapPointerDown(e, source);
+  }
+
+  function onMapPointerDown(e, source) {
+    if (source === undefined) source = "pointerdown";
+
+    const top = topElementAt(e.clientX, e.clientY);
+    const blockedReason = mapPointerBlockedReason(e);
+    debugLog("map-press", {
+      source,
+      blocked: blockedReason,
+      target: e.target?.id || e.target?.tagName,
+      topAtPoint: top?.id || top?.tagName,
+      topInMapWrap: top ? mapWrap?.contains(top) : null,
+      button: e.button,
+      altKey: e.altKey,
+      computing,
+      hasBounds: !!bounds,
+      toolMode,
+      client: { x: e.clientX, y: e.clientY },
+    });
+    if (blockedReason) {
+      debugWarn("map-press:ignored", blockedReason);
+      return;
+    }
+    if (!bounds) {
+      debugWarn("map-press:ignored", "no-bounds");
+      setStatus("Select a chart area first", true);
+      return;
+    }
+    if (computing) {
+      debugWarn("map-press:ignored", "computing-busy");
+      setStatus("Busy — wait for recomputation to finish");
+      return;
+    }
     const { lx, ly } = screenToLocal(e.clientX, e.clientY);
     lastPointerX = e.clientX;
     lastPointerY = e.clientY;
+    debugLog("map-press:coords", { lx, ly, viewScale });
 
     if (toolMode === "terrain" && e.button === 0 && !e.altKey) {
-      try {
-        await paintTerrainAt(lx, ly);
-      } catch (err) {
+      debugLog("map-press:branch", "terrain-paint");
+      void paintTerrainAt(lx, ly).catch((err) => {
+        debugWarn("paintTerrainAt:error", String(err));
         setStatus(String(err), true);
-      }
+      });
       return;
     }
 
-    if (e.button === 2 || (e.button === 0 && e.altKey)) {
+    if (e.button === 1 || e.button === 2 || (e.button === 0 && e.altKey)) {
+      debugLog("map-press:branch", "pan-modifier");
+      if (e.button === 1) e.preventDefault();
       panning = true;
-      canvas.classList.add("panning");
-      canvas.setPointerCapture(e.pointerId);
+      mapWrap.classList.add("panning");
+      capturePointer(e);
+      return;
+    }
+
+    if (e.button !== 0) {
+      debugWarn("map-press:ignored", `button-${e.button}`);
       return;
     }
 
     const hit = hitTestPort(lx, ly);
     if (hit) {
+      debugLog("map-press:branch", { dragPort: hit });
       selectPort(hit);
       draggingPort = true;
       const pos = getPortPos(hit);
       const loc = localFromGlobal(pos.gx, pos.gy);
       dragOffsetX = lx - loc.lx;
       dragOffsetY = ly - loc.ly;
-      canvas.classList.add("dragging-port");
-      canvas.setPointerCapture(e.pointerId);
-    } else if (selectedPortId) {
+      mapWrap.classList.add("dragging-port");
+      capturePointer(e);
+      if (mapOverlay) mapOverlay.textContent = `Dragging ${portState.get(hit)?.name || hit}`;
+    } else {
+      debugLog("map-press:branch", "pan-background");
       panning = true;
-      canvas.classList.add("panning");
-      canvas.setPointerCapture(e.pointerId);
+      mapWrap.classList.add("panning");
+      capturePointer(e);
     }
-  });
+  }
 
-  canvas.addEventListener("pointermove", (e) => {
+  function capturePointer(e) {
+    if (!dragListenersActive) {
+      dragListenersActive = true;
+      document.addEventListener("mousemove", onMapPointerMove, CAPTURE);
+      document.addEventListener("mouseup", onMapPointerUpEnd, CAPTURE);
+    }
+    const el = mapHitLayer || mapWrap;
+    if (e.pointerId != null && el?.setPointerCapture) {
+      try {
+        el.setPointerCapture(e.pointerId);
+        debugLog("pointer:capture", { pointerId: e.pointerId, on: el.id });
+      } catch (err) {
+        debugWarn("pointer:capture-failed", String(err));
+      }
+    }
+  }
+
+  function releasePointer(e) {
+    if (dragListenersActive) {
+      document.removeEventListener("mousemove", onMapPointerMove, CAPTURE);
+      document.removeEventListener("mouseup", onMapPointerUpEnd, CAPTURE);
+      dragListenersActive = false;
+    }
+    const el = mapHitLayer || mapWrap;
+    if (e?.pointerId != null && el?.releasePointerCapture) {
+      try {
+        el.releasePointerCapture(e.pointerId);
+        debugLog("pointer:release", { pointerId: e.pointerId });
+      } catch (err) {
+        debugWarn("pointer:release-failed", String(err));
+      }
+    }
+  }
+
+  async function onMapPointerUpEnd(e) {
+    releasePointer(e);
+    await onMapPointerUp(e);
+  }
+
+  function onMapPointerMove(e) {
+    if (!panning && !draggingPort) return;
     if (panning) {
       viewPanX += e.clientX - lastPointerX;
       viewPanY += e.clientY - lastPointerY;
@@ -686,9 +922,16 @@
     p.map_v = uv.map_v;
     draw();
     updateMeta();
-  });
+  }
 
-  canvas.addEventListener("pointerup", async (e) => {
+  async function onMapPointerUp(e) {
+    if (!panning && !draggingPort) return;
+    debugLog("pointerup", {
+      draggingPort,
+      panning,
+      selectedPortId,
+      button: e.button,
+    });
     if (draggingPort && selectedPortId) {
       const p = portState.get(selectedPortId);
       const { gx, gy } = globalFromUv(p.map_u, p.map_v);
@@ -701,15 +944,41 @@
     }
     draggingPort = false;
     panning = false;
-    canvas.classList.remove("dragging-port", "panning");
-    try {
-      canvas.releasePointerCapture(e.pointerId);
-    } catch (_) {}
-  });
+    mapWrap.classList.remove("dragging-port", "panning");
+    if (bounds && mapOverlay && !computing) {
+      mapOverlay.style.background = "";
+      mapOverlay.textContent =
+        toolMode === "terrain"
+          ? "Terrain: click cell · Land/Sea brush"
+          : "Ports: drag port · wheel zoom · right-drag pan";
+    }
+  }
 
-  canvas.addEventListener(
-    "wheel",
-    (e) => {
+  const CAPTURE = true;
+
+  window.__portMapEditorDebug = {
+    enabled: DEBUG,
+    build: EDITOR_BUILD,
+    snapshot: debugSnapshot,
+    log: debugLog,
+    testClick: null,
+  };
+
+  function bindMapInput(el) {
+    if (!el) return;
+    el.addEventListener("pointerdown", (e) => onMapPress(e, "pointerdown"), CAPTURE);
+    el.addEventListener("mousedown", (e) => onMapPress(e, "mousedown"), CAPTURE);
+    el.addEventListener("pointermove", onMapPointerMove, CAPTURE);
+    el.addEventListener("pointerup", (e) => void onMapPointerUpEnd(e), CAPTURE);
+    el.addEventListener("pointercancel", (e) => void onMapPointerUpEnd(e), CAPTURE);
+  }
+
+  if (!canvas || !mapWrap) {
+    console.error("[editor] #map-canvas or #map-wrap missing");
+    if (statusText) statusText.textContent = "Editor DOM error — reload page";
+  } else {
+    const onWheel = (e) => {
+      if (!pointerInMapWrap(e.clientX, e.clientY)) return;
       e.preventDefault();
       const factor = e.deltaY > 0 ? 1 / WHEEL_ZOOM_FACTOR : WHEEL_ZOOM_FACTOR;
       const wrapRect = mapWrap.getBoundingClientRect();
@@ -719,12 +988,53 @@
       viewPanY = my - (my - viewPanY) * factor;
       viewScale = Math.max(0.15, Math.min(24, viewScale * factor));
       applyViewTransform();
-      if (toolMode === "ports") draw();
-    },
-    { passive: false },
-  );
+      draw();
+    };
+    bindMapInput(mapHitLayer);
+    document.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    mapHitLayer?.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    const blockContext = (e) => {
+      if (!pointerInMapWrap(e.clientX, e.clientY)) return;
+      e.preventDefault();
+    };
+    mapHitLayer?.addEventListener("contextmenu", blockContext, CAPTURE);
+    document.addEventListener("contextmenu", blockContext, CAPTURE);
 
-  canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+    if (DEBUG) {
+      for (const type of ["pointerdown", "mousedown", "click"]) {
+        window.addEventListener(
+          type,
+          (e) => {
+            console.info(`[port-editor] window:${type}`, {
+              x: e.clientX,
+              y: e.clientY,
+              target: e.target?.id || e.target?.tagName,
+            });
+          },
+          true,
+        );
+      }
+    }
+
+    debugLog("input:bound", {
+      hitLayer: !!mapHitLayer,
+      mapWrap: !!mapWrap,
+      canvas: !!canvas,
+      canvasPointerEvents: getComputedStyle(canvas).pointerEvents,
+      hitLayerPointerEvents: mapHitLayer ? getComputedStyle(mapHitLayer).pointerEvents : null,
+    });
+
+    window.__portMapEditorDebug.testClick = () => {
+      const r = mapWrap.getBoundingClientRect();
+      const x = r.left + r.width / 2;
+      const y = r.top + r.height / 2;
+      debugLog("testClick:synthetic", { x, y });
+      onMapPress(
+        new MouseEvent("mousedown", { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 0 }),
+        "testClick",
+      );
+    };
+  }
 
   areaSelect.addEventListener("change", async () => {
     const id = areaSelect.value;
@@ -965,6 +1275,11 @@
     if (bounds) fitView();
   });
 
+  clearStaleComputingUi();
+  window.addEventListener("pageshow", (ev) => {
+    if (ev.persisted) clearStaleComputingUi();
+  });
+
   async function init() {
     try {
       const res = await fetch("/api/bootstrap");
@@ -1015,10 +1330,18 @@
         statusMsg = `Terrain API unreachable: ${e}`;
         statusErr = true;
       }
+      if (DEBUG) {
+        statusMsg += " · debug on (?debug=1)";
+        debugLog("init:ready", debugSnapshot());
+        console.info(
+          "[port-editor] Debug enabled. Click the map and watch for pointerdown / paintTerrainAt logs. snapshot(): __portMapEditorDebug.snapshot()",
+        );
+      }
       setStatus(statusMsg, statusErr);
       updateToolUi();
       mapOverlay.textContent = "Select a chart area";
     } catch (err) {
+      debugWarn("init:failed", String(err));
       setStatus(String(err), true);
     }
   }

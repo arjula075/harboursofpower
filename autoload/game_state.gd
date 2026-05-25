@@ -950,6 +950,19 @@ func get_port_map_uv(port_id: String) -> Vector2:
 	return Vector2(-1.0, -1.0)
 
 
+## Sea-chart anchor for the player hull: docked at `player_port_id`; underway lerps toward `voyage_dest_id`.
+func get_player_chart_uv() -> Vector2:
+	var here: Vector2 = get_port_map_uv(player_port_id)
+	if not is_at_sea() or voyage_dest_id.is_empty():
+		return here
+	var dest: Vector2 = get_port_map_uv(voyage_dest_id)
+	if here.x < 0.0 or dest.x < 0.0:
+		return here
+	var booked: int = maxi(1, player_voyage_booked_days)
+	var t: float = 1.0 - float(voyage_days_remaining) / float(booked)
+	return here.lerp(dest, clampf(t, 0.0, 1.0))
+
+
 func is_port_at_war(port_id: String) -> bool:
 	return get_port_war_days_remaining(port_id) > 0
 
@@ -3896,6 +3909,7 @@ func list_player_harbor_ship_rows() -> Array:
 	out.append(
 		{
 			"ship": get_player_ship_display_name(),
+			"ship_class_id": get_player_ship_class_id(),
 			"cargo": "%d/%d" % [get_player_cargo_used(), get_player_cargo_capacity()],
 			"speed_score": speed_score,
 			"condition": clampi(player_ship_condition, _SHIP_CONDITION_MIN, _SHIP_CONDITION_MAX),

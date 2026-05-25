@@ -392,6 +392,77 @@ def _build_region_rollups(
     return out
 
 
+def _port_chart_area_map(port_meta: dict[str, dict]) -> dict[str, str]:
+    return {str(pid): str(m.get("chart_area_id", "") or "") for pid, m in port_meta.items()}
+
+
+def _build_region_merchant_stats(
+    sim,
+    port_to_area: dict[str, str],
+    chart_areas: list[dict],
+) -> dict[str, dict]:
+    """NPC merchants homed in ports of each chart_area (spawn/bust cumulatives by home port)."""
+    out: dict[str, dict] = {str(a["id"]): {"npc_agents": 0, "spawn_cum": 0, "bust_cum": 0} for a in chart_areas}
+    out["_other"] = {"npc_agents": 0, "spawn_cum": 0, "bust_cum": 0}
+    for ag in getattr(sim, "npc_agents", []) or []:
+        if not isinstance(ag, dict):
+            continue
+        home = str(ag.get("home_port", "") or "")
+        aid = port_to_area.get(home, "_other")
+        if aid not in out:
+            aid = "_other"
+        out[aid]["npc_agents"] += 1
+    for pid, n in (getattr(sim, "merchant_spawn_events_by_port", None) or {}).items():
+        aid = port_to_area.get(str(pid), "_other")
+        if aid not in out:
+            aid = "_other"
+        out[aid]["spawn_cum"] += int(n)
+    for pid, n in (getattr(sim, "bankruptcy_events_by_port", None) or {}).items():
+        aid = port_to_area.get(str(pid), "_other")
+        if aid not in out:
+            aid = "_other"
+        out[aid]["bust_cum"] += int(n)
+    return out
+
+
+def _merge_region_merchant_stats(regions: dict[str, dict], merchant_stats: dict[str, dict]) -> None:
+    for aid, ms in merchant_stats.items():
+        if aid not in regions:
+            continue
+        regions[aid]["npc_agents"] = int(ms.get("npc_agents", 0))
+        regions[aid]["merchant_spawn_cum"] = int(ms.get("spawn_cum", 0))
+        regions[aid]["bankruptcy_cum"] = int(ms.get("bust_cum", 0))
+
+
+def _region_merchant_trend_compact(regions: dict[str, dict]) -> dict[str, dict]:
+    """Short keys for trend.jsonl: a=agents, s=spawn cum, b=bust cum."""
+    out: dict[str, dict] = {}
+    for aid, r in regions.items():
+        if int(r.get("port_count", 0)) <= 0 and aid != "_other":
+            continue
+        out[aid] = {
+            "a": int(r.get("npc_agents", 0)),
+            "s": int(r.get("merchant_spawn_cum", 0)),
+            "b": int(r.get("bankruptcy_cum", 0)),
+        }
+    return out
+
+
+def _region_merchant_deltas(snap: dict, prev_snap: dict | None) -> dict[str, dict]:
+    cur = _region_merchant_trend_compact(snap.get("regions") or {})
+    if not prev_snap:
+        return {aid: {"spawn": 0, "bust": 0} for aid in cur}
+    prev = _region_merchant_trend_compact(prev_snap.get("regions") or {})
+    out: dict[str, dict] = {}
+    for aid, c in cur.items():
+        p = prev.get(aid) or {"a": 0, "s": 0, "b": 0}
+        out[aid] = {
+            "spawn": max(0, int(c["s"]) - int(p["s"])),
+            "bust": max(0, int(c["b"]) - int(p["b"])),
+        }
+    return out
+
+
 def _load_alliance_band_port_lists(world_path: Path) -> list[list[str]]:
     try:
         world = json.loads(world_path.read_text())
@@ -835,6 +906,7 @@ def _compute_tick_events(snap: dict, prev_snap: dict | None) -> dict:
         return {
             "riot_delta": 0,
             "bust_delta": 0,
+            "npc_spawn_delta": 0,
             "war_new_ports": 0,
             "plague_new_ports": 0,
             "ports_at_war": int(ports_at_war),
@@ -843,6 +915,9 @@ def _compute_tick_events(snap: dict, prev_snap: dict | None) -> dict:
     riot_delta = max(0, int(snap.get("riot_events_total", 0)) - int(prev_snap.get("riot_events_total", 0)))
     bust_delta = max(
         0, int(snap.get("bankruptcy_events_total", 0)) - int(prev_snap.get("bankruptcy_events_total", 0))
+    )
+    npc_spawn_delta = max(
+        0, int(snap.get("npc_agent_count", 0)) - int(prev_snap.get("npc_agent_count", 0))
     )
     prev_ports = prev_snap.get("ports") or {}
     war_new = 0
@@ -856,6 +931,7 @@ def _compute_tick_events(snap: dict, prev_snap: dict | None) -> dict:
     return {
         "riot_delta": int(riot_delta),
         "bust_delta": int(bust_delta),
+        "npc_spawn_delta": int(npc_spawn_delta),
         "war_new_ports": int(war_new),
         "plague_new_ports": int(plague_new),
         "ports_at_war": int(ports_at_war),
@@ -966,6 +1042,10 @@ def _build_snapshot(
     # for stable ordering when populations match (common at game start).
     rows.sort(key=lambda kv: (-int(kv[1]["population_grain"]), -int(kv[1]["wealth"]), kv[0]))
     ports = dict(rows)
+    regions = _build_region_rollups(ports, chart_areas)
+    _merge_region_merchant_stats(
+        regions, _build_region_merchant_stats(sim, _port_chart_area_map(port_meta), chart_areas)
+    )
     snap = {
         "tick": tick_idx,
         "day": int(m.get("day", sim.current_day)),
@@ -991,7 +1071,7 @@ def _build_snapshot(
         "pop_summary": _pop_summary(ports),
         "contracts": _build_contracts_summary(sim, m),
         "chart_areas": chart_areas,
-        "regions": _build_region_rollups(ports, chart_areas),
+        "regions": regions,
         "alliance_bands": _build_alliance_bands(sim, world_path, metrics_ports),
         "wars": _build_wars_summary(ports),
         "goods_flow": _build_goods_flow_summary(sim),
@@ -1143,6 +1223,9 @@ def main() -> None:
             "npc_balance_sheet": int(snap["npc_total_balance_sheet_coins"]),
             "npc_at_sea": int(snap["npc_at_sea"]),
             "npc_agent_count": int(snap["npc_agent_count"]),
+            "npc_spawn_delta": int(ev.get("npc_spawn_delta", 0)),
+            "mbr": _region_merchant_trend_compact(snap.get("regions") or {}),
+            "mbr_delta": ev.get("region_merchant") or {},
             "riot_events_total": int(snap["riot_events_total"]),
             "bankruptcy_events_total": int(snap["bankruptcy_events_total"]),
             "pirate_raids_success": int(snap["pirate_raids_success"]),
@@ -1162,6 +1245,7 @@ def main() -> None:
             "contracts_active_total": int((snap.get("contracts") or {}).get("active_total", 0)),
             "riot_delta": int(ev.get("riot_delta", 0)),
             "bust_delta": int(ev.get("bust_delta", 0)),
+            "npc_spawn_delta": int(ev.get("npc_spawn_delta", 0)),
             "war_new_ports": int(ev.get("war_new_ports", 0)),
             "plague_new_ports": int(ev.get("plague_new_ports", 0)),
             "ports_at_war": int(ev.get("ports_at_war", 0)),
@@ -1184,6 +1268,7 @@ def main() -> None:
     def _emit(snap: dict) -> None:
         nonlocal last_snap
         ev = _compute_tick_events(snap, last_snap)
+        ev["region_merchant"] = _region_merchant_deltas(snap, last_snap)
         snap["events"] = ev
         snap["treasury"] = _build_treasury_summary(sim, snap, last_snap)
         snap["inequality"] = _build_inequality_summary(

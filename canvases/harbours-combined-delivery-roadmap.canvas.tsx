@@ -61,6 +61,18 @@ const COMBINED_MILESTONES_INITIAL: TodoItem[] = [
     status: "in_progress",
   },
   {
+    id: "m-npc-persons",
+    content:
+      "NPCs as persons: stable identity, names, history ledger, player relationships on interaction, NPC-to-NPC social memory when they interact; save + twin parity.",
+    status: "pending",
+  },
+  {
+    id: "m-tiro-scribe",
+    content:
+      "Personal scribe (Tiro): UI secretary records interactions; player queries what happened, who said what, whom to ask — witnessed/paid intel only.",
+    status: "pending",
+  },
+  {
     id: "m-institutional-surface",
     content:
       "Institutional trade player surface (phase5): charter clerk under Influence — law, breach copy, alliance map, live NPC civic grain register; world_full.json phase5 gate; twin metric npc_institutional_phase5_surface_enabled.",
@@ -159,7 +171,10 @@ export default function HarboursCombinedDeliveryRoadmap() {
             </Text>
             <Text>
               <strong>Living world</strong> — ports and fleets stay believable when idle; wars strain food without
-              scripted riot guarantees.
+              scripted riot guarantees. <strong>NPCs as persons</strong> — OCEAN traits today; names, history, and
+              persistent relationships (player and NPC-to-NPC) when interactions happen, tomorrow. A{" "}
+              <strong>personal scribe (Tiro)</strong> in UI keeps your codex and answers &quot;who said what&quot; from
+              what you actually recorded.
             </Text>
             <Text tone="secondary" size="small">
               Full goal cards, technical goals table, and horizon A–E tables:{" "}
@@ -180,12 +195,12 @@ export default function HarboursCombinedDeliveryRoadmap() {
           [
             "A — Economy & civic money",
             "Pricing, NPC merchants, specie, luxury, duties, materiel stability.",
-            "Living world first; twin alignment; 5k-day tuning; liquidity / personality already shipped — keep measuring bankruptcies and riots.",
+            "Living world first; twin alignment; 5k-day tuning; OCEAN shipped — next personhood (names, history, player + NPC social memory); measure bankruptcies and riots.",
           ],
           [
             "B — Cities & people",
-            "Population, famine, unrest, riots, later institutions.",
-            "City stress UX still “next”; optional warmup banner for calendar clarity.",
+            "Population, famine, unrest, riots, NPCs the player remembers, later institutions.",
+            "City stress UX; Tiro scribe UI (m-tiro-scribe); surface met merchants/captains; m-npc-persons.",
           ],
           [
             "C — Player agency & politics",
