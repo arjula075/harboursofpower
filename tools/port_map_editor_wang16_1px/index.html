@@ -4,15 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Harbours — port map editor (Wang-16 · 1px)</title>
-    <link rel="stylesheet" href="styles.css?v=map-wrap-input-13" />
+    <link rel="stylesheet" href="styles.css?v=map-wrap-input-14" />
   </head>
   <body>
     <div id="app">
       <header>
         <h1>Port map editor <span class="badge">Wang-16 · 1px</span></h1>
         <p class="hint">
-          <strong>Ports</strong> — drag &amp; snap to shore. <strong>Terrain</strong> — paint 1×1 land/sea
-          (corner Wang); dry-run then save rewrites full tilemap + mask. Rome &amp; Nile: inland exception.
+          <strong>Ports</strong> — drag &amp; snap to shore. <strong>Terrain</strong> — paint 1×1 land/sea.
+          <strong>Textures</strong> — approved tile art on shore topology (read-only). Rome &amp; Nile: inland exception.
           Export → <code>data/port_map_editor_wang16_1px_export.json</code>
         </p>
         <div class="legend">
@@ -35,7 +35,39 @@
               <input type="radio" name="tool-mode" value="terrain" />
               <span>Terrain</span>
             </label>
+            <label class="radio-pill">
+              <input type="radio" name="tool-mode" value="textures" />
+              <span>Textures</span>
+            </label>
           </div>
+        </div>
+        <div id="textures-panel" class="textures-panel hidden">
+          <label for="texture-biome-select">Biome</label>
+          <select id="texture-biome-select"></select>
+          <label for="texture-pool-select">Tile pool</label>
+          <select id="texture-pool-select">
+            <option value="approved">Approved</option>
+            <option value="pending">Pending</option>
+          </select>
+          <label for="texture-variation-select">Slot</label>
+          <select id="texture-variation-select">
+            <option value="1">v01</option>
+            <option value="2">v02</option>
+            <option value="3">v03</option>
+          </select>
+          <label for="texture-scale-select">Scale (px / 3×3 cell)</label>
+          <select id="texture-scale-select">
+            <option value="8">8</option>
+            <option value="10" selected>10</option>
+            <option value="12">12</option>
+          </select>
+          <button type="button" id="texture-refresh-btn">Refresh preview</button>
+          <p class="terrain-hint">
+            Topology from <code>shore_fixed</code> (3px cells). Cape tiles use land/sea fallbacks until art exists.
+          </p>
+          <a class="gallery-link" href="/tile-texture-gallery.html" target="_blank" rel="noopener"
+            >All chart areas gallery ↗</a
+          >
         </div>
         <div id="terrain-panel" class="terrain-panel hidden">
           <label>Terrain brush</label>
@@ -106,6 +138,6 @@
         <span id="coords-text"></span>
       </footer>
     </div>
-    <script src="app.js?v=map-wrap-input-13"></script>
+    <script src="app.js?v=map-wrap-input-14"></script>
   </body>
 </html>

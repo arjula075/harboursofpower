@@ -9,7 +9,7 @@
   "terrain_class": "sea",
   "variation": 2,
   "status": "pending",
-  "raw_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\tools\\tile-factory\\raw\\dry_scrubland\\summer\\totally_sea\\v02.png",
-  "pending_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\assets\\tiles\\pending\\dry_scrubland\\summer\\totally_sea\\v02.webp",
-  "approved_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\assets\\tiles\\approved\\dry_scrubland\\summer\\totally_sea\\v02.webp"
+  "raw_path": "/Users/ari.lahti/HarboursOfPower/tools/tile-factory/raw/dry_scrubland/summer/totally_sea/v02.png",
+  "pending_path": "/Users/ari.lahti/HarboursOfPower/assets/tiles/pending/dry_scrubland/summer/totally_sea/v02.webp",
+  "approved_path": "/Users/ari.lahti/HarboursOfPower/assets/tiles/approved/dry_scrubland/summer/totally_sea/v02.webp"
 }

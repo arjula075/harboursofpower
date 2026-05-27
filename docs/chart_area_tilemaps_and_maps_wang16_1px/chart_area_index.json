@@ -1,93 +1,236 @@
 {
   "source_tilemap": "mediterranean_recursive_tilemap_wang16_1px.json",
-  "note": "Parallel 1px corner-Wang-16 chart cuts (same bounds as chart_area_tilemaps_and_maps). Interior: totally_land / totally_sea; coast: corner bitmask names.",
+  "note": "Chart area bounds are practical rectangular cuts in the 2000x1000 logical grid. Areas overlap at coasts. Prefer smaller cuts (~200\u2013350 px) for 1px terrain editing in the port map editor.",
   "chart_areas": [
     {
-      "id": "iberia_gaul",
-      "name": "Iberian coast & Ligurian sea",
-      "description": "Atlantic gateway and the Gallo-Iberian rim \u2014 Gades, Massalia, the Catalan strand.",
+      "id": "iberia_atlantic",
+      "name": "Atlantic Iberia (Gades)",
+      "description": "Gades and the Atlantic facade west of the Pillars.",
       "bounds": {
         "x0": 0,
-        "y0": 0,
-        "x1": 520,
+        "y0": 520,
+        "x1": 140,
         "y1": 760
       }
     },
     {
-      "id": "tyrrhenian",
-      "name": "Tyrrhenian sea & approaches",
-      "description": "Italian west coast, Sardinia, Corsica, Latium and Campania.",
+      "id": "gibraltar_strait",
+      "name": "Strait of Gibraltar",
+      "description": "Pillars of Hercules \u2014 Gades, Sexi, Tingis, and the channel.",
       "bounds": {
-        "x0": 420,
-        "y0": 120,
+        "x0": 0,
+        "y0": 555,
+        "x1": 300,
+        "y1": 720
+      }
+    },
+    {
+      "id": "iberia_east",
+      "name": "Iberian Mediterranean coast",
+      "description": "Baetis to Emporion \u2014 Nova Carthago and the Catalan shore.",
+      "bounds": {
+        "x0": 100,
+        "y0": 450,
+        "x1": 420,
+        "y1": 760
+      }
+    },
+    {
+      "id": "ligurian",
+      "name": "Ligurian sea & Gulf of Lion",
+      "description": "Massalia, Narbonensis, and the Gallic littoral.",
+      "bounds": {
+        "x0": 350,
+        "y0": 180,
+        "x1": 540,
+        "y1": 450
+      }
+    },
+    {
+      "id": "tyrrhenian_etruria",
+      "name": "Etruria & north Tyrrhenian",
+      "description": "Populonia, Caere, Pyrgi, and the Tuscan littoral.",
+      "bounds": {
+        "x0": 620,
+        "y0": 240,
+        "x1": 780,
+        "y1": 400
+      }
+    },
+    {
+      "id": "tyrrhenian_sardinia",
+      "name": "Sardinia",
+      "description": "Caralis, Sulci, Tharros, and Olbia.",
+      "bounds": {
+        "x0": 580,
+        "y0": 380,
+        "x1": 720,
+        "y1": 520
+      }
+    },
+    {
+      "id": "tyrrhenian_latium",
+      "name": "Latium & Campania",
+      "description": "Rome, Ostia, Naples, Cumae, and the Tyrrhenian toe.",
+      "bounds": {
+        "x0": 720,
+        "y0": 300,
+        "x1": 920,
+        "y1": 480
+      }
+    },
+    {
+      "id": "sicily_island",
+      "name": "Sicily",
+      "description": "Panormus to Syracuse \u2014 the Sicilian ring.",
+      "bounds": {
+        "x0": 760,
+        "y0": 500,
         "x1": 900,
+        "y1": 620
+      }
+    },
+    {
+      "id": "strait_messina",
+      "name": "Strait of Messina",
+      "description": "Messana, Rhegium, and the narrows to Magna Graecia.",
+      "bounds": {
+        "x0": 860,
+        "y0": 500,
+        "x1": 940,
+        "y1": 580
+      }
+    },
+    {
+      "id": "magna_graecia",
+      "name": "Magna Graecia",
+      "description": "Taras, Croton, Locri, and the Calabrian instep.",
+      "bounds": {
+        "x0": 920,
+        "y0": 400,
+        "x1": 1020,
+        "y1": 560
+      }
+    },
+    {
+      "id": "tunisia_carthage",
+      "name": "Tunisia & Carthage",
+      "description": "Carthage, Utica, Hippo, and the African shore opposite Sicily.",
+      "bounds": {
+        "x0": 580,
+        "y0": 560,
+        "x1": 780,
+        "y1": 720
+      }
+    },
+    {
+      "id": "libya_tripolitania",
+      "name": "Tripolitania",
+      "description": "Oea, Sabratha, and Leptis Magna.",
+      "bounds": {
+        "x0": 720,
+        "y0": 680,
+        "x1": 900,
+        "y1": 860
+      }
+    },
+    {
+      "id": "cyrenaica",
+      "name": "Cyrenaica",
+      "description": "Cyrene and Apollonia \u2014 the Libyan pentapolis coast.",
+      "bounds": {
+        "x0": 1080,
+        "y0": 760,
+        "x1": 1200,
+        "y1": 860
+      }
+    },
+    {
+      "id": "nile_delta",
+      "name": "Nile delta & Egypt",
+      "description": "Alexandria, Naucratis, Memphis, and the grain mouths.",
+      "bounds": {
+        "x0": 1440,
+        "y0": 820,
+        "x1": 1640,
+        "y1": 980
+      }
+    },
+    {
+      "id": "greece_mainland",
+      "name": "Greece (mainland)",
+      "description": "Athens, Corinth, Megara, and the Peloponnese approaches.",
+      "bounds": {
+        "x0": 1160,
+        "y0": 480,
+        "x1": 1260,
+        "y1": 620
+      }
+    },
+    {
+      "id": "ionia_caria",
+      "name": "Ionia & Caria",
+      "description": "Smyrna, Ephesus, Miletus, Halicarnassus.",
+      "bounds": {
+        "x0": 1320,
+        "y0": 520,
+        "x1": 1420,
         "y1": 640
       }
     },
     {
-      "id": "sicily_ionian",
-      "name": "Sicily & Ionian basin",
-      "description": "Sicilian roadsteads and the heel-and-toe of Italy.",
+      "id": "crete_dodecanese",
+      "name": "Crete & Dodecanese",
+      "description": "Knossos, Rhodes, and the southern Aegean gate.",
       "bounds": {
-        "x0": 560,
-        "y0": 360,
-        "x1": 1180,
+        "x0": 1220,
+        "y0": 600,
+        "x1": 1420,
+        "y1": 700
+      }
+    },
+    {
+      "id": "cyprus",
+      "name": "Cyprus",
+      "description": "Salamis, Kition, Paphos, and the copper isle.",
+      "bounds": {
+        "x0": 1550,
+        "y0": 660,
+        "x1": 1680,
+        "y1": 740
+      }
+    },
+    {
+      "id": "phoenicia",
+      "name": "Phoenicia & Levant coast",
+      "description": "Tyre, Sidon, Byblos, and the Syrian strand.",
+      "bounds": {
+        "x0": 1680,
+        "y0": 650,
+        "x1": 1760,
         "y1": 780
       }
     },
     {
-      "id": "north_africa",
-      "name": "North African coast",
-      "description": "Carthaginian capital and the Tripolitanian and Mauretanian shores.",
+      "id": "propontis",
+      "name": "Propontis (Marmara)",
+      "description": "Byzantium and Chalcedon \u2014 Marmara mouth.",
       "bounds": {
-        "x0": 260,
-        "y0": 560,
-        "x1": 1180,
-        "y1": 1000
+        "x0": 1420,
+        "y0": 340,
+        "x1": 1520,
+        "y1": 420
       }
     },
     {
-      "id": "egypt_cyrenaica",
-      "name": "Egypt & Cyrenaica",
-      "description": "Cyrenaican headlands and the Nile-mouth grain hubs.",
+      "id": "pontus_euxinus",
+      "name": "Pontus Euxinus",
+      "description": "Sinope, Trapezus, Olbia, and the Black Sea grain horizon.",
       "bounds": {
-        "x0": 1040,
-        "y0": 600,
-        "x1": 1780,
-        "y1": 1000
-      }
-    },
-    {
-      "id": "aegean",
-      "name": "Aegean & Cretan sea",
-      "description": "Mainland Greece, the Aegean islands, western Anatolia and Crete.",
-      "bounds": {
-        "x0": 900,
-        "y0": 320,
-        "x1": 1600,
-        "y1": 840
-      }
-    },
-    {
-      "id": "levant_cyprus",
-      "name": "Levant & Cyprus",
-      "description": "Phoenician home ports and the Cypriot ring.",
-      "bounds": {
-        "x0": 1460,
-        "y0": 470,
-        "x1": 2000,
-        "y1": 900
-      }
-    },
-    {
-      "id": "propontis_pontus",
-      "name": "Propontis & Pontus Euxinus",
-      "description": "Marmara mouth and the Black Sea grain horizon.",
-      "bounds": {
-        "x0": 1180,
-        "y0": 0,
-        "x1": 2000,
-        "y1": 460
+        "x0": 1580,
+        "y0": 40,
+        "x1": 1920,
+        "y1": 400
       }
     }
   ]

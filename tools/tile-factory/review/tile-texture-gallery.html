@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Approved tile map — chart areas</title>
+    <style>
+      :root {
+        --bg: #12151a;
+        --panel: #1c2129;
+        --border: #2e3642;
+        --text: #e8eaed;
+        --muted: #9aa3b2;
+        --accent: #6ab0e8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 14px;
+      }
+      header {
+        padding: 14px 18px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      header p {
+        margin: 0;
+        color: var(--muted);
+        flex: 1;
+        min-width: 220px;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: flex-end;
+        width: 100%;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+      }
+      select,
+      button {
+        padding: 7px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #252b35;
+        color: var(--text);
+        font-size: 13px;
+      }
+      button {
+        cursor: pointer;
+        background: #2a5f8f;
+        border-color: #3d7ab5;
+      }
+      button:hover {
+        filter: brightness(1.08);
+      }
+      #status {
+        padding: 8px 18px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      #status.err {
+        color: #e85d5d;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 16px;
+        padding: 16px 18px 32px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .card h2 {
+        margin: 0;
+        padding: 10px 12px 4px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .card p {
+        margin: 0;
+        padding: 0 12px 8px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+      .thumb-wrap {
+        background: #0a0e12;
+        min-height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .thumb-wrap img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      .thumb-wrap .placeholder {
+        color: var(--muted);
+        font-size: 12px;
+        padding: 24px;
+        text-align: center;
+      }
+      .card footer {
+        padding: 8px 12px;
+        border-top: 1px solid var(--border);
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .card footer a {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Approved tile map</h1>
+      <p>
+        Shore topology from <code>shore_fixed</code> · textures from the tile pool you pick below.
+        Open the <a href="/" id="review-link">tile review</a> or
+        <a href="#" id="port-editor-link">port map editor</a> for other tools.
+      </p>
+      <div class="controls">
+        <label>
+          Biome
+          <select id="biome-select"></select>
+        </label>
+        <label>
+          Pool
+          <select id="pool-select">
+            <option value="approved">Approved</option>
+            <option value="pending">Pending</option>
+          </select>
+        </label>
+        <label>
+          Slot
+          <select id="variation-select">
+            <option value="1">v01</option>
+            <option value="2">v02</option>
+            <option value="3">v03</option>
+          </select>
+        </label>
+        <label>
+          Scale
+          <select id="scale-select">
+            <option value="8">8 px/cell</option>
+            <option value="10" selected>10 px/cell</option>
+            <option value="12">12 px/cell</option>
+          </select>
+        </label>
+        <button type="button" id="refresh-btn">Refresh all</button>
+      </div>
+    </header>
+    <p id="status" aria-live="polite">Loading…</p>
+    <div id="grid" class="grid"></div>
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const grid = $("grid");
+      const statusEl = $("status");
+      let chartAreas = [];
+      let cacheBust = Date.now();
+
+      const portEditorPort = new URLSearchParams(location.search).get("port_editor_port") || "8766";
+
+      function previewUrl(areaId) {
+        const biome = $("biome-select").value;
+        const pool = $("pool-select").value;
+        const variation = $("variation-select").value;
+        const scale = $("scale-select").value;
+        const q = new URLSearchParams({
+          biome,
+          pool,
+          variation,
+          scale,
+          v: String(cacheBust),
+        });
+        return `/api/tile-texture/preview/${encodeURIComponent(areaId)}?${q}`;
+      }
+
+      function setStatus(msg, isErr) {
+        statusEl.textContent = msg;
+        statusEl.className = isErr ? "err" : "";
+      }
+
+      function renderCards() {
+        grid.innerHTML = "";
+        for (const area of chartAreas) {
+          const card = document.createElement("article");
+          card.className = "card";
+          const url = previewUrl(area.id);
+          card.innerHTML =
+            `<h2>${area.name}</h2>` +
+            `<p>${area.description || area.id}</p>` +
+            `<div class="thumb-wrap"><div class="placeholder">Loading preview…</div></div>` +
+            `<footer><a href="${url}" target="_blank" rel="noopener">Open PNG</a> · id: <code>${area.id}</code></footer>`;
+          grid.appendChild(card);
+          const wrap = card.querySelector(".thumb-wrap");
+          const img = new Image();
+          img.alt = area.name;
+          img.loading = "lazy";
+          img.onload = () => {
+            wrap.innerHTML = "";
+            wrap.appendChild(img);
+          };
+          img.onerror = () => {
+            wrap.innerHTML =
+              '<div class="placeholder">Preview failed — approve tiles for this biome or try pending pool.</div>';
+          };
+          img.src = url;
+        }
+        setStatus(`${chartAreas.length} chart areas · ${$("biome-select").value} · pool=${$("pool-select").value}`);
+      }
+
+      async function loadMeta() {
+        const res = await fetch("/api/tile-texture/meta");
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        chartAreas = data.chart_areas || [];
+        const biomeSel = $("biome-select");
+        biomeSel.innerHTML = "";
+        for (const b of data.biomes || []) {
+          const opt = document.createElement("option");
+          opt.value = b.id;
+          opt.textContent = b.name;
+          biomeSel.appendChild(opt);
+        }
+        const d = data.defaults || {};
+        if (d.biome) biomeSel.value = d.biome;
+        if (d.pool) $("pool-select").value = d.pool;
+        if (d.variation) $("variation-select").value = String(d.variation);
+        if (d.scale) $("scale-select").value = String(d.scale);
+        $("port-editor-link").href = `http://127.0.0.1:${portEditorPort}/`;
+        renderCards();
+      }
+
+      $("refresh-btn").addEventListener("click", () => {
+        cacheBust = Date.now();
+        renderCards();
+      });
+      ["biome-select", "pool-select", "variation-select", "scale-select"].forEach((id) => {
+        $(id).addEventListener("change", () => {
+          cacheBust = Date.now();
+          renderCards();
+        });
+      });
+
+      loadMeta().catch((err) => setStatus(String(err), true));
+    </script>
+  </body>
+</html>

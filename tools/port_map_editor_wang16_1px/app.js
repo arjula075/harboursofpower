@@ -3,7 +3,7 @@
  * Basemap from pre-rendered PNG; snap via server spatial index.
  */
 (function () {
-  const EDITOR_BUILD = "map-wrap-input-13";
+  const EDITOR_BUILD = "map-wrap-input-14";
   const GW = 2000;
   const GH = 1000;
 
@@ -70,6 +70,12 @@
   const exportBtn = $("export-btn");
   const portsToolPanel = $("ports-tool-panel");
   const terrainPanel = $("terrain-panel");
+  const texturesPanel = $("textures-panel");
+  const textureBiomeSelect = $("texture-biome-select");
+  const texturePoolSelect = $("texture-pool-select");
+  const textureVariationSelect = $("texture-variation-select");
+  const textureScaleSelect = $("texture-scale-select");
+  const textureRefreshBtn = $("texture-refresh-btn");
   const terrainDryRunBtn = $("terrain-dry-run-btn");
   const terrainSaveBtn = $("terrain-save-btn");
   const terrainDiscardBtn = $("terrain-discard-btn");
@@ -93,6 +99,8 @@
   let computing = false;
   let terrainPreviewImage = null;
   let terrainPreviewVersion = 0;
+  let texturePreviewImage = null;
+  let texturePreviewToken = 0;
   let terrainDirty = false;
   let terrainBoundaryWarning = "";
   /** @type {{ lx: number, ly: number, until: number } | null} */
@@ -145,9 +153,14 @@
 
   function updateToolUi() {
     const isTerrain = toolMode === "terrain";
+    const isTextures = toolMode === "textures";
     if (terrainPanel) terrainPanel.classList.toggle("hidden", !isTerrain);
-    if (portsToolPanel) portsToolPanel.classList.toggle("hidden", isTerrain);
-    if (mapWrap) mapWrap.classList.toggle("terrain-mode", isTerrain);
+    if (texturesPanel) texturesPanel.classList.toggle("hidden", !isTextures);
+    if (portsToolPanel) portsToolPanel.classList.toggle("hidden", isTerrain || isTextures);
+    if (mapWrap) {
+      mapWrap.classList.toggle("terrain-mode", isTerrain);
+      mapWrap.classList.toggle("textures-mode", isTextures);
+    }
 
     const hasArea = !!areaId;
     const busy = computing;
@@ -181,6 +194,52 @@
     if (!areaId) return;
     const url = `/api/terrain/preview/${encodeURIComponent(areaId)}?v=${terrainPreviewVersion}`;
     terrainPreviewImage = await loadMapImage(url);
+  }
+
+  function texturePreviewQuery() {
+    const q = new URLSearchParams({
+      biome: textureBiomeSelect?.value || "sparse_olive",
+      pool: texturePoolSelect?.value || "approved",
+      variation: textureVariationSelect?.value || "1",
+      scale: textureScaleSelect?.value || "10",
+      v: String(texturePreviewToken),
+    });
+    return q;
+  }
+
+  async function loadTexturePreview() {
+    if (!areaId) return;
+    const url = `/api/tile-texture/preview/${encodeURIComponent(areaId)}?${texturePreviewQuery()}`;
+    setStatus("Loading tile texture preview…");
+    try {
+      texturePreviewImage = await loadMapImage(url);
+      setStatus(`Textures: ${textureBiomeSelect?.value || "—"} · ${areaId}`);
+      draw();
+    } catch (err) {
+      texturePreviewImage = null;
+      setStatus(String(err), true);
+      draw();
+      throw err;
+    }
+  }
+
+  async function loadTextureMeta() {
+    if (!textureBiomeSelect) return;
+    const res = await fetch("/api/tile-texture/meta");
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    textureBiomeSelect.innerHTML = "";
+    for (const b of data.biomes || []) {
+      const opt = document.createElement("option");
+      opt.value = b.id;
+      opt.textContent = b.name;
+      textureBiomeSelect.appendChild(opt);
+    }
+    const d = data.defaults || {};
+    if (d.biome) textureBiomeSelect.value = d.biome;
+    if (d.pool && texturePoolSelect) texturePoolSelect.value = d.pool;
+    if (d.variation && textureVariationSelect) textureVariationSelect.value = String(d.variation);
+    if (d.scale && textureScaleSelect) textureScaleSelect.value = String(d.scale);
   }
 
   async function initTerrainSession() {
@@ -461,10 +520,12 @@
     canvas.height = h;
     ctx.fillStyle = "#0a0e12";
     ctx.fillRect(0, 0, w, h);
-    const img =
-      toolMode === "terrain" && terrainPreviewImage && terrainPreviewImage.complete
-        ? terrainPreviewImage
-        : mapImage;
+    let img = mapImage;
+    if (toolMode === "terrain" && terrainPreviewImage && terrainPreviewImage.complete) {
+      img = terrainPreviewImage;
+    } else if (toolMode === "textures" && texturePreviewImage && texturePreviewImage.complete) {
+      img = texturePreviewImage;
+    }
     if (img && img.complete) {
       ctx.drawImage(img, 0, 0, w, h);
     }
@@ -527,7 +588,7 @@
     if (!bounds) return;
     drawBasemap();
     if (paintFlash) drawPaintFlash();
-    if (toolMode === "ports") drawMarkers();
+    if (toolMode === "ports" || toolMode === "textures") drawMarkers();
     else drawSelectedPortMarker();
     const p = portState.get(selectedPortId);
     if (p && p.map_u != null) {
@@ -615,6 +676,7 @@
     areaId = id;
     selectedPortId = "";
     mapImage = null;
+    texturePreviewImage = null;
     setStatus(`Loading ${id}…`);
     mapOverlay.textContent = "Loading tilemap…";
     exportBtn.disabled = true;
@@ -656,19 +718,32 @@
       }
     }
 
+    if (toolMode === "textures") {
+      try {
+        await loadTexturePreview();
+      } catch (_) {
+        /* status set in loadTexturePreview */
+      }
+    }
+
     fitView();
     renderPortList();
     draw();
     exportBtn.disabled = areaPorts.length === 0;
     const areaName = chartAreas.find((a) => a.id === id)?.name || id;
-    setStatus(
-      `${areaName}: ${shoreSnapCount.toLocaleString()} shore snap targets · ${areaPorts.length} ports · 1px wang16`,
-    );
+    if (toolMode !== "textures") {
+      setStatus(
+        `${areaName}: ${shoreSnapCount.toLocaleString()} shore snap targets · ${areaPorts.length} ports · 1px wang16`,
+      );
+    }
     updateToolUi();
-    mapOverlay.textContent =
-      toolMode === "terrain"
-        ? "Terrain: click cell · Land/Sea brush · shore = derived Wang"
-        : "Ports: drag port · wheel zoom · right-drag pan";
+    if (toolMode === "terrain") {
+      mapOverlay.textContent = "Terrain: click cell · Land/Sea brush · shore = derived Wang";
+    } else if (toolMode === "textures") {
+      mapOverlay.textContent = "Textures: pan/zoom · ports shown for reference";
+    } else {
+      mapOverlay.textContent = "Ports: drag port · wheel zoom · right-drag pan";
+    }
     if (terrainBoundaryWarning) setStatus(terrainBoundaryWarning, true);
     const wRect = mapWrap?.getBoundingClientRect();
     debugLog("loadArea:done", {
@@ -819,6 +894,14 @@
     lastPointerX = e.clientX;
     lastPointerY = e.clientY;
     debugLog("map-press:coords", { lx, ly, viewScale });
+
+    if (toolMode === "textures") {
+      debugLog("map-press:branch", "textures-view-only");
+      panning = true;
+      mapWrap.classList.add("panning");
+      capturePointer(e);
+      return;
+    }
 
     if (toolMode === "terrain" && e.button === 0 && !e.altKey) {
       debugLog("map-press:branch", "terrain-paint");
@@ -1084,15 +1167,35 @@
         loadTerrainPreview()
           .then(() => draw())
           .catch((err) => setStatus(String(err), true));
+      } else if (toolMode === "textures" && areaId) {
+        loadTexturePreview().catch((err) => setStatus(String(err), true));
       } else {
         draw();
       }
       if (bounds) {
-        mapOverlay.textContent =
-          toolMode === "terrain"
-            ? "Terrain: click cell · Land/Sea brush"
-            : "Ports: drag port · wheel zoom · right-drag pan";
+        if (toolMode === "terrain") {
+          mapOverlay.textContent = "Terrain: click cell · Land/Sea brush";
+        } else if (toolMode === "textures") {
+          mapOverlay.textContent = "Textures: pan/zoom · ports shown for reference";
+        } else {
+          mapOverlay.textContent = "Ports: drag port · wheel zoom · right-drag pan";
+        }
       }
+    });
+  });
+
+  if (textureRefreshBtn) {
+    textureRefreshBtn.addEventListener("click", () => {
+      texturePreviewToken = Date.now();
+      loadTexturePreview().catch((err) => setStatus(String(err), true));
+    });
+  }
+  [textureBiomeSelect, texturePoolSelect, textureVariationSelect, textureScaleSelect].forEach((el) => {
+    if (!el) return;
+    el.addEventListener("change", () => {
+      if (toolMode !== "textures" || !areaId) return;
+      texturePreviewToken = Date.now();
+      loadTexturePreview().catch((err) => setStatus(String(err), true));
     });
   });
 
@@ -1318,6 +1421,11 @@
       }
       updateTerrainDiskStatus(data.terrain_disk);
       refreshTerrainDiskStatus();
+      try {
+        await loadTextureMeta();
+      } catch (e) {
+        debugWarn("texture-meta:failed", String(e));
+      }
       let statusMsg = msg;
       let statusErr = false;
       try {

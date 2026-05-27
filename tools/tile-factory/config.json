@@ -109,5 +109,10 @@
     15,
     52,
     62
-  ]
+  ],
+  "active_generation": {
+    "sparse_olive": {
+      "summer": 2
+    }
+  }
 }

@@ -22,7 +22,7 @@ from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler
 from pathlib import Path
 from socketserver import TCPServer
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 TOOLS_DIR = REPO_ROOT / "tools"
@@ -30,6 +30,10 @@ if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
 STATIC_DIR = REPO_ROOT / "tools" / "port_map_editor_wang16_1px"
+TILE_SCRIPTS = REPO_ROOT / "tools" / "tile-factory" / "scripts"
+if str(TILE_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(TILE_SCRIPTS))
+from tile_texture_http import handle_tile_texture_get  # noqa: E402
 DOCS_MAPS = REPO_ROOT / "docs" / "chart_area_tilemaps_and_maps_wang16_1px"
 WORLD_PATH = REPO_ROOT / "data" / "world_full.json"
 EXPORT_PATH = REPO_ROOT / "data" / "port_map_editor_wang16_1px_export.json"
@@ -266,6 +270,9 @@ class PortMapEditorWang16Handler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
         path = parsed.path
+
+        if handle_tile_texture_get(self, path, parse_qs(parsed.query), json_response=_json_response):
+            return
 
         if path == "/api/terrain/status":
             try:
@@ -588,15 +595,36 @@ class _ReuseAddrTCPServer(TCPServer):
     allow_reuse_address = True
 
 
+def _dependency_help() -> str:
+    venvs = (
+        REPO_ROOT / "tools" / "tile-factory" / ".venv",
+        REPO_ROOT / ".venv",
+    )
+    lines = [
+        "Missing Pillow and/or numpy for the port map editor.",
+        "",
+        "Option A — use an existing project venv (from repo root):",
+    ]
+    for v in venvs:
+        py = v / "bin" / "python3"
+        if py.is_file():
+            lines.append(f"  {py.relative_to(REPO_ROOT)} tools/port_map_editor_wang16_1px_server.py --port 8770")
+    lines += [
+        "",
+        "Option B — create tile-factory venv and install deps:",
+        "  python3 -m venv tools/tile-factory/.venv",
+        "  tools/tile-factory/.venv/bin/pip install -r tools/tile-factory/requirements.txt",
+        "  tools/tile-factory/.venv/bin/python3 tools/port_map_editor_wang16_1px_server.py --port 8770",
+    ]
+    return "\n".join(lines)
+
+
 def main() -> None:
     try:
         import numpy  # noqa: F401
         from PIL import Image  # noqa: F401
     except ImportError as exc:
-        raise SystemExit(
-            "Missing dependencies. Run: .venv/bin/pip install Pillow numpy\n"
-            "Then start with: .venv/bin/python tools/port_map_editor_wang16_1px_server.py"
-        ) from exc
+        raise SystemExit(_dependency_help()) from exc
 
     ap = argparse.ArgumentParser(description="Wang-16 1px port map editor HTTP server")
     ap.add_argument(
@@ -636,7 +664,8 @@ def main() -> None:
     with httpd:
         url = f"http://{host}:{port}/"
         print(f"Port map editor (wang16 1px) at {url}")
-        print("Terrain API: POST /api/terrain/save  GET /api/terrain/status  (build map-wrap-input-13, ?debug=1)")
+        print("Terrain API: POST /api/terrain/save  GET /api/terrain/status  (build map-wrap-input-14, ?debug=1)")
+        print("Tile textures: GET /api/tile-texture/meta  /tile-texture-gallery.html")
         print(f"Tilemaps: {DOCS_MAPS}")
         print(f"Export file: {EXPORT_PATH}")
         print("Ctrl+C to stop.")

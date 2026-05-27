@@ -14,6 +14,7 @@ from common import (
     load_topology_rules,
     repo_path,
     spec_path,
+    terrain_asset_relpath,
     tile_id,
     topology_by_id,
 )
@@ -42,28 +43,38 @@ def write_spec(spec: dict) -> Path:
     return p
 
 
-def make_terrain_spec(biome: str, season: str, topology: str, variation: int) -> dict:
+def make_terrain_spec(
+    biome: str,
+    season: str,
+    topology: str,
+    variation: int,
+    *,
+    generation: int = 1,
+) -> dict:
     cfg = load_config()
-    tid = tile_id(biome, season, topology, variation)
+    tid = tile_id(biome, season, topology, variation, generation=generation)
     topo = topology_by_id(topology)
-    rel_pending = Path(cfg["paths"]["pending"]) / biome / season / topology / f"v{variation:02d}.webp"
-    rel_raw = Path("tools/tile-factory/raw") / biome / season / topology / f"v{variation:02d}.png"
+    rel_pending = terrain_asset_relpath(
+        biome, season, topology, variation, generation=generation, ext=".webp"
+    )
+    rel_raw = terrain_asset_relpath(
+        biome, season, topology, variation, generation=generation, ext=".png"
+    )
     return {
         "id": tid,
         "kind": "terrain",
         "biome": biome,
         "season": season,
         "topology": topology,
+        "generation": generation,
         "legacy_id": topo.get("legacy_id", topology),
         "wang_mask": topo.get("wang_mask"),
         "terrain_class": topo.get("terrain_class"),
         "variation": variation,
         "status": "pending",
-        "raw_path": str(repo_path(str(rel_raw))),
-        "pending_path": str(repo_path(str(rel_pending))),
-        "approved_path": str(
-            repo_path(cfg["paths"]["approved"]) / biome / season / topology / f"v{variation:02d}.webp"
-        ),
+        "raw_path": str(repo_path("tools/tile-factory/raw") / rel_raw),
+        "pending_path": str(repo_path(cfg["paths"]["pending"]) / rel_pending),
+        "approved_path": str(repo_path(cfg["paths"]["approved"]) / rel_pending),
     }
 
 
@@ -141,24 +152,13 @@ def cmd_validate(args: argparse.Namespace) -> int:
 
 
 def cmd_approve(args: argparse.Namespace) -> int:
-    cfg = load_config()
-    spec_file = spec_path(args.id)
-    with spec_file.open(encoding="utf-8") as f:
-        spec = json.load(f)
-    pending = Path(spec["pending_path"])
-    approved = Path(spec["approved_path"])
-    if not pending.is_file():
-        print(f"Not in pending: {pending}")
+    from review_lib import approve_tile
+
+    result = approve_tile(args.id)
+    if not result.get("ok"):
+        print(result.get("error", "approve failed"))
         return 1
-    approved.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(pending, approved)
-    sail_src = pending.with_suffix(".sail.png")
-    if sail_src.is_file():
-        shutil.copy2(sail_src, approved.with_suffix(".sail.png"))
-    spec["status"] = "approved"
-    with spec_file.open("w", encoding="utf-8") as f:
-        json.dump(spec, f, indent=2)
-    print(f"Approved -> {approved}")
+    print(f"Approved -> {result.get('approved_path', '')}")
     return 0
 
 
@@ -347,37 +347,20 @@ def cmd_phase1(args: argparse.Namespace) -> int:
 
 
 def cmd_build_review(_: argparse.Namespace) -> int:
-    cfg = load_config()
-    pending = repo_path(cfg["paths"]["pending"])
-    overlay_pending = repo_path("assets/tiles/overlays/pending")
-    rows = []
-    for root in (pending, overlay_pending):
-        if not root.is_dir():
-            continue
-        for webp in sorted(root.rglob("*.webp")):
-            rel = webp.relative_to(repo_path("."))
-            rows.append(
-                f'<div class="card"><img src="../../../{rel.as_posix()}" width="256" height="256" />'
-                f"<p>{rel.as_posix()}</p></div>"
-            )
-    html = f"""<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Tile review</title>
-<style>
-body {{ font-family: system-ui; background: #1a1a1a; color: #eee; }}
-.grid {{ display: flex; flex-wrap: wrap; gap: 12px; }}
-.card {{ background: #2a2a2a; padding: 8px; border-radius: 8px; }}
-.card p {{ font-size: 12px; margin: 8px 0 0; word-break: break-all; }}
-</style></head><body>
-<h1>Pending tiles — approve via CLI</h1>
-<p><code>python tools/tile-factory/scripts/orchestrator.py approve BIOME/season/topology/vNN</code></p>
-<div class="grid">{''.join(rows) if rows else '<p>No pending tiles.</p>'}</div>
-</body></html>"""
-    html = html.replace("<motion></motion>", "")
-    out = FACTORY_ROOT / "review" / "index.html"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(html, encoding="utf-8")
-    print(f"Review gallery -> {out}")
+    review_index = FACTORY_ROOT / "review" / "index.html"
+    if not review_index.is_file():
+        print(f"Missing {review_index} — use the interactive review app in tools/tile-factory/review/")
+        return 1
+    print(f"Interactive review UI: {review_index}")
+    print("Start server:  python3 tools/tile-factory/review_server.py")
+    print("Then open:     http://127.0.0.1:8768/")
     return 0
+
+
+def cmd_review_server(args: argparse.Namespace) -> int:
+    script = FACTORY_ROOT / "review_server.py"
+    cmd = [sys.executable, str(script), "--host", args.host, "--port", str(args.port)]
+    return subprocess.call(cmd, cwd=str(repo_path(".")))
 
 
 # Phase A (chunk map plan): prompt before commands that spend API / build coast tiles.
@@ -507,8 +490,13 @@ def main() -> int:
     p_app.add_argument("id", help="Tile id")
     p_app.set_defaults(func=cmd_approve)
 
-    p_rev = sub.add_parser("build-review", help="Build review/index.html")
+    p_rev = sub.add_parser("build-review", help="Print how to open the interactive review UI")
     p_rev.set_defaults(func=cmd_build_review)
+
+    p_rsv = sub.add_parser("review-server", help="Run interactive tile review + approve HTTP server")
+    p_rsv.add_argument("--host", default="127.0.0.1")
+    p_rsv.add_argument("--port", type=int, default=8768)
+    p_rsv.set_defaults(func=cmd_review_server)
 
     p_edges = sub.add_parser("generate-edges", help="Generate edge strip library (OpenAI)")
     p_edges.set_defaults(func=cmd_generate_edges)

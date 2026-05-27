@@ -18,8 +18,8 @@ const COORDINATE_SHEET_PNG := "res://docs/8670b2bf-409a-4880-ae53-683f5eb2d2a6.p
 const SEA_CHART_SVG := "res://assets/ui/sea_chart.svg"
 
 ## Default horizontal span of the Routes map view in logical map coordinates (same units as LOGICAL_GRID_WIDTH).
-## Smaller `view_w` = more zoomed in. Was 100; 58 keeps the player hull and home port readable on open.
-const ROUTES_LOCAL_VIEW_WIDTH_MAP := 58.0
+## Smaller `view_w` = more zoomed in. Reduced to make terrain tile art legible by default.
+const ROUTES_LOCAL_VIEW_WIDTH_MAP := 36.0
 
 ## First available basemap texture (cropped sheet → full sheet → sea SVG); returns null if none load.
 static func load_route_basemap_texture() -> Texture2D:

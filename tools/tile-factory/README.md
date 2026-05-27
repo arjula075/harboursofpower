@@ -30,7 +30,16 @@ python tools/tile-factory/scripts/orchestrator.py build-v1-mosaic --proof
 python tools/tile-factory/scripts/orchestrator.py build-v1-mosaic --variations 1 2 3
 ```
 
-Open `tools/tile-factory/review/index.html` and `tools/tile-factory/reports/lake_mosaic_5x5.png`.
+**Review & approve** (interactive — switch sets, mosaic, approve in browser):
+
+```powershell
+python tools/tile-factory/review_server.py
+# open http://127.0.0.1:8768/
+```
+
+Or: `python tools/tile-factory/scripts/orchestrator.py review-server`
+
+Also builds `tools/tile-factory/reports/lake_mosaic_5x5.png` during mosaic steps.
 
 **Tweak compositor only** (no API):
 
@@ -58,7 +67,9 @@ Pre-flight runs automatically and prints API call count + cost estimate before a
 | `build-v1-mosaic --skip-generate` | No | Re-composite + lake only |
 | `refresh-mosaic` | No | Alias for `--skip-generate` |
 | `build-v1-mosaic --validate` | — | Also run tile validator after build |
-| `approve <id>` | No | pending → approved |
+| `approve <id>` | No | pending → approved (CLI) |
+| `review-server` | No | Interactive review UI + approve API |
+| `build-review` | No | Print review server URL |
 
 ### Cost guide (rough, gpt-image-1)
 
@@ -82,6 +93,15 @@ Sea tiles are procedural (no API). `totally_sea` is not generated via OpenAI.
 Prompts: single source in `scripts/prompts.py`.
 
 ## Approve tiles
+
+**Browser (recommended):** run `review_server.py`, pick **Set** (biome/season), **Pool**, **Variation**, then:
+
+- Expand **Generation prompts** on each tile (nested: global → biome → geometry → variation).
+- **Save prompts** — overrides stored in the tile spec (`prompt_layers`); used on next recreate.
+- **Recreate tile** — OpenAI raw + compositor (or procedural sea); polls job log in UI.
+- **Approve** — copy pending → approved.
+
+**CLI:**
 
 ```powershell
 python tools/tile-factory/scripts/orchestrator.py approve dry_scrubland/summer/horizontal_top_land/v01
@@ -108,7 +128,8 @@ python tools/tile-factory/scripts/orchestrator.py approve dry_scrubland/summer/h
 | `specs/` | Per-tile job JSON |
 | `raw/` | Model output (gitignored) |
 | `assets/tiles/pending/` | Built tiles awaiting approval |
-| `review/index.html` | Lake mosaic gallery |
+| `review/index.html` | Interactive review UI (needs `review_server.py`) |
+| `review_server.py` | Local server: sets, mosaic, approve API |
 
 ## Legacy (deprecated for v1)
 

@@ -18,10 +18,12 @@ Copy from `_template.md` for a new entry in [BIOMES.md](../../BIOMES.md).
 
 ## Shores
 
-- Irregular natural coastline; thin surf line only
-- Cardinal shores: straight coast at exact tile midline
-- Diagonal shores: small sea triangle in corner, coast hits edge midpoints
+- Coastline silhouette must meander at medium scale (not texture-only roughness)
+- Broad coastal transition band; shallow submerged rocks follow irregular shore shape
+- Cardinal shores: coast enters/exits opposite edges near midpoints with organic wobble between
+- Corner shores: compact irregular bay in corner region — never triangle/wedge/straight split
+- Terrain self-contained in tile; no landmarks or structures on borders
 
 ## Variation
 
-- v01–v03 share identical coast geometry; only inland detail changes
+- v01–v03 share tile exit connectivity; local shore shape and inland detail may vary

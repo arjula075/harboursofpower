@@ -8,10 +8,10 @@
   "wang_mask": 3,
   "terrain_class": "shore",
   "variation": 1,
-  "status": "pending",
-  "raw_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\tools\\tile-factory\\raw\\dry_scrubland\\summer\\diagonal_descending_left_land\\v01.png",
-  "pending_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\assets\\tiles\\pending\\dry_scrubland\\summer\\diagonal_descending_left_land\\v01.webp",
-  "approved_path": "D:\\Users\\ari19\\WebstormProjects\\HarboursOfPower\\assets\\tiles\\approved\\dry_scrubland\\summer\\diagonal_descending_left_land\\v01.webp",
+  "status": "approved",
+  "raw_path": "/Users/ari.lahti/HarboursOfPower/tools/tile-factory/raw/dry_scrubland/summer/diagonal_descending_left_land/v01.png",
+  "pending_path": "/Users/ari.lahti/HarboursOfPower/assets/tiles/pending/dry_scrubland/summer/diagonal_descending_left_land/v01.webp",
+  "approved_path": "/Users/ari.lahti/HarboursOfPower/assets/tiles/approved/dry_scrubland/summer/diagonal_descending_left_land/v01.webp",
   "autotile_contract": true,
   "autotile_fallback": false
 }

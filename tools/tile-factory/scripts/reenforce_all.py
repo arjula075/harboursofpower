@@ -13,7 +13,7 @@ from PIL import Image
 from autotile_geometry import SHORE_TOPOLOGIES
 from autotile_agent import regenerate_uniform_sea_set
 from tile_publish import resolve_land_anchor
-from common import load_config, repo_path, spec_path
+from common import get_active_generation, load_config, repo_path, spec_path, tile_id
 from enforce_contract import enforce_contract, measure_edge_uniformity
 from generate_sail_mask import write_mask_for_tile
 from make_uniform_sea import get_open_sea_rgb, save_open_sea_rgb
@@ -31,7 +31,8 @@ def main() -> int:
     season = cfg["season"]
     sea_rgb = get_open_sea_rgb(cfg)
     save_open_sea_rgb(cfg, sea_rgb)
-    land_anchor = resolve_land_anchor(cfg)
+    generation = get_active_generation(cfg, biome, season)
+    land_anchor = resolve_land_anchor(cfg, biome=biome, season=season, generation=generation)
     coast_band = int(cfg.get("autotile_coast_band_px", 32))
     sea_fade = int(cfg.get("autotile_sea_fade_px", 96))
 
@@ -41,7 +42,7 @@ def main() -> int:
 
     for topo in SHORE_TOPOLOGIES:
         for v in variations:
-            tid = f"{biome}/{season}/{topo}/v{v:02d}"
+            tid = tile_id(biome, season, topo, v, generation=generation)
             sp = spec_path(tid)
             if not sp.is_file():
                 continue

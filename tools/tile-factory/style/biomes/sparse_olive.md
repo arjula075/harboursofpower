@@ -19,7 +19,7 @@
 
 - Irregular natural coastline; thin white surf only
 - Shallow turquoise band near coast, uniform deep blue at open-sea tile edges
-- Cardinal shores: straight coast at exact tile midline
+- Cardinal shores: coast meanders between opposite edge midpoints; silhouette irregularity required
 - Diagonal shores: small sea triangle in corner
 
 ## Variation

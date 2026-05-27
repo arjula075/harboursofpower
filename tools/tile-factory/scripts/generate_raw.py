@@ -7,9 +7,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from common import FACTORY_ROOT, load_config, repo_path
+from common import FACTORY_ROOT, load_config, repo_path, terrain_asset_relpath
 from openai_client import generate_image, save_image_response
-from prompts import port_overlay_prompt, terrain_prompt
+from prompts import assemble_generation_prompt
 
 
 def log_cost(report_dir: Path, entry: dict) -> None:
@@ -18,19 +18,38 @@ def log_cost(report_dir: Path, entry: dict) -> None:
         f.write(json.dumps(entry) + "\n")
 
 
+def _resolve_raw_path(spec: dict) -> Path:
+    variation = int(spec.get("variation", 1))
+    if spec["kind"] == "terrain":
+        generation = int(spec.get("generation", 1))
+        rel = terrain_asset_relpath(
+            str(spec["biome"]),
+            str(spec["season"]),
+            str(spec["topology"]),
+            variation,
+            generation=generation,
+            ext=".png",
+        )
+        return repo_path("tools/tile-factory/raw") / rel
+    culture = str(spec.get("culture", "greek")).replace("port_", "")
+    return repo_path("tools/tile-factory/raw/overlays") / f"port_{culture}" / spec["season"] / f"v{variation:02d}.png"
+
+
 def generate_spec(spec: dict, cfg: dict, force: bool = False) -> bool:
-    raw = Path(spec["raw_path"])
+    raw = _resolve_raw_path(spec)
+    spec["raw_path"] = str(raw)
     if raw.is_file() and not force:
         print(f"Skip existing {spec['id']}")
         return True
 
-    if spec["kind"] == "terrain":
-        prompt = terrain_prompt(spec["topology"], int(spec["variation"]))
-    elif spec["kind"] == "port_overlay":
-        culture = spec["culture"].replace("port_", "") if "culture" in spec else "greek"
-        prompt = port_overlay_prompt(culture, int(spec["variation"]))
-    else:
+    if spec["kind"] not in ("terrain", "port_overlay"):
         raise ValueError(f"Unknown kind {spec['kind']}")
+
+    if spec.get("kind") == "terrain" and spec.get("topology") == "totally_sea":
+        print(f"Skip API generate for procedural sea: {spec['id']}")
+        return True
+
+    prompt = assemble_generation_prompt(spec)
 
     model = cfg.get("openai_image_model", "gpt-image-1")
     size = int(cfg["tile_size"])

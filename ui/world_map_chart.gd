@@ -4,6 +4,7 @@ class_name WorldMapChart
 ## Chunk-based Mediterranean chart (Phase C). Same UX contract as RoutesMapChart.
 
 signal sail_requested(port_id: String)
+signal free_sail_docked(port_id: String)
 
 var _gs: HarboursGameState
 var _rows: Array = []
@@ -11,6 +12,9 @@ var _projection := HarboursChartProjection.new()
 var _manifest: Dictionary = {}
 var _chunks: Array = []
 var _textures: Dictionary = {}  # path -> Texture2D
+
+## Open-sea fill when no regional chunk covers the view (matches wang16 mask sea).
+const _OPEN_SEA_COLOR := Color(0.118, 0.314, 0.471, 1.0)
 
 var _dragging := false
 var _drag_moved := false
@@ -21,7 +25,15 @@ func setup(gs: HarboursGameState, rows: Array) -> void:
 	_gs = gs
 	_rows = rows
 	_load_chunks()
-	_projection.reset_center_from_uv(_gs.get_port_map_uv(_gs.player_port_id))
+	if _gs.is_free_sailing():
+		_projection.reset_center_from_uv(_gs.get_player_sail_uv())
+	else:
+		_projection.reset_center_from_uv(_gs.get_port_map_uv(_gs.player_port_id))
+	if not _gs.free_sail_started.is_connected(_on_free_sail_started):
+		_gs.free_sail_started.connect(_on_free_sail_started)
+	if not _gs.free_sail_docked.is_connected(_on_free_sail_docked):
+		_gs.free_sail_docked.connect(_on_free_sail_docked)
+	_sync_free_sail_process()
 	queue_redraw()
 
 
@@ -29,6 +41,7 @@ func _load_chunks() -> void:
 	_manifest = HarboursChunkManifestLoader.load_document()
 	_chunks = HarboursChunkManifestLoader.load_chunks(_manifest)
 	_projection.configure_from_manifest(_manifest)
+	_apply_texture_filter_for_layout()
 	_textures.clear()
 	for entry in _chunks:
 		var d: Dictionary = entry
@@ -47,7 +60,10 @@ static func is_available() -> bool:
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	focus_mode = Control.FOCUS_ALL
 	clip_contents = true
+	modulate = Color.WHITE
+	_apply_texture_filter_for_layout()
 	if get_node_or_null("RoutesMapHover") == null:
 		var h := Label.new()
 		h.name = "RoutesMapHover"
@@ -76,6 +92,39 @@ func _exit_tree() -> void:
 	var vp := get_viewport()
 	if vp != null and vp.size_changed.is_connected(apply_fill_height):
 		vp.size_changed.disconnect(apply_fill_height)
+	if _gs != null:
+		if _gs.free_sail_started.is_connected(_on_free_sail_started):
+			_gs.free_sail_started.disconnect(_on_free_sail_started)
+		if _gs.free_sail_docked.is_connected(_on_free_sail_docked):
+			_gs.free_sail_docked.disconnect(_on_free_sail_docked)
+	set_process(false)
+
+
+func _on_free_sail_started() -> void:
+	_sync_free_sail_process()
+	_projection.reset_center_from_uv(_gs.get_player_sail_uv())
+	queue_redraw()
+
+
+func _on_free_sail_docked(port_id: String) -> void:
+	_sync_free_sail_process()
+	_projection.reset_center_from_uv(_gs.get_port_map_uv(port_id))
+	free_sail_docked.emit(port_id)
+	queue_redraw()
+
+
+func _sync_free_sail_process() -> void:
+	set_process(_gs != null and _gs.is_free_sailing())
+
+
+func _process(delta: float) -> void:
+	if _gs == null or not _gs.is_free_sailing():
+		return
+	_gs.apply_free_sail_steer_from_input(delta)
+	_gs.tick_free_sailing(delta)
+	if _gs.is_free_sailing():
+		_projection.center_map = _gs.get_player_sail_map_pos()
+		queue_redraw()
 
 
 func _risk_color(risk: String) -> Color:
@@ -98,17 +147,31 @@ func _draw_map() -> void:
 	if sz.x < 4.0 or sz.y < 4.0:
 		return
 	var vis := _projection.visible_map_rect(geo)
+	var layout := str(_manifest.get("layout", "grid"))
+	if layout != "tile_pixels":
+		_draw_open_sea_background(geo, vis)
 
 	if _chunks.is_empty():
-		draw_rect(Rect2(Vector2.ZERO, sz), Color(0.07, 0.12, 0.2))
+		draw_rect(Rect2(Vector2.ZERO, sz), _OPEN_SEA_COLOR)
 		_draw_legend(geo)
 		return
 
 	for entry in _chunks:
 		_draw_chunk(entry, geo, vis)
 
+	if layout == "tile_pixels":
+		_draw_tile_grid_if_zoomed(geo, vis)
+
 	_draw_ports(geo)
 	_draw_legend(geo)
+
+
+func _draw_open_sea_background(geo: Dictionary, vis: Rect2) -> void:
+	var tl_scr := _projection.map_to_screen(vis.position.x, vis.position.y, geo)
+	var br_scr := _projection.map_to_screen(vis.end.x, vis.end.y, geo)
+	var dest := Rect2(tl_scr, br_scr - tl_scr)
+	if dest.size.x >= 0.5 and dest.size.y >= 0.5:
+		draw_rect(dest, _OPEN_SEA_COLOR)
 
 
 func _draw_chunk(entry: Dictionary, geo: Dictionary, vis: Rect2) -> void:
@@ -124,15 +187,14 @@ func _draw_chunk(entry: Dictionary, geo: Dictionary, vis: Rect2) -> void:
 	var clip := chunk_rect.intersection(vis)
 	if clip.size.x < 0.5 or clip.size.y < 0.5:
 		return
-	var cw := maxf(x1 - x0, 1.0)
-	var ch := maxf(y1 - y0, 1.0)
+	var chunk_tiles := float(_manifest.get("chunk_tile_size", maxf(x1 - x0, 1.0)))
 	var tw := float(tex.get_width())
 	var th := float(tex.get_height())
 	var src := Rect2(
-		(clip.position.x - x0) / cw * tw,
-		(clip.position.y - y0) / ch * th,
-		clip.size.x / cw * tw,
-		clip.size.y / ch * th,
+		(clip.position.x - x0) / chunk_tiles * tw,
+		(clip.position.y - y0) / chunk_tiles * th,
+		clip.size.x / chunk_tiles * tw,
+		clip.size.y / chunk_tiles * th,
 	)
 	var tl_scr := _projection.map_to_screen(clip.position.x, clip.position.y, geo)
 	var br_scr := _projection.map_to_screen(clip.end.x, clip.end.y, geo)
@@ -140,6 +202,32 @@ func _draw_chunk(entry: Dictionary, geo: Dictionary, vis: Rect2) -> void:
 	if dest.size.x < 0.5 or dest.size.y < 0.5:
 		return
 	draw_texture_rect_region(tex, dest, src)
+
+
+func _apply_texture_filter_for_layout() -> void:
+	if str(_manifest.get("layout", "")) == "tile_pixels":
+		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	else:
+		texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+
+
+func _draw_tile_grid_if_zoomed(geo: Dictionary, vis: Rect2) -> void:
+	var ppm: float = float(geo.get("px_per_mx", 0.0))
+	if ppm < 5.0:
+		return
+	var x_start := int(ceilf(vis.position.x))
+	var x_end := int(floorf(vis.end.x))
+	var y_start := int(ceilf(vis.position.y))
+	var y_end := int(floorf(vis.end.y))
+	var grid_col := Color(1.0, 1.0, 1.0, 0.08)
+	for x in range(x_start, x_end + 1):
+		var a := _projection.map_to_screen(float(x), vis.position.y, geo)
+		var b := _projection.map_to_screen(float(x), vis.end.y, geo)
+		draw_line(a, b, grid_col, 1.0)
+	for y in range(y_start, y_end + 1):
+		var a := _projection.map_to_screen(vis.position.x, float(y), geo)
+		var b := _projection.map_to_screen(vis.end.x, float(y), geo)
+		draw_line(a, b, grid_col, 1.0)
 
 
 func _draw_player_ship(geo: Dictionary) -> void:
@@ -152,7 +240,8 @@ func _draw_player_ship(geo: Dictionary) -> void:
 	if hscr.x < -80.0 or hscr.y < -80.0 or hscr.x > sz.x + 80.0 or hscr.y > sz.y + 80.0:
 		return
 	var sid := _gs.get_player_ship_class_id()
-	if not HarboursShipVisualCatalog.draw_map_ship(self, hscr, sid):
+	var heading: Variant = _gs.get_player_chart_course_heading() if _gs.has_chart_course_heading() else null
+	if not HarboursShipVisualCatalog.draw_map_ship(self, hscr, sid, heading):
 		var cross := 14.0
 		draw_line(hscr + Vector2(-cross, 0.0), hscr + Vector2(cross, 0.0), Color(0.95, 0.95, 1.0, 0.95), 2.0)
 		draw_line(hscr + Vector2(0.0, -cross), hscr + Vector2(0.0, cross), Color(0.95, 0.95, 1.0, 0.95), 2.0)
@@ -188,7 +277,37 @@ func _draw_ports(geo: Dictionary) -> void:
 func _draw_legend(geo: Dictionary) -> void:
 	var font := get_theme_default_font()
 	var n := _chunks.size()
-	var legend := "Chunk map (%d) · your ship · drag pan · wheel zoom · click port to sail" % n
+	var layout := str(_manifest.get("layout", "grid"))
+	var legend := "Chart map (%d regions) · drag pan · wheel zoom · click port to sail" % n
+	if layout == "chart_area":
+		legend = "Regional chart (%d areas) · drag pan · wheel zoom · click port to sail" % n
+	elif layout == "tile_pixels":
+		var cts := int(_manifest.get("chunk_tile_size", 128))
+		var tile_px := int(_manifest.get("tile_size", 1))
+		legend = (
+			"Tile map (%d×%d chunks, 1 tile = %d px source) · drag pan · wheel zoom · click port to sail"
+			% [_manifest.get("chunk_count_x", 0), _manifest.get("chunk_count_y", 0), maxi(1, tile_px)]
+		)
+		if tile_px <= 1:
+			legend = (
+			"Tile map (%d×%d chunks, 1 tile = 1 px) · drag pan · wheel zoom · click port to sail"
+			% [_manifest.get("chunk_count_x", 0), _manifest.get("chunk_count_y", 0)]
+			)
+		if cts > 0:
+			legend = (
+				"Tile map (%d chunks, %d×%d tiles each, %d px/tile) · drag pan · wheel zoom · click port to sail"
+				% [n, cts, cts, maxi(1, tile_px)]
+			)
+	if _gs != null and _gs.is_free_sailing():
+		legend = "Under sail · A / ← left · S / → right · reach a port to dock (days do not pass)"
+		var aid := HarboursChartAreaLookup.area_at_map(
+			_gs.get_player_sail_map_pos().x, _gs.get_player_sail_map_pos().y
+		)
+		if aid.is_empty():
+			aid = HarboursChartAreaLookup.area_at_uv(_gs.get_player_sail_uv())
+		if not aid.is_empty():
+			legend += " · %s" % _gs.get_chart_area_display_name(aid)
+		legend += " · Space = flag last bump bad"
 	draw_string(font, Vector2(8.0, 18.0), legend, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.85, 0.88, 0.92))
 
 
@@ -228,7 +347,12 @@ func _on_gui_input(ev: InputEvent) -> void:
 				_drag_moved = false
 				_press_screen = mb.position
 			else:
-				if _dragging and not _drag_moved and _press_screen.distance_to(mb.position) < 6.0:
+				if (
+					_dragging
+					and not _drag_moved
+					and _press_screen.distance_to(mb.position) < 6.0
+					and not _gs.is_free_sailing()
+				):
 					var pick := _nearest_port_screen(mb.position, 36.0)
 					if not pick.is_empty() and pick != _gs.player_port_id:
 						sail_requested.emit(pick)
@@ -251,6 +375,11 @@ func _on_gui_input(ev: InputEvent) -> void:
 				)
 				queue_redraw()
 				get_viewport().set_input_as_handled()
+	elif ev is InputEventKey:
+		var key := ev as InputEventKey
+		if key.pressed and not key.echo and key.keycode == KEY_SPACE and _gs.is_free_sailing():
+			_gs.mark_free_sail_last_bump_bad()
+			get_viewport().set_input_as_handled()
 	elif ev is InputEventMouseMotion:
 		var mm := ev as InputEventMouseMotion
 		if _dragging and (mm.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:

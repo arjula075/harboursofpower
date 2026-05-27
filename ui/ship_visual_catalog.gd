@@ -62,17 +62,37 @@ static func get_map_scale(ship_class_id: String) -> float:
 ## Target hull height on sea charts (Control `_draw`); separate from scene-tree `map_scale`.
 const CHART_DRAW_HEIGHT_PX := 88.0
 
+## Sheet art: bow toward bottom of texture (+Y). Course heading uses Godot angles (0 = +X, +Y down).
 
-static func draw_map_ship(canvas: CanvasItem, screen_center: Vector2, ship_class_id: String) -> bool:
+
+static func get_bow_angle_unrotated(ship_class_id: String) -> float:
+	var custom: Variant = get_visual_object(ship_class_id).get("bow_angle_rad", null)
+	if custom != null:
+		return float(custom)
+	return Vector2.DOWN.angle()
+
+
+static func course_to_draw_rotation(course_heading_rad: float, ship_class_id: String) -> float:
+	return course_heading_rad - get_bow_angle_unrotated(ship_class_id)
+
+
+static func draw_map_ship(
+	canvas: CanvasItem,
+	screen_center: Vector2,
+	ship_class_id: String,
+	heading_rad: Variant = null,
+) -> bool:
 	_ensure_loaded()
 	var tex := get_texture(ship_class_id)
 	if tex == null:
 		return false
 	var th: float = maxf(float(tex.get_height()), 1.0)
 	var sc: float = (CHART_DRAW_HEIGHT_PX / th) * get_map_scale(ship_class_id)
-	var flip_h: bool = str(get_visual_object(ship_class_id).get("facing", "east")).to_lower() == "west"
 	var sz: Vector2 = tex.get_size()
-	canvas.draw_set_transform(screen_center, 0.0, Vector2(-sc if flip_h else sc, sc))
+	var rot := 0.0
+	if heading_rad != null:
+		rot = course_to_draw_rotation(float(heading_rad), ship_class_id)
+	canvas.draw_set_transform(screen_center, rot, Vector2(sc, sc))
 	canvas.draw_texture(tex, -sz * 0.5)
 	canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	return true

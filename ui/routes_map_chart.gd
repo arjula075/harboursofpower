@@ -3,6 +3,7 @@ class_name RoutesMapChart
 
 ## Emitted when the player picks a destination port on the chart (same as legacy Sail).
 signal sail_requested(port_id: String)
+signal free_sail_docked(port_id: String)
 
 const _VIEW_W_MIN := 30.0
 const _VIEW_W_MAX := 900.0
@@ -26,11 +27,17 @@ func setup(gs: HarboursGameState, rows: Array) -> void:
 	_gs = gs
 	_rows = rows
 	_texture = HarboursChartGrid.load_route_basemap_texture()
+	if not _gs.free_sail_started.is_connected(_on_free_sail_started):
+		_gs.free_sail_started.connect(_on_free_sail_started)
+	if not _gs.free_sail_docked.is_connected(_on_free_sail_docked):
+		_gs.free_sail_docked.connect(_on_free_sail_docked)
 	_reset_view_from_player()
+	_sync_free_sail_process()
 
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	focus_mode = Control.FOCUS_ALL
 	clip_contents = true
 	if get_node_or_null("RoutesMapHover") == null:
 		var h := Label.new()
@@ -61,10 +68,44 @@ func _exit_tree() -> void:
 	var vp := get_viewport()
 	if vp != null and vp.size_changed.is_connected(apply_fill_height):
 		vp.size_changed.disconnect(apply_fill_height)
+	if _gs != null:
+		if _gs.free_sail_started.is_connected(_on_free_sail_started):
+			_gs.free_sail_started.disconnect(_on_free_sail_started)
+		if _gs.free_sail_docked.is_connected(_on_free_sail_docked):
+			_gs.free_sail_docked.disconnect(_on_free_sail_docked)
+	set_process(false)
+
+
+func _on_free_sail_started() -> void:
+	_sync_free_sail_process()
+	_reset_view_from_player()
+
+
+func _on_free_sail_docked(port_id: String) -> void:
+	_sync_free_sail_process()
+	_reset_view_from_player()
+	free_sail_docked.emit(port_id)
+	queue_redraw()
+
+
+func _sync_free_sail_process() -> void:
+	set_process(_gs != null and _gs.is_free_sailing())
+
+
+func _process(delta: float) -> void:
+	if _gs == null or not _gs.is_free_sailing():
+		return
+	_gs.apply_free_sail_steer_from_input(delta)
+	_gs.tick_free_sailing(delta)
+	if _gs.is_free_sailing():
+		_center_map = _gs.get_player_sail_map_pos()
+		queue_redraw()
 
 
 func _reset_view_from_player() -> void:
-	var uv: Vector2 = _gs.get_port_map_uv(_gs.player_port_id)
+	var uv: Vector2 = (
+		_gs.get_player_sail_uv() if _gs.is_free_sailing() else _gs.get_port_map_uv(_gs.player_port_id)
+	)
 	var lw := float(HarboursChartGrid.LOGICAL_GRID_WIDTH)
 	var lh := float(HarboursChartGrid.LOGICAL_GRID_HEIGHT)
 	if uv.x >= 0.0:
@@ -142,6 +183,8 @@ func _draw_map() -> void:
 	var font := get_theme_default_font()
 	var fz := 12
 	var legend := "Risk: green low · yellow moderate · red higher open-sea / piracy read"
+	if _gs != null and _gs.is_free_sailing():
+		legend = "Under sail · A / ← left · S / → right · Space = flag last bump bad"
 	draw_string(font, Vector2(8.0, 18.0), legend, HORIZONTAL_ALIGNMENT_LEFT, -1, fz, Color(0.85, 0.88, 0.92))
 
 	for row in _rows:
@@ -178,7 +221,8 @@ func _draw_player_ship(geo: Dictionary, lw: float, lh: float) -> void:
 	if hscr.x < -80.0 or hscr.y < -80.0 or hscr.x > sz.x + 80.0 or hscr.y > sz.y + 80.0:
 		return
 	var sid := _gs.get_player_ship_class_id()
-	if not HarboursShipVisualCatalog.draw_map_ship(self, hscr, sid):
+	var heading: Variant = _gs.get_player_chart_course_heading() if _gs.has_chart_course_heading() else null
+	if not HarboursShipVisualCatalog.draw_map_ship(self, hscr, sid, heading):
 		var cross := 14.0
 		draw_line(hscr + Vector2(-cross, 0.0), hscr + Vector2(cross, 0.0), Color(0.95, 0.95, 1.0, 0.95), 2.0)
 		draw_line(hscr + Vector2(0.0, -cross), hscr + Vector2(0.0, cross), Color(0.95, 0.95, 1.0, 0.95), 2.0)
@@ -225,7 +269,12 @@ func _on_gui_input(ev: InputEvent) -> void:
 				_drag_moved = false
 				_press_screen = mb.position
 			else:
-				if _dragging and not _drag_moved and _press_screen.distance_to(mb.position) < 6.0:
+				if (
+					_dragging
+					and not _drag_moved
+					and _press_screen.distance_to(mb.position) < 6.0
+					and not _gs.is_free_sailing()
+				):
 					var pick := _nearest_port_screen(mb.position, 36.0)
 					if not pick.is_empty() and pick != _gs.player_port_id:
 						sail_requested.emit(pick)
@@ -240,6 +289,11 @@ func _on_gui_input(ev: InputEvent) -> void:
 				_view_w = clampf(_view_w * _ZOOM_STEP, _VIEW_W_MIN, minf(_VIEW_W_MAX, float(HarboursChartGrid.LOGICAL_GRID_WIDTH)))
 				queue_redraw()
 				get_viewport().set_input_as_handled()
+	elif ev is InputEventKey:
+		var key := ev as InputEventKey
+		if key.pressed and not key.echo and key.keycode == KEY_SPACE and _gs.is_free_sailing():
+			_gs.mark_free_sail_last_bump_bad()
+			get_viewport().set_input_as_handled()
 	elif ev is InputEventMouseMotion:
 		var mm := ev as InputEventMouseMotion
 		if _dragging and (mm.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:

@@ -69,6 +69,8 @@ func _ready() -> void:
 	_gs.food_riot_report.connect(_on_food_riot_report)
 	_gs.crop_rumor_report.connect(_on_crop_rumor_report)
 	_gs.player_encounter_report.connect(_on_player_encounter_report)
+	_gs.free_sail_shore_bump.connect(_on_free_sail_shore_bump)
+	_gs.free_sail_bump_flagged.connect(_on_free_sail_bump_flagged)
 	refresh_admin_button.pressed.connect(_refresh_admin_dump_text)
 	close_admin_button.pressed.connect(_hide_admin_window)
 	admin_window.close_requested.connect(_hide_admin_window)
@@ -218,7 +220,7 @@ func _refresh_header() -> void:
 	day_label.text = _gs.get_calendar_header_line()
 	money_label.text = "Coins: %d" % _gs.get_money()
 	cargo_label.text = _gs.get_cargo_summary() + "\n" + _gs.get_ship_status_line()
-	if _gs.is_at_sea():
+	if _gs.is_at_sea() or _gs.is_free_sailing():
 		port_stock_label.visible = false
 		port_stock_label.text = ""
 	else:
@@ -329,6 +331,17 @@ func _rebuild_trade() -> void:
 		c.free()
 	city_places_vbox.show()
 	city_title.text = "City"
+	if _gs.is_free_sailing():
+		city_title.text = "Under sail (chart)"
+		city_places_vbox.hide()
+		if _city_place_index == _PLACE_ROUTES:
+			_build_routes_panel(trade_box)
+		else:
+			_append_wrapped(
+				trade_box,
+				"Under sail — open Routes for the chart (A / S steer, reach a port to dock). Days do not pass until you close the chart."
+			)
+		return
 	if _gs.is_at_sea():
 		city_title.text = "Under way"
 		city_places_vbox.hide()
@@ -998,9 +1011,9 @@ func _show_routes_fullscreen_overlay(rows: Array) -> void:
 	pay_refresh.pressed.connect(_on_pay_route_refresh_pressed)
 	bar.add_child(pay_refresh)
 	var hint := Label.new()
-	var chart_kind := "chunk map" if WorldMapChart.is_available() else "sea chart"
+	var chart_kind := "regional chart" if WorldMapChart.is_available() else "sea chart"
 	hint.text = (
-		"%s · drag pan · wheel zoom · click port to sail · default width %d map units (of %d). Risk: marker color + hover line."
+		"%s · under sail on open (A/S or arrow keys) · drag pan · wheel zoom · click port for booked voyage · width %d / %d. Risk: marker + hover."
 		% [chart_kind, int(HarboursChartGrid.ROUTES_LOCAL_VIEW_WIDTH_MAP), HarboursChartGrid.LOGICAL_GRID_WIDTH]
 	)
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1018,6 +1031,12 @@ func _show_routes_fullscreen_overlay(rows: Array) -> void:
 	map_chart.setup(_gs, rows)
 	map_chart.sail_requested.connect(_on_destination_chosen)
 	v.add_child(map_chart)
+	map_chart.call_deferred("grab_focus")
+	if map_chart is WorldMapChart:
+		(map_chart as WorldMapChart).free_sail_docked.connect(_on_free_sail_docked)
+	elif map_chart is RoutesMapChart:
+		(map_chart as RoutesMapChart).free_sail_docked.connect(_on_free_sail_docked)
+	_auto_start_free_sailing_when_chart_opens()
 	call_deferred("_routes_overlay_focus_close", close_btn)
 
 
@@ -1197,6 +1216,30 @@ func _deferred_rebuild_trade_and_header() -> void:
 	_refresh_header()
 
 
+func _auto_start_free_sailing_when_chart_opens() -> void:
+	if _gs.is_free_sailing():
+		_refresh_header()
+		return
+	if not _gs.begin_free_sailing():
+		return
+	_append_log("Under sail — A / ← turn left, S / → turn right; reach a port to dock.")
+	_refresh_header()
+
+
+func _on_free_sail_shore_bump(_bump_id: int, summary: String) -> void:
+	_append_log("Shore bump: %s → %s" % [summary, HarboursFreeSailBumpLog.get_log_path()])
+
+
+func _on_free_sail_bump_flagged(_bump_id: int, summary: String) -> void:
+	_append_log("Bump flagged: %s" % summary)
+
+
+func _on_free_sail_docked(port_id: String) -> void:
+	_append_log("Docked at %s." % _gs.get_port_name(port_id))
+	_refresh_header()
+	_rebuild_trade()
+
+
 func _on_destination_chosen(to_id: String) -> void:
 	if not _gs.start_voyage(to_id):
 		return
@@ -1206,6 +1249,9 @@ func _on_destination_chosen(to_id: String) -> void:
 
 
 func _on_advance_pressed() -> void:
+	if _gs.is_free_sailing():
+		_append_log("Still on the chart under sail — dock at a port or close the chart first; days do not pass while manoeuvring.")
+		return
 	_gs.advance_day()
 
 
@@ -1224,6 +1270,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_SPACE and _gs.is_free_sailing():
+			if _routes_fullscreen_layer != null and is_instance_valid(_routes_fullscreen_layer):
+				_gs.mark_free_sail_last_bump_bad()
+				get_viewport().set_input_as_handled()
+				return
 		if event.keycode == KEY_F12:
 			if admin_window.visible:
 				_hide_admin_window()

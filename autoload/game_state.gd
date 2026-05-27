@@ -15,7 +15,7 @@ const _PORT_NPC_TRADERS_LOAD_MAX := 999
 const _NPC_BANKRUPTCY_REPLACE_MIN_PULSE := 0.20
 const _NPC_BANKRUPTCY_REPLACE_MIN_PORT_STOCK_UNITS := 36
 
-const SAVE_VERSION := 49
+const SAVE_VERSION := 50
 ## Canonical world graph + tuning: `data/world_full.json` (full Mediterranean chart; `WORLD_DATA_PATH`).
 const WORLD_DATA_PATH := "res://data/world_full.json"
 ## Phase 1 convoy/piracy scaffold: captain hat + escort job contract (no combat yet).
@@ -549,6 +549,10 @@ signal food_riot_report(summary: String)
 signal crop_rumor_report(summary: String)
 signal voyage_started(to_port_id: String, days: int)
 signal voyage_completed(at_port_id: String)
+signal free_sail_started()
+signal free_sail_docked(port_id: String)
+signal free_sail_shore_bump(bump_id: int, summary: String)
+signal free_sail_bump_flagged(bump_id: int, summary: String)
 signal game_saved(path: String)
 signal game_loaded(path: String)
 signal game_load_failed(reason: String)
@@ -768,6 +772,11 @@ var _last_crop_rumor_ui_line: String = ""
 var _rng := RandomNumberGenerator.new()
 
 var player_port_id: String = ""
+## Real-time chart sailing (no voyage days yet).
+var player_free_sailing: bool = false
+var player_sail_map_x: float = 0.0
+var player_sail_map_y: float = 0.0
+var player_sail_heading: float = 0.0
 var voyage_dest_id: String = ""
 var voyage_days_remaining: int = 0
 ## Set at voyage start for storm odds (does not tick down with remaining days).
@@ -950,10 +959,12 @@ func get_port_map_uv(port_id: String) -> Vector2:
 	return Vector2(-1.0, -1.0)
 
 
-## Sea-chart anchor for the player hull: docked at `player_port_id`; underway lerps toward `voyage_dest_id`.
+## Sea-chart anchor for the player hull: docked, free-sailing, or booked voyage lerp.
 func get_player_chart_uv() -> Vector2:
+	if player_free_sailing:
+		return get_player_sail_uv()
 	var here: Vector2 = get_port_map_uv(player_port_id)
-	if not is_at_sea() or voyage_dest_id.is_empty():
+	if voyage_days_remaining <= 0 or voyage_dest_id.is_empty():
 		return here
 	var dest: Vector2 = get_port_map_uv(voyage_dest_id)
 	if here.x < 0.0 or dest.x < 0.0:
@@ -961,6 +972,155 @@ func get_player_chart_uv() -> Vector2:
 	var booked: int = maxi(1, player_voyage_booked_days)
 	var t: float = 1.0 - float(voyage_days_remaining) / float(booked)
 	return here.lerp(dest, clampf(t, 0.0, 1.0))
+
+
+func is_free_sailing() -> bool:
+	return player_free_sailing
+
+
+func get_player_sail_map_pos() -> Vector2:
+	return Vector2(player_sail_map_x, player_sail_map_y)
+
+
+func get_player_sail_uv() -> Vector2:
+	var lw := float(HarboursChartGrid.LOGICAL_GRID_WIDTH)
+	var lh := float(HarboursChartGrid.LOGICAL_GRID_HEIGHT)
+	return Vector2(
+		clampf(player_sail_map_x / maxf(1.0, lw), 0.0, 1.0),
+		clampf(player_sail_map_y / maxf(1.0, lh), 0.0, 1.0),
+	)
+
+
+func get_player_sail_heading() -> float:
+	return player_sail_heading
+
+
+func has_chart_course_heading() -> bool:
+	if player_free_sailing:
+		return true
+	return voyage_days_remaining > 0 and not voyage_dest_id.is_empty()
+
+
+func get_player_chart_course_heading() -> float:
+	if player_free_sailing:
+		return player_sail_heading
+	if voyage_days_remaining > 0 and not voyage_dest_id.is_empty():
+		var here: Vector2 = get_port_map_uv(player_port_id)
+		var dest: Vector2 = get_port_map_uv(voyage_dest_id)
+		if here.x >= 0.0 and dest.x >= 0.0:
+			var lw := float(HarboursChartGrid.LOGICAL_GRID_WIDTH)
+			var lh := float(HarboursChartGrid.LOGICAL_GRID_HEIGHT)
+			var leg := Vector2((dest.x - here.x) * lw, (dest.y - here.y) * lh)
+			if leg.length_squared() > 4.0:
+				return leg.angle()
+	return 0.0
+
+
+func can_begin_free_sailing() -> bool:
+	if player_free_sailing or voyage_days_remaining > 0:
+		return false
+	if player_port_id.is_empty() or not _port_names.has(player_port_id):
+		return false
+	return get_port_map_uv(player_port_id).x >= 0.0
+
+
+func begin_free_sailing() -> bool:
+	if not can_begin_free_sailing():
+		return false
+	var uv: Vector2 = get_port_map_uv(player_port_id)
+	player_sail_map_x = uv.x * float(HarboursChartGrid.LOGICAL_GRID_WIDTH)
+	player_sail_map_y = uv.y * float(HarboursChartGrid.LOGICAL_GRID_HEIGHT)
+	player_sail_heading = HarboursLandMask.heading_away_from_land(player_sail_map_x, player_sail_map_y)
+	var lw := float(HarboursChartGrid.LOGICAL_GRID_WIDTH)
+	var lh := float(HarboursChartGrid.LOGICAL_GRID_HEIGHT)
+	var push := Vector2(cos(player_sail_heading), sin(player_sail_heading)) * 11.0
+	for _i in 5:
+		var nx := clampf(player_sail_map_x + push.x, 0.0, lw - 1.0)
+		var ny := clampf(player_sail_map_y + push.y, 0.0, lh - 1.0)
+		if HarboursLandMask.is_sea(nx, ny):
+			player_sail_map_x = nx
+			player_sail_map_y = ny
+	player_free_sailing = true
+	free_sail_started.emit()
+	return true
+
+
+func end_free_sailing_dock(port_id: String) -> void:
+	if not player_free_sailing:
+		return
+	var pid := str(port_id)
+	if pid.is_empty() or not _port_names.has(pid):
+		return
+	player_free_sailing = false
+	player_port_id = pid
+	voyage_dest_id = ""
+	voyage_days_remaining = 0
+	free_sail_docked.emit(pid)
+
+
+func steer_free_sailing(turn_rad: float) -> void:
+	if not player_free_sailing:
+		return
+	player_sail_heading = wrapf(player_sail_heading + turn_rad, -PI, PI)
+
+
+const _FREE_SAIL_SPEED := 9.0
+const _FREE_SAIL_TURN_RATE := 1.65
+const _FREE_SAIL_DOCK_RADIUS := 22.0
+
+
+func get_free_sail_turn_rate() -> float:
+	return _FREE_SAIL_TURN_RATE
+
+
+func mark_free_sail_last_bump_bad() -> String:
+	var result: Dictionary = HarboursFreeSailBumpLog.mark_last_as_bad()
+	var msg := str(result.get("message", ""))
+	if bool(result.get("ok", false)):
+		var entry: Dictionary = result.get("entry", {})
+		if not entry.is_empty():
+			free_sail_bump_flagged.emit(int(entry.get("id", 0)), HarboursFreeSailBumpLog.format_bump_line(entry))
+	return msg
+
+
+func apply_free_sail_steer_from_input(delta: float) -> void:
+	if not player_free_sailing or delta <= 0.0:
+		return
+	var turn := _FREE_SAIL_TURN_RATE * delta
+	if Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT):
+		steer_free_sailing(-turn)
+	if Input.is_physical_key_pressed(KEY_S) or Input.is_physical_key_pressed(KEY_RIGHT):
+		steer_free_sailing(turn)
+
+
+func tick_free_sailing(delta: float) -> void:
+	if not player_free_sailing or delta <= 0.0:
+		return
+	var lw := float(HarboursChartGrid.LOGICAL_GRID_WIDTH)
+	var lh := float(HarboursChartGrid.LOGICAL_GRID_HEIGHT)
+	var dir := Vector2(cos(player_sail_heading), sin(player_sail_heading))
+	var step := dir * _FREE_SAIL_SPEED * delta
+	var next_x := clampf(player_sail_map_x + step.x, 0.0, lw - 1.0)
+	var next_y := clampf(player_sail_map_y + step.y, 0.0, lh - 1.0)
+	if HarboursLandMask.is_blocked_for_sailing(next_x, next_y):
+		var bump_id := HarboursFreeSailBumpLog.record_bump(
+			player_sail_map_x,
+			player_sail_map_y,
+			next_x,
+			next_y,
+			player_sail_heading,
+			current_day,
+		)
+		var bump_entry := HarboursFreeSailBumpLog.get_last_bump()
+		free_sail_shore_bump.emit(bump_id, HarboursFreeSailBumpLog.format_bump_line(bump_entry))
+		player_sail_heading = wrapf(player_sail_heading + PI, -PI, PI)
+		return
+	var dock_id := HarboursLandMask.nearest_port_id(_port_map_uv, next_x, next_y, _FREE_SAIL_DOCK_RADIUS)
+	if not dock_id.is_empty():
+		end_free_sailing_dock(dock_id)
+		return
+	player_sail_map_x = next_x
+	player_sail_map_y = next_y
 
 
 func is_port_at_war(port_id: String) -> bool:
@@ -1073,6 +1233,8 @@ func is_at_sea() -> bool:
 
 
 func get_location_summary() -> String:
+	if player_free_sailing:
+		return "Under sail — A / ← turn left · S / → turn right · reach a port to dock (no days pass yet)"
 	if is_at_sea():
 		var sea_note: String = (
 			" · open-water routing" if player_voyage_open_sea_01 > 0.34 else " · mostly coastal lanes"
@@ -4388,7 +4550,7 @@ func get_player_route_table() -> Array:
 
 
 func start_voyage(to_port_id: String) -> bool:
-	if is_at_sea():
+	if player_free_sailing or is_at_sea():
 		return false
 	if str(player_voyage_role) == _VOYAGE_ROLE_ESCORT:
 		return false
@@ -4480,6 +4642,10 @@ func save_campaign() -> bool:
 		"player_port_id": player_port_id,
 		"voyage_dest_id": voyage_dest_id,
 		"voyage_days_remaining": voyage_days_remaining,
+		"player_free_sailing": player_free_sailing,
+		"player_sail_map_x": player_sail_map_x,
+		"player_sail_map_y": player_sail_map_y,
+		"player_sail_heading": player_sail_heading,
 		"player_voyage_booked_days": clampi(player_voyage_booked_days, 0, 999),
 		"player_voyage_open_sea_01": clampf(player_voyage_open_sea_01, 0.0, 1.0),
 		"player_voyage_risk_aversion": clampf(player_voyage_risk_aversion, 0.0, 1.0),
@@ -4586,6 +4752,21 @@ func load_campaign() -> bool:
 	player_port_id = str(d.get("player_port_id", player_port_id))
 	voyage_dest_id = str(d.get("voyage_dest_id", ""))
 	voyage_days_remaining = maxi(0, int(d.get("voyage_days_remaining", 0)))
+	if ver >= 50:
+		player_free_sailing = bool(d.get("player_free_sailing", false))
+		player_sail_map_x = float(d.get("player_sail_map_x", 0.0))
+		player_sail_map_y = float(d.get("player_sail_map_y", 0.0))
+		player_sail_heading = float(d.get("player_sail_heading", 0.0))
+	else:
+		player_free_sailing = false
+		player_sail_map_x = 0.0
+		player_sail_map_y = 0.0
+		player_sail_heading = 0.0
+	if player_free_sailing:
+		voyage_days_remaining = 0
+		voyage_dest_id = ""
+	elif voyage_days_remaining > 0:
+		player_free_sailing = false
 	player_money = int(d.get("player_money", 0))
 	if ver >= 26:
 		_world_treasury_coins = clampi(

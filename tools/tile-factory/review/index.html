@@ -1,29 +1,72 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Lake mosaic — 10 tile set</title>
-<style>
-body { font-family: system-ui; background: #1a1a1a; color: #eee; margin: 16px; }
-h1 { margin-bottom: 4px; }
-.sub { color: #aaa; margin-bottom: 16px; }
-.mosaic-wrap { margin-bottom: 24px; }
-.mosaic-wrap img { border: 1px solid #444; image-rendering: auto; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 128px);
-  gap: 4px;
-  width: fit-content;
-}
-.cell { background: #2a2a2a; padding: 4px; border-radius: 4px; text-align: center; }
-.cell p { font-size: 9px; margin: 4px 0 0; line-height: 1.2; color: #bbb; }
-.cell.missing .ph { width:128px; height:128px; background:#522; display:flex; align-items:center; justify-content:center; font-size:32px; }
-code { font-size: 11px; }
-</style></head><body>
-<h1>Lake mosaic (5×5)</h1>
-<p class="sub">Center = open sea · inner ring = shores · outer ring = land · 25 tiles total</p>
-<div class="mosaic-wrap">
-  <p><strong>Stitched preview</strong></p>
-  <img src="../../../tools/tile-factory/reports/lake_mosaic_5x5.png" width="640" height="640" />
-</div>
-<div class="grid"><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/diagonal_rising_left_land/v01.webp" width="128" height="128" /><p>diagonal rising left land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/horizontal_top_land/v01.webp" width="128" height="128" /><p>horizontal top land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/diagonal_rising_right_land/v01.webp" width="128" height="128" /><p>diagonal rising right land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/vertical_left_land/v01.webp" width="128" height="128" /><p>vertical left land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_sea/v01.webp" width="128" height="128" /><p>totally sea</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/vertical_right_land/v01.webp" width="128" height="128" /><p>vertical right land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/diagonal_descending_left_land/v01.webp" width="128" height="128" /><p>diagonal descending left land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/horizontal_bottom_land/v01.webp" width="128" height="128" /><p>horizontal bottom land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/diagonal_descending_right_land/v01.webp" width="128" height="128" /><p>diagonal descending right land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div><div class="cell"><img src="../../../assets/tiles/pending/sparse_olive/summer/totally_land/v01.webp" width="128" height="128" /><p>totally land</p></div></div>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tile factory — review &amp; approve</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Tile review</h1>
+      <p class="sub">Each tile shows <strong>Prompts &amp; recreate</strong> (edit layers, regenerate) then <strong>Approve</strong>. Restart server after updates.</p>
+    </div>
+    <p id="server-hint" class="server-hint hidden">Start the server: <code>python3 tools/tile-factory/review_server.py</code></p>
+  </header>
 
-<p style="margin-top:20px"><code>orchestrator.py approve dry_scrubland/summer/TOPOLOGY/v01</code></p>
-</body></html>
+  <section class="controls">
+    <label>
+      Set
+      <select id="set-select"></select>
+    </label>
+    <label>
+      Pool
+      <select id="pool-select">
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="both">Both (compare)</option>
+      </select>
+    </label>
+    <label>
+      Generation
+      <select id="generation-select" title="Prompt/art batch (g002, g003…). Legacy flat layout = g001."></select>
+    </label>
+    <label>
+      Slot
+      <select id="variation-select" title="Wang alternate textures within one generation (v01–v03).">
+        <option value="1">v01</option>
+        <option value="2">v02</option>
+        <option value="3">v03</option>
+        <option value="all">All slots</option>
+      </select>
+    </label>
+    <label>
+      View
+      <select id="view-select">
+        <option value="mosaic">Lake mosaic (5×5)</option>
+        <option value="grid">All topologies (grid)</option>
+      </select>
+    </label>
+    <button type="button" id="refresh-btn">Refresh</button>
+    <button type="button" id="approve-all-btn" class="secondary" title="Approve every visible pending tile in grid view">Approve all visible</button>
+    <a class="map-preview-link" href="/tile-texture-gallery.html" target="_blank" rel="noopener" title="Mosaic of all chart areas using approved/pending tiles">Map preview ↗</a>
+  </section>
+
+  <p id="set-meta" class="set-meta"></p>
+  <p id="status" class="status" aria-live="polite"></p>
+
+  <section id="mosaic-panel" class="panel">
+    <h2>Lake mosaic</h2>
+    <p class="hint">Center = open sea · inner ring = shores · outer ring = land</p>
+    <div id="mosaic-grid" class="mosaic-grid"></div>
+  </section>
+
+  <section id="grid-panel" class="panel hidden">
+    <h2>Topology grid</h2>
+    <div id="tile-grid" class="tile-grid"></div>
+  </section>
+
+  <script src="app.js?v=2"></script>
+</body>
+</html>

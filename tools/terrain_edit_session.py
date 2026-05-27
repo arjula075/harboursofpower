@@ -386,11 +386,9 @@ def save_all(*, dry_run: bool, snap_index_factory, clear_snap_cache) -> dict[str
         source_mode=source_mode,
     )
 
-    from slice_map_chunks import slice_master
+    from build_tile_pixel_chunks import build_tile_pixel_chunks
 
-    chunk_manifest = slice_master(
-        GLOBAL_MASK_PATH,
-        chunk_size=2048,
+    chunk_manifest = build_tile_pixel_chunks(
         chunks_dir=CHUNKS_DIR,
         manifest_path=CHUNK_MANIFEST_PATH,
     )

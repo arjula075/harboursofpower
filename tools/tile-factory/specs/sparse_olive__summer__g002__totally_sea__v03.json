@@ -1,0 +1,16 @@
+{
+  "id": "sparse_olive/summer/g002/totally_sea/v03",
+  "kind": "terrain",
+  "biome": "sparse_olive",
+  "season": "summer",
+  "topology": "totally_sea",
+  "generation": 2,
+  "legacy_id": "totally_sea",
+  "wang_mask": 0,
+  "terrain_class": "sea",
+  "variation": 3,
+  "status": "pending",
+  "raw_path": "/Users/ari.lahti/HarboursOfPower/tools/tile-factory/raw/sparse_olive/summer/g002/totally_sea/v03.png",
+  "pending_path": "/Users/ari.lahti/HarboursOfPower/assets/tiles/pending/sparse_olive/summer/g002/totally_sea/v03.webp",
+  "approved_path": "/Users/ari.lahti/HarboursOfPower/assets/tiles/approved/sparse_olive/summer/g002/totally_sea/v03.webp"
+}

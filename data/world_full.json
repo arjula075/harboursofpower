@@ -75,44 +75,109 @@
   },
   "chart_areas": [
     {
-      "id": "iberia_gaul",
-      "name": "Iberian coast & Ligurian sea",
-      "description": "Atlantic gateway and the Gallo-Iberian rim — Gades, Massalia, the Catalan strand."
+      "id": "iberia_atlantic",
+      "name": "Atlantic Iberia (Gades)",
+      "description": "Gades and the Atlantic facade west of the Pillars."
     },
     {
-      "id": "tyrrhenian",
-      "name": "Tyrrhenian sea & approaches",
-      "description": "Italian west coast, Sardinia, Corsica, Latium and Campania."
+      "id": "gibraltar_strait",
+      "name": "Strait of Gibraltar",
+      "description": "Pillars of Hercules — Gades, Sexi, Tingis, and the channel."
     },
     {
-      "id": "sicily_ionian",
-      "name": "Sicily & Ionian basin",
-      "description": "Sicilian roadsteads and the heel-and-toe of Italy."
+      "id": "iberia_east",
+      "name": "Iberian Mediterranean coast",
+      "description": "Baetis to Emporion — Nova Carthago and the Catalan shore."
     },
     {
-      "id": "north_africa",
-      "name": "North African coast",
-      "description": "Carthaginian capital and the Tripolitanian and Mauretanian shores."
+      "id": "ligurian",
+      "name": "Ligurian sea & Gulf of Lion",
+      "description": "Massalia, Narbonensis, and the Gallic littoral."
     },
     {
-      "id": "egypt_cyrenaica",
-      "name": "Egypt & Cyrenaica",
-      "description": "Cyrenaican headlands and the Nile-mouth grain hubs."
+      "id": "tyrrhenian_etruria",
+      "name": "Etruria & north Tyrrhenian",
+      "description": "Populonia, Caere, Pyrgi, and the Tuscan littoral."
     },
     {
-      "id": "aegean",
-      "name": "Aegean & Cretan sea",
-      "description": "Mainland Greece, the Aegean islands, western Anatolia and Crete."
+      "id": "tyrrhenian_sardinia",
+      "name": "Sardinia",
+      "description": "Caralis, Sulci, Tharros, and Olbia."
     },
     {
-      "id": "levant_cyprus",
-      "name": "Levant & Cyprus",
-      "description": "Phoenician home ports and the Cypriot ring."
+      "id": "tyrrhenian_latium",
+      "name": "Latium & Campania",
+      "description": "Rome, Ostia, Naples, Cumae, and the Tyrrhenian toe."
     },
     {
-      "id": "propontis_pontus",
-      "name": "Propontis & Pontus Euxinus",
-      "description": "Marmara mouth and the Black Sea grain horizon."
+      "id": "sicily_island",
+      "name": "Sicily",
+      "description": "Panormus to Syracuse — the Sicilian ring."
+    },
+    {
+      "id": "strait_messina",
+      "name": "Strait of Messina",
+      "description": "Messana, Rhegium, and the narrows to Magna Graecia."
+    },
+    {
+      "id": "magna_graecia",
+      "name": "Magna Graecia",
+      "description": "Taras, Croton, Locri, and the Calabrian instep."
+    },
+    {
+      "id": "tunisia_carthage",
+      "name": "Tunisia & Carthage",
+      "description": "Carthage, Utica, Hippo, and the shore opposite Sicily."
+    },
+    {
+      "id": "libya_tripolitania",
+      "name": "Tripolitania",
+      "description": "Oea, Sabratha, and Leptis Magna."
+    },
+    {
+      "id": "cyrenaica",
+      "name": "Cyrenaica",
+      "description": "Cyrene and Apollonia — the Libyan pentapolis coast."
+    },
+    {
+      "id": "nile_delta",
+      "name": "Nile delta & Egypt",
+      "description": "Alexandria, Naucratis, Memphis, and the grain mouths."
+    },
+    {
+      "id": "greece_mainland",
+      "name": "Greece (mainland)",
+      "description": "Athens, Corinth, Megara, and the Peloponnese approaches."
+    },
+    {
+      "id": "ionia_caria",
+      "name": "Ionia & Caria",
+      "description": "Smyrna, Ephesus, Miletus, Halicarnassus."
+    },
+    {
+      "id": "crete_dodecanese",
+      "name": "Crete & Dodecanese",
+      "description": "Knossos, Rhodes, and the southern Aegean gate."
+    },
+    {
+      "id": "cyprus",
+      "name": "Cyprus",
+      "description": "Salamis, Kition, Paphos, and the copper isle."
+    },
+    {
+      "id": "phoenicia",
+      "name": "Phoenicia & Levant coast",
+      "description": "Tyre, Sidon, Byblos, and the Syrian strand."
+    },
+    {
+      "id": "propontis",
+      "name": "Propontis (Marmara)",
+      "description": "Byzantium and Chalcedon — Marmara mouth."
+    },
+    {
+      "id": "pontus_euxinus",
+      "name": "Pontus Euxinus",
+      "description": "Sinope, Trapezus, Olbia, and the Black Sea grain horizon."
     }
   ],
   "ports": [
@@ -154,7 +219,7 @@
         "grain": -0.08
       },
       "npc_traders_base": 6,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "sicily_island"
     },
     {
       "id": "aleria",
@@ -189,7 +254,7 @@
       "initial_wealth": 98,
       "trade_price_bias": {},
       "npc_traders_base": 4,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_etruria"
     },
     {
       "id": "alexandria",
@@ -246,7 +311,7 @@
         "treasury_sink_frac": 0.1
       },
       "npc_traders_base": 10,
-      "chart_area_id": "egypt_cyrenaica"
+      "chart_area_id": "nile_delta"
     },
     {
       "id": "antipolis",
@@ -285,7 +350,7 @@
         "pottery": -0.04
       },
       "npc_traders_base": 4,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "ligurian"
     },
     {
       "id": "apollonia_cyrenaica",
@@ -327,7 +392,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "egypt_cyrenaica"
+      "chart_area_id": "cyrenaica"
     },
     {
       "id": "arados",
@@ -372,7 +437,7 @@
         "salt": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "levant_cyprus"
+      "chart_area_id": "phoenicia"
     },
     {
       "id": "athens_piraeus",
@@ -428,7 +493,7 @@
         "treasury_sink_frac": 0.1
       },
       "npc_traders_base": 10,
-      "chart_area_id": "aegean"
+      "chart_area_id": "greece_mainland"
     },
     {
       "id": "byblos",
@@ -473,7 +538,7 @@
         "salt": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "levant_cyprus"
+      "chart_area_id": "phoenicia"
     },
     {
       "id": "byzantion",
@@ -520,7 +585,7 @@
         "spice": 1
       },
       "npc_traders_base": 7,
-      "chart_area_id": "propontis_pontus"
+      "chart_area_id": "propontis"
     },
     {
       "id": "caere",
@@ -561,7 +626,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_etruria"
     },
     {
       "id": "caralis",
@@ -606,7 +671,7 @@
         "salt": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_sardinia"
     },
     {
       "id": "carthage",
@@ -664,7 +729,7 @@
         "treasury_sink_frac": 0.1
       },
       "npc_traders_base": 10,
-      "chart_area_id": "north_africa",
+      "chart_area_id": "tunisia_carthage",
       "population_existential_war_burst_days": 68
     },
     {
@@ -713,7 +778,7 @@
         "metal": 1
       },
       "npc_traders_base": 7,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "iberia_east"
     },
     {
       "id": "catane",
@@ -750,7 +815,7 @@
         "grain": -0.08
       },
       "npc_traders_base": 6,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "sicily_island"
     },
     {
       "id": "chalcedon",
@@ -793,7 +858,7 @@
         "spice": 1
       },
       "npc_traders_base": 4,
-      "chart_area_id": "propontis_pontus"
+      "chart_area_id": "propontis"
     },
     {
       "id": "chalcis",
@@ -835,7 +900,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "aegean"
+      "chart_area_id": "greece_mainland"
     },
     {
       "id": "chersonesos",
@@ -875,7 +940,7 @@
         "grain": -0.08
       },
       "npc_traders_base": 6,
-      "chart_area_id": "propontis_pontus"
+      "chart_area_id": "pontus_euxinus"
     },
     {
       "id": "corinth",
@@ -922,7 +987,7 @@
         "grain": 1
       },
       "npc_traders_base": 8,
-      "chart_area_id": "aegean"
+      "chart_area_id": "greece_mainland"
     },
     {
       "id": "croton",
@@ -964,7 +1029,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "magna_graecia"
     },
     {
       "id": "cumae",
@@ -1006,7 +1071,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_latium"
     },
     {
       "id": "cyrene",
@@ -1046,7 +1111,7 @@
         "grain": -0.08
       },
       "npc_traders_base": 6,
-      "chart_area_id": "egypt_cyrenaica"
+      "chart_area_id": "cyrenaica"
     },
     {
       "id": "emporion",
@@ -1088,7 +1153,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "iberia_east"
     },
     {
       "id": "ephesus",
@@ -1135,7 +1200,7 @@
         "grain": 1
       },
       "npc_traders_base": 8,
-      "chart_area_id": "aegean"
+      "chart_area_id": "ionia_caria"
     },
     {
       "id": "eretria",
@@ -1177,7 +1242,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "aegean"
+      "chart_area_id": "greece_mainland"
     },
     {
       "id": "gades",
@@ -1236,7 +1301,7 @@
         "treasury_sink_frac": 0.1
       },
       "npc_traders_base": 10,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "gibraltar_strait"
     },
     {
       "id": "gela",
@@ -1273,7 +1338,7 @@
         "grain": -0.08
       },
       "npc_traders_base": 6,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "sicily_island"
     },
     {
       "id": "gythion",
@@ -1315,7 +1380,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "aegean"
+      "chart_area_id": "greece_mainland"
     },
     {
       "id": "halicarnassus",
@@ -1357,7 +1422,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "aegean"
+      "chart_area_id": "ionia_caria"
     },
     {
       "id": "hippo",
@@ -1395,7 +1460,7 @@
         "salt": -0.05
       },
       "npc_traders_base": 4,
-      "chart_area_id": "north_africa"
+      "chart_area_id": "tunisia_carthage"
     },
     {
       "id": "kition",
@@ -1442,7 +1507,7 @@
         "metal": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "levant_cyprus"
+      "chart_area_id": "cyprus"
     },
     {
       "id": "knossos",
@@ -1484,7 +1549,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "aegean"
+      "chart_area_id": "crete_dodecanese"
     },
     {
       "id": "kydonia",
@@ -1523,7 +1588,7 @@
         "pottery": -0.04
       },
       "npc_traders_base": 4,
-      "chart_area_id": "aegean"
+      "chart_area_id": "crete_dodecanese"
     },
     {
       "id": "leptis_magna",
@@ -1568,7 +1633,7 @@
         "salt": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "north_africa"
+      "chart_area_id": "libya_tripolitania"
     },
     {
       "id": "locri",
@@ -1610,7 +1675,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "magna_graecia"
     },
     {
       "id": "malaka",
@@ -1655,7 +1720,7 @@
         "salt": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "gibraltar_strait"
     },
     {
       "id": "massalia",
@@ -1701,7 +1766,7 @@
         "grain": 1
       },
       "npc_traders_base": 8,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "ligurian"
     },
     {
       "id": "megara",
@@ -1740,7 +1805,7 @@
         "pottery": -0.04
       },
       "npc_traders_base": 4,
-      "chart_area_id": "aegean"
+      "chart_area_id": "greece_mainland"
     },
     {
       "id": "memphis",
@@ -1782,7 +1847,7 @@
         "metal": 1.1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "egypt_cyrenaica"
+      "chart_area_id": "nile_delta"
     },
     {
       "id": "messana",
@@ -1824,7 +1889,7 @@
         "spice": 1
       },
       "npc_traders_base": 9,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "strait_messina"
     },
     {
       "id": "miletus",
@@ -1870,7 +1935,7 @@
         "grain": 1
       },
       "npc_traders_base": 8,
-      "chart_area_id": "aegean"
+      "chart_area_id": "ionia_caria"
     },
     {
       "id": "motya",
@@ -1915,7 +1980,7 @@
         "salt": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "sicily_island"
     },
     {
       "id": "naucratis",
@@ -1960,7 +2025,7 @@
         "metal": 1.1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "egypt_cyrenaica"
+      "chart_area_id": "nile_delta"
     },
     {
       "id": "naxos_sicily",
@@ -1999,7 +2064,7 @@
         "pottery": -0.04
       },
       "npc_traders_base": 4,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "sicily_island"
     },
     {
       "id": "neapolis",
@@ -2044,7 +2109,7 @@
         "olive_oil": 1
       },
       "npc_traders_base": 7,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_latium"
     },
     {
       "id": "nikaia",
@@ -2083,7 +2148,7 @@
         "pottery": -0.04
       },
       "npc_traders_base": 4,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "ligurian"
     },
     {
       "id": "oea",
@@ -2125,7 +2190,7 @@
         "salt": 1
       },
       "npc_traders_base": 4,
-      "chart_area_id": "north_africa"
+      "chart_area_id": "libya_tripolitania"
     },
     {
       "id": "olbia_sardinia",
@@ -2170,7 +2235,7 @@
         "salt": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_sardinia"
     },
     {
       "id": "olbia_pontic",
@@ -2210,7 +2275,7 @@
         "grain": -0.08
       },
       "npc_traders_base": 6,
-      "chart_area_id": "propontis_pontus"
+      "chart_area_id": "pontus_euxinus"
     },
     {
       "id": "ostia",
@@ -2263,7 +2328,7 @@
         "treasury_sink_frac": 0.09
       },
       "npc_traders_base": 7,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_latium"
     },
     {
       "id": "panormus",
@@ -2307,7 +2372,7 @@
         "timber": 1.2
       },
       "npc_traders_base": 7,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "sicily_island"
     },
     {
       "id": "pantikapaion",
@@ -2353,7 +2418,7 @@
         "grain": 1
       },
       "npc_traders_base": 8,
-      "chart_area_id": "propontis_pontus"
+      "chart_area_id": "pontus_euxinus"
     },
     {
       "id": "paphos",
@@ -2395,7 +2460,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "levant_cyprus"
+      "chart_area_id": "cyprus"
     },
     {
       "id": "populonia",
@@ -2439,7 +2504,7 @@
         "metal": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_etruria"
     },
     {
       "id": "poseidonia",
@@ -2481,7 +2546,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_latium"
     },
     {
       "id": "pyrgi",
@@ -2519,7 +2584,7 @@
         "wire": -0.05
       },
       "npc_traders_base": 4,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_etruria"
     },
     {
       "id": "rhegium",
@@ -2560,7 +2625,7 @@
         "wine": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "strait_messina"
     },
     {
       "id": "rhode_iberia",
@@ -2599,7 +2664,7 @@
         "pottery": -0.04
       },
       "npc_traders_base": 4,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "iberia_east"
     },
     {
       "id": "rhodes",
@@ -2646,7 +2711,7 @@
         "grain": 1
       },
       "npc_traders_base": 8,
-      "chart_area_id": "aegean"
+      "chart_area_id": "crete_dodecanese"
     },
     {
       "id": "rome",
@@ -2691,7 +2756,7 @@
         "grain": 1
       },
       "npc_traders_base": 8,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_latium"
     },
     {
       "id": "sabratha",
@@ -2733,7 +2798,7 @@
         "salt": 1
       },
       "npc_traders_base": 4,
-      "chart_area_id": "north_africa"
+      "chart_area_id": "libya_tripolitania"
     },
     {
       "id": "salamis_cyprus",
@@ -2775,7 +2840,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "levant_cyprus"
+      "chart_area_id": "cyprus"
     },
     {
       "id": "selinus",
@@ -2817,7 +2882,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "sicily_island"
     },
     {
       "id": "sexi",
@@ -2859,7 +2924,7 @@
         "salt": 1
       },
       "npc_traders_base": 4,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "gibraltar_strait"
     },
     {
       "id": "sidon",
@@ -2905,7 +2970,7 @@
         "salt": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "levant_cyprus"
+      "chart_area_id": "phoenicia"
     },
     {
       "id": "sinope",
@@ -2947,7 +3012,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "propontis_pontus"
+      "chart_area_id": "pontus_euxinus"
     },
     {
       "id": "smyrna",
@@ -2989,7 +3054,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "aegean"
+      "chart_area_id": "ionia_caria"
     },
     {
       "id": "solus",
@@ -3031,7 +3096,7 @@
         "salt": 1
       },
       "npc_traders_base": 4,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "sicily_island"
     },
     {
       "id": "sulci",
@@ -3078,7 +3143,7 @@
         "metal": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_sardinia"
     },
     {
       "id": "syracuse",
@@ -3124,7 +3189,7 @@
         "grain": 1
       },
       "npc_traders_base": 8,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "sicily_island"
     },
     {
       "id": "taras",
@@ -3170,7 +3235,7 @@
         "grain": 1
       },
       "npc_traders_base": 8,
-      "chart_area_id": "sicily_ionian"
+      "chart_area_id": "magna_graecia"
     },
     {
       "id": "tharros",
@@ -3215,7 +3280,7 @@
         "salt": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "tyrrhenian"
+      "chart_area_id": "tyrrhenian_sardinia"
     },
     {
       "id": "tingis",
@@ -3260,7 +3325,7 @@
         "olive_oil": 1.1
       },
       "npc_traders_base": 5,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "gibraltar_strait"
     },
     {
       "id": "trapezus",
@@ -3302,7 +3367,7 @@
         "timber": 0.8
       },
       "npc_traders_base": 6,
-      "chart_area_id": "propontis_pontus"
+      "chart_area_id": "pontus_euxinus"
     },
     {
       "id": "tyre",
@@ -3358,7 +3423,7 @@
         "treasury_sink_frac": 0.1
       },
       "npc_traders_base": 10,
-      "chart_area_id": "levant_cyprus"
+      "chart_area_id": "phoenicia"
     },
     {
       "id": "utica",
@@ -3403,7 +3468,7 @@
         "salt": 1
       },
       "npc_traders_base": 6,
-      "chart_area_id": "north_africa"
+      "chart_area_id": "tunisia_carthage"
     },
     {
       "id": "cenchreae_bread",
@@ -3553,7 +3618,7 @@
         "grain": -0.07
       },
       "npc_traders_base": 3,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "ligurian"
     },
     {
       "id": "ager_narbonensis",
@@ -3590,7 +3655,7 @@
         "grain": -0.07
       },
       "npc_traders_base": 3,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "ligurian"
     },
     {
       "id": "arelate_bread",
@@ -3627,7 +3692,7 @@
         "grain": -0.08
       },
       "npc_traders_base": 3,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "ligurian"
     },
     {
       "id": "larnaca_fields",
@@ -4113,7 +4178,7 @@
         "fish": -0.05
       },
       "npc_traders_base": 3,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "gibraltar_strait"
     },
     {
       "id": "onoba_bread",
@@ -4151,7 +4216,7 @@
         "fish": -0.05
       },
       "npc_traders_base": 3,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "gibraltar_strait"
     },
     {
       "id": "carteia_coast",
@@ -4189,7 +4254,7 @@
         "fish": -0.05
       },
       "npc_traders_base": 3,
-      "chart_area_id": "iberia_gaul"
+      "chart_area_id": "gibraltar_strait"
     },
     {
       "id": "acre_feed",

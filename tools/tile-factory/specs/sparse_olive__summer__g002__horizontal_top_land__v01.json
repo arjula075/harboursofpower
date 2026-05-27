@@ -1,0 +1,16 @@
+{
+  "id": "sparse_olive/summer/g002/horizontal_top_land/v01",
+  "kind": "terrain",
+  "biome": "sparse_olive",
+  "season": "summer",
+  "topology": "horizontal_top_land",
+  "generation": 2,
+  "legacy_id": "horizontal_top_land",
+  "wang_mask": 8,
+  "terrain_class": "shore",
+  "variation": 1,
+  "status": "pending",
+  "raw_path": "/Users/ari.lahti/HarboursOfPower/tools/tile-factory/raw/sparse_olive/summer/g002/horizontal_top_land/v01.png",
+  "pending_path": "/Users/ari.lahti/HarboursOfPower/assets/tiles/pending/sparse_olive/summer/g002/horizontal_top_land/v01.webp",
+  "approved_path": "/Users/ari.lahti/HarboursOfPower/assets/tiles/approved/sparse_olive/summer/g002/horizontal_top_land/v01.webp"
+}

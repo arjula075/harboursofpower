@@ -6,6 +6,13 @@ import json
 import sys
 from pathlib import Path
 
+# Line-buffered logs when piped to tee (long batch runs).
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(line_buffering=True)
+    except Exception:
+        pass
+
 from PIL import Image
 
 from common import band_px, load_config, spec_path
@@ -18,7 +25,11 @@ from tile_publish import publish_composited_shore, publish_land_anchor_v01, publ
 
 def load_spec(tile_id: str) -> dict:
     with spec_path(tile_id).open(encoding="utf-8") as f:
-        return json.load(f)
+        spec = json.load(f)
+    from review_lib import normalize_spec_paths
+
+    normalize_spec_paths(spec)
+    return spec
 
 
 def content_errors(spec: dict, raw_path: Path, cfg: dict) -> list[str]:
@@ -109,7 +120,12 @@ def regenerate(tile_id: str, max_attempts: int, *, lenient: bool = False) -> boo
                 print(f"    content FAIL: {', '.join(errs)}")
                 continue
             if int(spec.get("variation", 0)) == 1:
-                publish_land_anchor_v01(cfg)
+                publish_land_anchor_v01(
+                    cfg,
+                    biome=spec["biome"],
+                    season=spec["season"],
+                    generation=int(spec.get("generation", 1)),
+                )
             else:
                 publish_raw_to_pending(spec, cfg)
                 from generate_sail_mask import write_mask_for_tile
@@ -120,9 +136,14 @@ def regenerate(tile_id: str, max_attempts: int, *, lenient: bool = False) -> boo
         print(f"  GAVE UP {tile_id}")
         return False
 
-    land_anchor = resolve_land_anchor(cfg)
+    land_anchor = resolve_land_anchor(
+        cfg,
+        biome=spec["biome"],
+        season=spec["season"],
+        generation=int(spec.get("generation", 1)),
+    )
     if land_anchor is None:
-        print("  ERROR: need totally_land/v01 in pending/ first")
+        print(f"  ERROR: need {spec['biome']}/{spec['season']}/totally_land/v01 in pending/ first")
         return False
 
     for attempt in range(1, max_attempts + 1):

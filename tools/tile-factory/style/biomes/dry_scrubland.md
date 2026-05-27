@@ -16,4 +16,5 @@
 
 ## Shores
 
-- Irregular natural coastline; white foam only as thin surf line, not a thick band
+- Coastline silhouette must meander at medium scale; broad rocky coastal band, not a thin separator
+- Shallow submerged rock follows irregular shore; white foam only as thin surf line
